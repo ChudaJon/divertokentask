@@ -4,6 +4,7 @@ open Routes;
 [@react.component]
 let make = () => {
   let (tasks, setTasks) = useState(() => []);
+  let (tokenCoin, setTokenCoin) = useState(() => 10);
 
   let url = ReasonReactRouter.useUrl();
 
@@ -20,9 +21,10 @@ let make = () => {
   Js.log2("URL >> ", url);
 
   <div>
+    <p> {string("You have " ++ string_of_int(tokenCoin) ++ " token")} </p>
     {switch (url->Routes.url2route) {
      | Register => <Register />
-     | UnclaimTask => <UnclaimTask tasks />
+     | UnclaimTask => <UnclaimTask tasks setTokenCoin />
      | TaskList => <TaskList />
      | Notification => <Notification />
      | AddTask => <AddTask setTasks />
