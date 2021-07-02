@@ -1,6 +1,6 @@
 // // Entry point
 
-[@bs.val] external document: Js.t({..}) = "document";
+@val external document: {..} = "document"
 
 // We're using raw DOM manipulations here, to avoid making you read
 // ReasonReact when you might precisely be trying to learn it for the first
@@ -10,22 +10,22 @@
 // style##innerHTML #= ExampleStyles.style;
 
 let makeContainer = () => {
-  let container = document##createElement("div");
-  container##className #= "container";
+  let container = document["createElement"]("div")
+  container["className"] = "container"
 
   // let title = document##createElement("div");
   // title##className #= "containerTitle";
   // title##innerText #= text;
 
-  let content = document##createElement("div");
-  content##className #= "containerContent";
+  let content = document["createElement"]("div")
+  content["className"] = "containerContent"
 
   // let () = container##appendChild(title);
-  let () = container##appendChild(content);
-  let () = document##body##appendChild(container);
+  let () = container["appendChild"](content)
+  let () = document["body"]["appendChild"](container)
 
-  content;
-};
+  content
+}
 
 // // All 4 examples.
 // ReactDOMRe.render(
@@ -33,4 +33,4 @@ let makeContainer = () => {
 //   makeContainer("Blinking Greeting"),
 // );
 
-ReactDOMRe.render(<Routing />, makeContainer());
+ReactDOMRe.render(<Routing />, makeContainer())
