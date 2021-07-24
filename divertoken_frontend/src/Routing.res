@@ -6,11 +6,11 @@ let make = () => {
   let (tasks, setTasks) = useState(() => list{})
   let (tokenCoin, setTokenCoin) = useState(() => 10)
 
-  let url = ReasonReactRouter.useUrl()
+  let url = RescriptReactRouter.useUrl()
 
-  let onUnclaimedTask = () => ReasonReactRouter.push(Routes.route2Str(UnclaimTask))
-  let onTaskList = () => ReasonReactRouter.push(Routes.route2Str(TaskList))
-  let onNotification = () => ReasonReactRouter.push(Routes.route2Str(Notification))
+  let onUnclaimedTask = () => RescriptReactRouter.push(Routes.route2Str(UnclaimTask))
+  let onTaskList = () => RescriptReactRouter.push(Routes.route2Str(TaskList))
+  let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
 
   Js.log2("URL >> ", url)
 

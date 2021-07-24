@@ -3,7 +3,7 @@
 @val external document: {..} = "document"
 
 // We're using raw DOM manipulations here, to avoid making you read
-// ReasonReact when you might precisely be trying to learn it for the first
+// RescriptReact when you might precisely be trying to learn it for the first
 // time through the examples later.
 // let style = document##createElement("style");
 // document##head##appendChild(style);
@@ -33,4 +33,5 @@ let makeContainer = () => {
 //   makeContainer("Blinking Greeting"),
 // );
 
-ReactDOMRe.render(<Routing />, makeContainer())
+// ReactDOMRe.render(<Routing />, makeContainer())
+ReactDOM.render(<Routing />, makeContainer())

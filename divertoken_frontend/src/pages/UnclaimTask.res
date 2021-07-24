@@ -2,7 +2,7 @@ open React
 
 @react.component
 let make = (~tasks, ~setTokenCoin) => {
-  let onAddTask = () => ReasonReactRouter.push(Routes.route2Str(AddTask))
+  let onAddTask = () => RescriptReactRouter.push(Routes.route2Str(AddTask))
 
   <div>
     {tasks

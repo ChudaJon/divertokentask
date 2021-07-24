@@ -5,7 +5,7 @@ type routes =
   | Notification
   | AddTask
 
-let url2route = (url: ReasonReactRouter.url) =>
+let url2route = (url: RescriptReactRouter.url) =>
   switch url.path {
   | list{"register"} => Register
   | list{"unclaim-task"} => UnclaimTask
