@@ -1,4 +1,5 @@
 open React
+open MaterialUI
 
 @react.component
 let make = (~setTasks) => {
@@ -9,14 +10,18 @@ let make = (~setTasks) => {
     setTaskContent(value)
   }
 
-  <div>
-    <input type_="text" value=taskContent onChange />
-    <button
-      onClick={_ => {
-        onUnclaimedTask()
-        setTasks(prevTasks => \"@"(prevTasks, list{taskContent}))
-      }}>
-      {string("Save")}
-    </button>
-  </div>
+  <Grid.Container>
+    <Grid.Item> <TextField label="Task..." value=taskContent onChange /> </Grid.Item>
+    <Grid.Item>
+      <Button
+        color="primary"
+        variant=Button.Variant.contained
+        onClick={_ => {
+          onUnclaimedTask()
+          setTasks(prevTasks => \"@"(prevTasks, list{taskContent}))
+        }}>
+        {string("Save")}
+      </Button>
+    </Grid.Item>
+  </Grid.Container>
 }
