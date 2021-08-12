@@ -249,9 +249,9 @@ module Divertask = {
 
   let db = App.database(app)
 
-  let listenToPath = (path, ~eventType:Database.eventType=#child_added, ~onData:Js.Json.t=>unit) => 
+  let listenToPath = (path, ~eventType:Database.eventType=#child_added, ~onData:Js.Json.t=>unit, ()) => 
   {
-    
+    Js.log2("listening...", path)
     let callback = snapshot => Database.DataSnapshot.val_(snapshot) |> onData;
     
     Database.ref(db, ~path, ()) -> Database.Reference.on(

@@ -7,3 +7,7 @@ let addTask = (task:t) => {
 
   db->Database.ref(~path, ())->Database.Reference.push(~value=task,());
 }
+
+let fromJson = (data:Js.Json.t) => {
+  Js.Json.decodeString(data)
+}
