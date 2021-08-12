@@ -10,18 +10,28 @@ let make = (~setTasks) => {
     setTaskContent(value)
   }
 
-  <Grid.Container>
-    <Grid.Item> <TextField label="Task..." value=taskContent onChange /> </Grid.Item>
-    <Grid.Item>
+  let onSave = ()=>{
+    switch(taskContent) {
+      |""=> ()
+      |task => Task.addTask(task) -> ignore
+    }
+  }
+
+  module Container = Grid.Container
+  module Item = Grid.Item
+  <Container>
+    <Item> <TextField label="Task..." value=taskContent onChange /> </Item>
+    <Item>
       <Button
         color="primary"
         variant=Button.Variant.contained
         onClick={_ => {
           onUnclaimedTask()
-          setTasks(prevTasks => \"@"(prevTasks, list{taskContent}))
+          // setTasks(prevTasks => List.append(prevTasks, list{taskContent}))
+          onSave()
         }}>
         {string("Save")}
       </Button>
-    </Grid.Item>
-  </Grid.Container>
+    </Item>
+  </Container>
 }
