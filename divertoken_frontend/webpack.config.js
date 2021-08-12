@@ -1,6 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+let outputDir = path.join(__dirname, "build");
+
 module.exports = {
   entry: './lib/es6/src/Index.bs.js',
   // If you ever want to use webpack during development, change 'production'
@@ -9,7 +11,7 @@ module.exports = {
   // you didn't know this
   mode: 'development',
   output: {
-    path: path.join(__dirname, "build"),
+    path: outputDir,
     publicPath: '/',
     filename: '[name].[chunkhash:4].js'.toLowerCase(),
     chunkFilename: '[name].[chunkhash:4].chunk.js'.toLowerCase()
@@ -19,5 +21,12 @@ module.exports = {
       template: 'index.html',
       inject: true,
     })
-  ]
+  ],
+  devServer: {
+    stats: 'normal',
+    port: process.env.PORT || 8000,
+    compress: false,
+    contentBase: outputDir,
+    historyApiFallback: true
+  }
 };
