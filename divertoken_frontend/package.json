@@ -5,7 +5,7 @@
     "build": "bsb -make-world",
     "start": "bsb -make-world -w -ws _ ",
     "clean": "bsb -clean-world",
-    "server": "moduleserve ./ --port 5050 --spa",
+    "server": "webpack serve --config webpack.config.js --progress --port 5050",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -18,9 +18,14 @@
   "dependencies": {
     "@divertise-asia/bs-mui": "^2.0.0",
     "@rescript/react": "^0.10.3",
+    "firebase": "^8.9.1",
+    "html-webpack-plugin": "^5.3.2",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
-    "reason-react": ">=0.7.1"
+    "reason-react": ">=0.7.1",
+    "webpack": "^5.50.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
   },
   "devDependencies": {
     "bs-platform": "^8.3.1",
