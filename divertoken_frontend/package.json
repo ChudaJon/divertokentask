@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "bs-platform": "^8.3.1",
+    "css-loader": "^6.2.0",
     "moduleserve": "^0.9.0",
     "rescript": "^9.1.4"
   }
