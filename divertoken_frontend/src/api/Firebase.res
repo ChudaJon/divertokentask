@@ -248,11 +248,13 @@ module Divertask = {
   let _ = messaging; /** This is required to load firebase.messaging. */
 
   let db = App.database(app)
+  type key = string;
 
-  let listenToPath = (path, ~eventType:Database.eventType=#child_added, ~onData:Js.Json.t=>unit, ()) => 
+  let listenToPath = (path, ~eventType:Database.eventType=#child_added, ~onData:(option<key>, Js.Json.t)=>unit, ()) => 
   {
     Js.log2("listening...", path)
-    let callback = snapshot => Database.DataSnapshot.val_(snapshot) |> onData;
+    let callback = snapshot => 
+      onData(Database.DataSnapshot.key(snapshot)->Js.Null.toOption, Database.DataSnapshot.val_(snapshot));
     
     Database.ref(db, ~path, ()) -> Database.Reference.on(
         ~eventType,
