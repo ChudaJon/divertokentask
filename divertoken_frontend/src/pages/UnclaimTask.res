@@ -6,10 +6,10 @@ let make = (~tasks, ~setTokenCoin) => {
 
   let (tasks:list<string>, setTask) = useState(_=>list{})
 
-  let onData = (data:Js.Json.t) => {
-    switch(data->Task.fromJson){
-      |Some(task) => setTask(prevTasks => list{task, ...prevTasks})
-      |None => ()
+  let onData = (id:option<string>, data:Js.Json.t) => {
+    switch(data->Task.fromJson(id,_)){
+      |{content, status: Open} => setTask(prevTasks => list{content, ...prevTasks})
+      |_ => ()
     }
     
   };

@@ -13,7 +13,12 @@ let make = (~setTasks) => {
   let onSave = ()=>{
     switch(taskContent) {
       |""=> ()
-      |task => Task.addTask(task) -> ignore
+      |task => {
+        task
+        -> Task.createTask
+        -> Task.addTask
+        -> ignore
+      }
     }
   }
 
