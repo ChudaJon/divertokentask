@@ -21,7 +21,7 @@
   "namespace": true,
   "bs-dependencies": [
     "@rescript/react",
-    "@divertise-asia/bs-mui"
+    "@divertise-asia/bs-mui",
+    "@glennsl/bs-json"
   ]
-  // "refmt": 3
 }
