@@ -1,2 +1,6 @@
 /** User type */
-type t = string;
+type t = {
+  displayName: string,
+  token: int,
+  email: string
+};
