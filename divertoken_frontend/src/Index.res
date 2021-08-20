@@ -17,4 +17,4 @@ let makeContainer = () => {
 }
 
 // ReactDOMRe.render(<Routing />, makeContainer())
-ReactDOM.render(<Routing />, makeContainer())
+ReactDOM.render(<App />, makeContainer())
