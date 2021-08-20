@@ -37,8 +37,8 @@ let changeToken = (user, amount) => {...user, token: user.token + amount}
 
 let spendToken = (user, amount) => {
   let value = user->changeToken(-amount)->Codec.toJson
-  let path = "users"
-  let db = Firebase.Divertask.db;
+  let path = `users/${user.id}`
+  let db = Firebase.Divertask.db
 
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 }

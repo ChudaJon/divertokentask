@@ -58,7 +58,12 @@ let addTask = (task:t) => {
 let vote = (task:t, vote: int, byUser:User.t) => {
   byUser->User.spendToken(vote)->ignore
 
-  let task = {...task, vote: vote +1}
+  let task = {...task, vote: task.vote +vote}
   let value = task->toJson
+  let path = switch(task.id){
+    |Some(id) => `${path}/${id}`
+    |None => `${path}/unidentified}`
+  }
+  
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 }

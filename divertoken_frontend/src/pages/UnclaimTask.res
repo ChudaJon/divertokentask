@@ -7,6 +7,7 @@ let make = (~user) => {
   let (tasks:list<Task.t>, setTaskList) = useState(_=>list{})
 
   let onData = (id:option<string>, data:Js.Json.t) => {
+    Js.log2("task", data)
     let task = data->Task.fromJson(id,_);
     setTaskList(prevTasks => list{task, ...prevTasks})
   };
@@ -19,7 +20,7 @@ let make = (~user) => {
 
   <div>
     {tasks
-    ->Belt.List.map(task => <UnclaimTaskCard user task />)
+    ->Belt.List.mapWithIndex((i,task) => <UnclaimTaskCard key=`task-${Js.Int.toString(i)}` user task />)
     ->Array.of_list
     ->React.array}
     <button onClick={_ => onAddTask()}> {string("+ Add Task")} </button>
