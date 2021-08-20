@@ -43,9 +43,11 @@ let spendToken = (user, amount) => {
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 }
 
-let login = (_username, _password) => Js.Promise.resolve({
+let login = (_username, _password) => {
+  Js.Promise.resolve({
   id: "proto-user-0",
   displayName: "test",
   token: 10,
   email: "divertask@divertise.asia"
 }:t)
+}

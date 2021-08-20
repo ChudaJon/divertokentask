@@ -6,17 +6,18 @@ open Promise
 let make = () => {
   let (tasks, setTasks) = useState(() => list{})
   let (maybeUser, setUser) = useState(() => None)
+  let (auth, setAuth) = useState(() => "proto-user-0")
 
-  useEffect0(() => {
-    User.login("user", "pass")
-    ->then((user: User.t) => {
-      setUser(_ => Some(user))
-      resolve()
-    })
-    ->ignore
+  let onData = (id:option<string>, data:Js.Json.t) => {
+    let user = data->User.Codec.fromJson(id,_);
+    setUser(_=> Some(user))
+  };
+  
+  useEffect1(()=>{
+    let stopListen = Firebase.Divertask.listenToPath(`users/${auth}`, ~eventType=#value, ~onData,())
 
-    None
-  })
+    Some(stopListen)
+  },[auth])
 
   let url = RescriptReactRouter.useUrl()
 
