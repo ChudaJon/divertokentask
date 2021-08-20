@@ -12,7 +12,6 @@ let make = () => {
   let onTaskList = () => RescriptReactRouter.push(Routes.route2Str(TaskList))
   let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
 
-  Js.log2("URL >> ", url)
 
   <div>
     <p> {string("You have " ++ (string_of_int(tokenCoin) ++ " token"))} </p>

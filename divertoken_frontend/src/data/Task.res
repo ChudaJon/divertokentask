@@ -9,6 +9,7 @@ type t = {
   id: option<string>,
   content: string,
   vote: int,
+  deadline: option<Js.Date.t>,
   status
 }
 
@@ -21,6 +22,7 @@ let fromJson = (id:option<string>, data:Js.Json.t) => {
       id,
       content: Decode.field("content", Decode.string)->Decode.withDefault("?")(json),
       vote: Decode.field("vote", Decode.int)->Decode.withDefault(0)(json),
+      deadline: (Decode.field("deadline", Decode.date)->Decode.optional)(json),
       status: Open
     }
   })
@@ -37,7 +39,7 @@ let toJson = (task:t) => {
   -> Encode.object_
 };
 
-let createTask = (content:string) => { id: None, content, vote: 0, status: Open }
+let createTask = (~deadline=?, content:string) => { id: None, content, vote: 0, status: Open, deadline }
 
 let addTask = (task:t) => {
   let db = Firebase.Divertask.db;
