@@ -11,7 +11,7 @@ let make = (~user: User.t, ~task: Task.t) => {
 
   <Grid.Container>
     <Grid.Item xs={GridSize.size(8)}>
-      <div className="box">
+      <Box className="box">
         // style={ReactDOM.Style.make(~margin="10px", ~padding="10px", ~border="1px solid black", ())}>
         <Grid.Item xs={GridSize.size(12)}>
           <Typography> {string(task.content)} </Typography>
@@ -37,7 +37,7 @@ let make = (~user: User.t, ~task: Task.t) => {
             </Button>
           </Grid.Item>
         </Grid.Container>
-      </div>
+      </Box>
     </Grid.Item>
   </Grid.Container>
 }
