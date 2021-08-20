@@ -5,12 +5,18 @@ type t = {
   email: string
 };
 
+let changeToken = (user, amount) => {...user, token: user.token + amount}
 
-let deductToken = (user, price) => {...user, token: user.token - price}
-let depositToken = (user, amount) => {...user, token: user.token - amount}
+let spendToken = (user, amount) => {
+  ()
+}
+
+let depositToken = (user, amount) => {
+  ()
+}
 
 let login = (_username, _password) => Js.Promise.resolve({
   displayName: "test",
   token: 10,
   email: "divertask@divertise.asia"
-})
+}:t)

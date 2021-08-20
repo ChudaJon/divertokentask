@@ -49,7 +49,7 @@ let addTask = (task:t) => {
   db->Database.ref(~path, ())->Database.Reference.push(~value, ());
 }
 
-let voteTask = (task:t, _vote: int) => {
+let vote = (task:t, _vote: int) => {
   // TODO: DVT-7 Implement voteup/down task logic that update server data.
   task
 }
