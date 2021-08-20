@@ -4,8 +4,7 @@ open React
 let make = (~user:User.t, ~task:Task.t) => {
   let vote = (user:User.t, task:Task.t) => {
     let amount = 1;
-    user->User.spendToken(amount)->ignore
-    task->Task.vote(amount)->ignore
+    task->Task.vote(amount, user)->ignore
   }
 
   <div style={ReactDOM.Style.make(~margin="10px", ~padding="10px", ~border="1px solid black", ())}>

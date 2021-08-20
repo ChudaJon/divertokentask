@@ -15,6 +15,9 @@ type t = {
 
 module Database = Firebase.Database;
 
+let path = "tasks";
+let db = Firebase.Divertask.db;
+
 let fromJson = (id:option<string>, data:Js.Json.t) => {
   open Json;
   data->(json=>{
@@ -35,6 +38,11 @@ let toJson = (task:t) => {
     ("vote", task.vote->Encode.int),
     ("status", 0->Encode.int),
   ]
+  -> Js.Array.concat(
+    switch(task.id){
+      |Some(id) => [("id", Encode.string(id))]
+      |None => []
+    })
   -> Array.to_list
   -> Encode.object_
 };
@@ -42,14 +50,15 @@ let toJson = (task:t) => {
 let createTask = (~deadline=?, content:string) => { id: None, content, vote: 0, status: Open, deadline }
 
 let addTask = (task:t) => {
-  let db = Firebase.Divertask.db;
-  let path = "tasks"
   let value = task->toJson
 
   db->Database.ref(~path, ())->Database.Reference.push(~value, ());
 }
 
-let vote = (task:t, _vote: int) => {
-  // TODO: DVT-7 Implement voteup/down task logic that update server data.
-  task
+let vote = (task:t, vote: int, byUser:User.t) => {
+  byUser->User.spendToken(vote)->ignore
+
+  let task = {...task, vote: vote +1}
+  let value = task->toJson
+  db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 }
