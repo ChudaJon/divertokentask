@@ -31,7 +31,8 @@ let make = (~user: User.t, ~task: Task.t) => {
             </Button>
           </Grid.Item>
           <Grid.Item xs={GridSize.size(4)}>
-            <Button color="secondary" variant=Button.Variant.contained onClick={_ => ()}>
+            <Button
+              color="secondary" variant=Button.Variant.contained onClick={_ => vote(user, task)}>
               {string("Vote")}
             </Button>
           </Grid.Item>
