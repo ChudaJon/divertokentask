@@ -32,9 +32,9 @@ module.exports = {
   ],
   module: {
     rules: [
-      { 
-        test: /\.(eot|woff|woff2|ttf)$/, 
-        loader: "url-loader" 
+      {
+        test: /\.(eot|woff|woff2|ttf)$/,
+        loader: "url-loader"
       },
       {
         test: /\.(jpe?g|png|gif|svg|ico)$/,
@@ -43,12 +43,12 @@ module.exports = {
           options: {
             name: '[path][name]-[hash:4].[ext]',
           },
-        }, ]
+        },]
       },
       {
         test: /\.scss$/,
         use: [
-            MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,
           {
             loader: "css-loader" // translates CSS into CommonJS
           },
@@ -67,15 +67,3 @@ module.exports = {
     historyApiFallback: true
   }
 };
-
-module.exports = {
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
-      },
-    ],
-  },
-};
-

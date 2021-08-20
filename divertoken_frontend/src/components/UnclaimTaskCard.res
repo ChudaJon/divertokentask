@@ -2,10 +2,6 @@ open React
 open MaterialUI
 open MaterialUIDataType
 
-// @module("/src/styles/UnclaimTaskCard.css") external styles: 'a = "default"
-
-%%raw("require('../styles/main.css')")
-
 @react.component
 let make = (~user: User.t, ~task: Task.t) => {
   let vote = (user: User.t, task: Task.t) => {
@@ -18,13 +14,13 @@ let make = (~user: User.t, ~task: Task.t) => {
       <div className="box">
         // style={ReactDOM.Style.make(~margin="10px", ~padding="10px", ~border="1px solid black", ())}>
         <Grid.Item xs={GridSize.size(12)}>
-          <Typography> {string(content)} </Typography>
+          <Typography> {string(task.content)} </Typography>
           <Grid.Container>
             <Grid.Item xs={GridSize.size(6)}>
               <Typography> {string("Deadline: ")} </Typography>
             </Grid.Item>
             <Grid.Item xs={GridSize.size(6)}>
-              <Typography> {string("Votes: " ++ string_of_int(vote))} </Typography>
+              <Typography> {string("Votes: " ++ string_of_int(task.vote))} </Typography>
             </Grid.Item>
           </Grid.Container>
         </Grid.Item>
@@ -35,13 +31,7 @@ let make = (~user: User.t, ~task: Task.t) => {
             </Button>
           </Grid.Item>
           <Grid.Item xs={GridSize.size(4)}>
-            <Button
-              color="secondary"
-              variant=Button.Variant.contained
-              onClick={_ => {
-                setVote(_ => vote + 1)
-                setTokenCoin(prev => prev - 1)
-              }}>
+            <Button color="secondary" variant=Button.Variant.contained onClick={_ => ()}>
               {string("Vote")}
             </Button>
           </Grid.Item>
