@@ -19,6 +19,7 @@
     "@divertise-asia/bs-mui": "^2.0.0",
     "@glennsl/bs-json": "^5.0.4",
     "@rescript/react": "^0.10.3",
+    "@ryyppy/rescript-promise": "^2.1.0",
     "firebase": "^8.9.1",
     "html-webpack-plugin": "^5.3.2",
     "react": "^16.8.1",
@@ -31,7 +32,9 @@
   "devDependencies": {
     "bs-platform": "^8.3.1",
     "css-loader": "^6.2.0",
+    "file-loader": "^6.2.0",
     "moduleserve": "^0.9.0",
-    "rescript": "^9.1.4"
+    "rescript": "^9.1.4",
+    "url-loader": "^4.1.1"
   }
 }

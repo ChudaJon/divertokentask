@@ -9,10 +9,14 @@ type t = {
   id: option<string>,
   content: string,
   vote: int,
+  deadline: option<Js.Date.t>,
   status
 }
 
 module Database = Firebase.Database;
+
+let path = "tasks";
+let db = Firebase.Divertask.db;
 
 let fromJson = (id:option<string>, data:Js.Json.t) => {
   open Json;
@@ -21,6 +25,7 @@ let fromJson = (id:option<string>, data:Js.Json.t) => {
       id,
       content: Decode.field("content", Decode.string)->Decode.withDefault("?")(json),
       vote: Decode.field("vote", Decode.int)->Decode.withDefault(0)(json),
+      deadline: (Decode.field("deadline", Decode.date)->Decode.optional)(json),
       status: Open
     }
   })
@@ -33,21 +38,32 @@ let toJson = (task:t) => {
     ("vote", task.vote->Encode.int),
     ("status", 0->Encode.int),
   ]
+  -> Js.Array.concat(
+    switch(task.id){
+      |Some(id) => [("id", Encode.string(id))]
+      |None => []
+    })
   -> Array.to_list
   -> Encode.object_
 };
 
-let createTask = (content:string) => { id: None, content, vote: 0, status: Open }
+let createTask = (~deadline=?, content:string) => { id: None, content, vote: 0, status: Open, deadline }
 
 let addTask = (task:t) => {
-  let db = Firebase.Divertask.db;
-  let path = "tasks"
   let value = task->toJson
 
   db->Database.ref(~path, ())->Database.Reference.push(~value, ());
 }
 
-let voteTask = (task:t, _vote: int) => {
-  // TODO: DVT-7 Implement voteup/down task logic that update server data.
-  task
+let vote = (task:t, vote: int, byUser:User.t) => {
+  byUser->User.spendToken(vote)->ignore
+
+  let task = {...task, vote: task.vote +vote}
+  let value = task->toJson
+  let path = switch(task.id){
+    |Some(id) => `${path}/${id}`
+    |None => `${path}/unidentified}`
+  }
+  
+  db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 }

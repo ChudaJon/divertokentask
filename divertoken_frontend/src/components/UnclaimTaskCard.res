@@ -7,8 +7,11 @@ open MaterialUIDataType
 %%raw("require('../styles/main.css')")
 
 @react.component
-let make = (~content, ~setTokenCoin) => {
-  let (vote, setVote) = React.useState(() => 0)
+let make = (~user: User.t, ~task: Task.t) => {
+  let vote = (user: User.t, task: Task.t) => {
+    let amount = 1
+    task->Task.vote(amount, user)->ignore
+  }
 
   <Grid.Container>
     <Grid.Item xs={GridSize.size(8)}>

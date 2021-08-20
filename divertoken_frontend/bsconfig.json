@@ -22,6 +22,7 @@
   "bs-dependencies": [
     "@rescript/react",
     "@divertise-asia/bs-mui",
-    "@glennsl/bs-json"
+    "@glennsl/bs-json",
+    "@ryyppy/rescript-promise"
   ]
 }
