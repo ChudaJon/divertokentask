@@ -8,16 +8,21 @@ let make = () => {
   let (maybeUser, setUser) = useState(() => None)
   let (auth, setAuth) = useState(() => "proto-user-0")
 
-  let onData = (id:option<string>, data:Js.Json.t) => {
-    let user = data->User.Codec.fromJson(id,_);
-    setUser(_=> Some(user))
-  };
-  
-  useEffect1(()=>{
-    let stopListen = Firebase.Divertask.listenToPath(`users/${auth}`, ~eventType=#value, ~onData,())
+  let onData = (id: option<string>, data: Js.Json.t) => {
+    let user = data->User.Codec.fromJson(id, _)
+    setUser(_ => Some(user))
+  }
+
+  useEffect1(() => {
+    let stopListen = Firebase.Divertask.listenToPath(
+      `users/${auth}`,
+      ~eventType=#value,
+      ~onData,
+      (),
+    )
 
     Some(stopListen)
-  },[auth])
+  }, [auth])
 
   let url = RescriptReactRouter.useUrl()
 
@@ -32,7 +37,7 @@ let make = () => {
       <p> {string(`You have  ${Js.Int.toString(user.token)} token`)} </p>
       {switch url->Routes.url2route {
       | Register => <Register />
-      | UnclaimTask => <UnclaimTask user/>
+      | UnclaimTask => <UnclaimTask user />
       | TaskList => <TaskList />
       | Notification => <Notification />
       | AddTask => <AddTask setTasks />

@@ -5,8 +5,10 @@ open MaterialUIDataType
 @react.component
 let make = (~user: User.t, ~task: Task.t) => {
   let vote = (user: User.t, task: Task.t) => {
-    let amount = 1
-    task->Task.vote(amount, user)->ignore
+    if user.token > 0 {
+      let amount = 1
+      task->Task.vote(amount, user)->ignore
+    }
   }
 
   <Grid.Container>
