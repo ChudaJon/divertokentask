@@ -18,9 +18,13 @@ let make = (~user: User.t, ~task: Task.t) => {
         <Grid.Item xs={GridSize.size(12)}>
           <Typography> {string(task.content)} </Typography>
           <Grid.Container>
-            <Grid.Item xs={GridSize.size(6)}>
-              <Typography> {string("Deadline: ")} </Typography>
-            </Grid.Item>
+            {switch task.deadline {
+            | Some(deadline) =>
+              <Grid.Item xs={GridSize.size(6)}>
+                <Typography> {string("Deadline: " ++ Js.Date.toDateString(deadline))} </Typography>
+              </Grid.Item>
+            | None => React.null
+            }}
             <Grid.Item xs={GridSize.size(6)}>
               <Typography> {string("Votes: " ++ string_of_int(task.vote))} </Typography>
             </Grid.Item>
