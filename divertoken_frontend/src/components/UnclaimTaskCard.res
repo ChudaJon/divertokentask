@@ -23,7 +23,10 @@ let make = (~user: User.t, ~task: Task.t) => {
               <Grid.Item xs={GridSize.size(6)}>
                 <Typography> {string("Deadline: " ++ Js.Date.toDateString(deadline))} </Typography>
               </Grid.Item>
-            | None => React.null
+            | None =>
+              <Grid.Item xs={GridSize.size(6)}>
+                <Typography> {string("Deadline: - ")} </Typography>
+              </Grid.Item>
             }}
             <Grid.Item xs={GridSize.size(6)}>
               <Typography> {string("Votes: " ++ string_of_int(task.vote))} </Typography>
