@@ -17,7 +17,13 @@ let make = (~user: User.t, ~task: Task.t) => {
           <Typography> {string(task.content)} </Typography>
           <Grid.Container>
             <Grid.Item xs={GridSize.size(6)}>
-              <Typography> {string("Deadline: ")} </Typography>
+              {
+                let due = switch(task.deadline){
+                  |Some(d) => d->Js.Date.toString
+                  |None => "N/A"
+                }
+              <Typography> {string(`Deadline: ${due}`)} </Typography>
+              }
             </Grid.Item>
             <Grid.Item xs={GridSize.size(6)}>
               <Typography> {string("Votes: " ++ string_of_int(task.vote))} </Typography>
