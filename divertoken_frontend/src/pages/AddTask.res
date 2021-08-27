@@ -17,7 +17,7 @@ let make = (~setTasks) => {
       |""=> ()
       |task => {
         task
-        -> Task.createTask
+        -> Task.createTask(~deadline=dueDate)
         -> Task.addTask
         -> ignore
       }
