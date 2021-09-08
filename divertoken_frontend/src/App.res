@@ -35,7 +35,7 @@ let make = () => {
       | UnclaimTask => <UnclaimTask user/>
       | TaskList => <TaskList />
       | Notification => <Notification />
-      | AddTask => <AddTask setTasks />
+      | AddTask => <AddTask setTasks user/>
       }}
       <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button>
       <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
