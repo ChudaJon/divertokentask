@@ -1,8 +1,9 @@
 type status =
   | Open
-  | Claim(User.t)
-  | Done(User.t)
-  | DoneAndVerified(User.t, array<User.t>)
+  | Claim
+  | Done
+  | DoneAndVerified
+
 
 type t = {
   id: option<string>,
@@ -10,7 +11,7 @@ type t = {
   vote: int,
   deadline: option<Js.Date.t>,
   status: status,
-  voted: Js.Dict.t<int>,
+  voted: Js.Dict.t<int>
 }
 
 module Database = Firebase.Database
