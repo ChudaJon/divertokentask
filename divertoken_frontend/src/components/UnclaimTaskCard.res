@@ -12,6 +12,10 @@ let make = (~user: User.t, ~task: Task.t) => {
     task->Task.vote(amount, user, setVoteText)->ignore
   }
 
+  let claim = (user: User.t, task: Task.t) => {
+    task->Task.claim(user)->ignore
+  }
+
   <Grid.Container>
     <Grid.Item xs={GridSize.size(8)}>
       <div className="box">
@@ -35,7 +39,7 @@ let make = (~user: User.t, ~task: Task.t) => {
         </Grid.Item>
         <Grid.Container>
           <Grid.Item xs={GridSize.size(8)}>
-            <Button color="secondary" variant=Button.Variant.contained>
+            <Button color="secondary" variant=Button.Variant.contained onClick={_ => claim(user,task)} >
               {string("Claim Task")}
             </Button>
           </Grid.Item>

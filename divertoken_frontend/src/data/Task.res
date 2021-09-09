@@ -10,7 +10,7 @@ type t = {
   content: string,
   vote: int,
   deadline: option<Js.Date.t>,
-  status: status,
+  mutable status: status,
   voted: Js.Dict.t<int>
 }
 
@@ -27,13 +27,13 @@ let fromJson = (id: option<string>, data: Js.Json.t) => {
         content: Decode.field("content", Decode.string)->Decode.withDefault("?")(json),
         vote: Decode.field("vote", Decode.int)->Decode.withDefault(0)(json),
         deadline: (Decode.field("deadline", Decode.date)->Decode.optional)(json),
-        status: Open,
-        // switch t.status {
-        //   | 0 => Open
-        //   | 1 => Claim
-        //   | 2 => Done
-        //   | 3 => DoneAndVerified
-        // }->Encode.int,
+        status: 
+          switch t.status {
+          | 0 => Open
+          | 1 => Claim
+          | 2 => Done
+          | 3 => DoneAndVerified
+        },
         voted: Decode.field("voted", Decode.dict(Decode.int))->Decode.withDefault(Js.Dict.fromList(list{("0", 0)}))(json),
       }
     }
@@ -119,4 +119,20 @@ let vote = (task: t, vote: int, byUser: User.t, setVoteText) => {
 
     db->Database.ref(~path, ())->Database.Reference.update(~value, ())
   }
+}
+
+let claim = (task: t, byUser: User.t) => {
+
+  Js.log2("bef", task.status)
+  // Use user later
+  task.status = Claim;
+  Js.log2("after", task.status)
+  let task = {...task, status: task.status}
+  let value = task->toJson
+  let path = switch task.id {
+  | Some(id) => `${path}/${id}`
+  | None => `${path}/unidentified}`
+  }
+
+  db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 }

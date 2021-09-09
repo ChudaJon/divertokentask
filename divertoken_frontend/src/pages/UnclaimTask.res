@@ -38,6 +38,7 @@ let make = (~user) => {
 
   <div>
     {tasks
+    -> Belt.List.keep(t => t.status == Open)
     |> Array.of_list
     |> Js.Array.mapi((task, i) => <UnclaimTaskCard key={"task-" ++ string_of_int(i)} user task />)
     |> React.array
