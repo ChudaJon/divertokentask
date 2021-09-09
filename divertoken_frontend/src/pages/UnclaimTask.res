@@ -23,7 +23,8 @@ let make = (~user) => {
     {tasks
     |> Array.of_list
     |> Js.Array.mapi((task, i) => <UnclaimTaskCard key={"task-" ++ string_of_int(i)} user task />)
-    |> React.array}
+    |> React.array
+    }
     <Button color="primary" variant=Button.Variant.contained onClick={_ => onAddTask()}>
       {string("+ Add Task")}
     </Button>

@@ -12,7 +12,7 @@ let make = () => {
     let user = data->User.Codec.fromJson(id,_);
     setUser(_=> Some(user))
   };
-  
+
   useEffect1(()=>{
     let stopListen = Firebase.Divertask.listenToPath(`users/${auth}`, ~eventType=#value, ~onData,())
 
@@ -33,7 +33,7 @@ let make = () => {
       {switch url->Routes.url2route {
       | Register => <Register />
       | UnclaimTask => <UnclaimTask user/>
-      | TaskList => <TaskList />
+      | TaskList => <TaskList user/>
       | Notification => <Notification />
       | AddTask => <AddTask setTasks user/>
       }}
