@@ -16,6 +16,16 @@ type t = {
 
 module Database = Firebase.Database
 
+let numbertoStatus = n => {
+  switch(n){
+    |0 => Open
+    |1 => Claim
+    |2 => Done
+    |3 => DoneAndVerified
+    |_ => Open
+  }
+}
+
 let path = "tasks"
 let db = Firebase.Divertask.db
 let fromJson = (id: option<string>, data: Js.Json.t) => {
@@ -27,13 +37,7 @@ let fromJson = (id: option<string>, data: Js.Json.t) => {
         content: Decode.field("content", Decode.string)->Decode.withDefault("?")(json),
         vote: Decode.field("vote", Decode.int)->Decode.withDefault(0)(json),
         deadline: (Decode.field("deadline", Decode.date)->Decode.optional)(json),
-        status: 
-          switch t.status {
-          | 0 => Open
-          | 1 => Claim
-          | 2 => Done
-          | 3 => DoneAndVerified
-        },
+        status:  Decode.field("status", Decode.int)(json)->numbertoStatus,
         voted: Decode.field("voted", Decode.dict(Decode.int))->Decode.withDefault(Js.Dict.fromList(list{("0", 0)}))(json),
       }
     }
