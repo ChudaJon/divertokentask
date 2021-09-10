@@ -45,7 +45,7 @@ let make = (~user: User.t, ~task: Task.t) => {
           <Grid.Item xs={GridSize.size(8)}>
           </Grid.Item>
           <Grid.Item xs={GridSize.size(4)}>
-            { showDone ? 
+            { task.status == Claim ? 
             <Button
               color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
               {string("Done")}

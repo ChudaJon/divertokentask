@@ -46,7 +46,8 @@ let make = (~user: User.t, ~task: Task.t) => {
           <Grid.Item xs={GridSize.size(4)}>
             <Button
               color="secondary" variant=Button.Variant.contained onClick={_ => vote(user, task)} >
-              {string(voteText)}
+              { Js.Dict.get(task.voted, user.id) == Some(0) || Js.Dict.get(task.voted, user.id) == None ?
+              {string("Vote")} : {string("Unvote")} }
             </Button>
           </Grid.Item>
         </Grid.Container>
