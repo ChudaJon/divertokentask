@@ -20,44 +20,51 @@ let make = (~user: User.t, ~task: Task.t) => {
     setDoneMsg(_ => false);
   }
 
-  <Grid.Container>
-    <Grid.Item xs={GridSize.size(8)}>
-      <div className="box">
-        // style={ReactDOM.Style.make(~margin="10px", ~padding="10px", ~border="1px solid black", ())}>
-        <Grid.Item xs={GridSize.size(12)}>
-          <Typography> {string(task.content)} </Typography>
+  <div style={ReactDOM.Style.make(~display="flex", ())}>
+    <Grid.Container>
+      <div style=(ReactDOM.Style.make(~margin="auto", ~width="50%", ~display="block", ()))>
+        <div className="box"
+          style={ReactDOM.Style.make(~margin="10px", ~padding="10px", ~border="1px solid black", ~borderColor="#8C8C8C", ~borderRadius="3px 3px",())}>
+          <Grid.Item xs={GridSize.size(12)}>
+            <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ()))>
+              <Typography variant=Typography.Variant.h5> {string(task.content)} </Typography>
+            </div>
+            <Grid.Container>
+              <Grid.Item xs={GridSize.size(6)}>
+                {
+                  let due = switch(task.deadline){
+                    |Some(d) => d->Js.Date.toString
+                    |None => "N/A"
+                  }
+                <Typography> {string(`Deadline: ${due}`)} </Typography>
+                }
+              </Grid.Item>
+              <Grid.Item xs={GridSize.size(6)}>
+                <Typography> {string("Votes: " ++ string_of_int(task.vote))} </Typography>
+              </Grid.Item>
+            </Grid.Container>
+          </Grid.Item>
           <Grid.Container>
             <Grid.Item xs={GridSize.size(6)}>
-              {
-                let due = switch(task.deadline){
-                  |Some(d) => d->Js.Date.toString
-                  |None => "N/A"
-                }
-              <Typography> {string(`Deadline: ${due}`)} </Typography>
-              }
-            </Grid.Item>
-            <Grid.Item xs={GridSize.size(6)}>
-              <Typography> {string("Votes: " ++ string_of_int(task.vote))} </Typography>
+            { task.status == Claim ? 
+            <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ~fontFamily="Arial", ~fontSize="15px", ()))>
+                <Button
+                  color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
+                  {string("Done")}
+                </Button> 
+              </div> : 
+              <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ~fontFamily="Arial", ~fontSize="15px", ()))>
+                {string("Task is being verified")} 
+              </div>}
+              <Snackbar _open={doneMsg} autoHideDuration={6000} onClose={handleDoneMsgClose}>
+                <Alert onClose={handleDoneMsgClose} severity="info">
+                    {string("Please wait for your task to be verified")}
+                </Alert>
+              </Snackbar>
             </Grid.Item>
           </Grid.Container>
-        </Grid.Item>
-        <Grid.Container>
-          <Grid.Item xs={GridSize.size(8)}>
-          </Grid.Item>
-          <Grid.Item xs={GridSize.size(4)}>
-            { task.status == Claim ? 
-            <Button
-              color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
-              {string("Done")}
-            </Button> : {string("Task is being verified")}}
-            <Snackbar _open={doneMsg} autoHideDuration={6000} onClose={handleDoneMsgClose}>
-              <Alert onClose={handleDoneMsgClose} severity="info">
-                  {string("Please wait for your task to be verified")}
-              </Alert>
-            </Snackbar>
-          </Grid.Item>
-        </Grid.Container>
+        </div>
       </div>
-    </Grid.Item>
-  </Grid.Container>
+    </Grid.Container>
+  </div>
 }

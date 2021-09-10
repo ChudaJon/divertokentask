@@ -25,37 +25,40 @@ let make = () => {
   let onTaskList = () => RescriptReactRouter.push(Routes.route2Str(TaskList))
   let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
 
+  let switchTab = 
+  <div> 
+    <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button> 
+    <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
+    <button onClick={_ => onNotification()}> {string("Notification")} </button> 
+  </div>
+
   switch maybeUser {
+    
   | None => <div> {string("Please Login")} </div>
   | Some(user) =>
+    let tokenCount = <div> <p> {string(`You have  ${Js.Int.toString(user.token)} token`)} </p> </div>
     <div>
       {switch url->Routes.url2route {
       | Register => <Register />
       | UnclaimTask => 
         <div> 
-          <p> {string(`You have  ${Js.Int.toString(user.token)} token`)} </p> <UnclaimTask user/>
-          <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button> 
-          <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
-          <button onClick={_ => onNotification()}> {string("Notification")} </button>
+          tokenCount
+          <UnclaimTask user/>
+          switchTab
         </div>
       | TaskList => 
         <div> 
-          <p> {string(`You have  ${Js.Int.toString(user.token)} token`)} </p> <TaskList user/> 
-          <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button>
-          <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
-          <button onClick={_ => onNotification()}> {string("Notification")} </button>
+          tokenCount
+          <TaskList user/> 
+          switchTab
         </div>
       | Notification => 
         <div> <Notification />          
-          <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button>
-          <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
-          <button onClick={_ => onNotification()}> {string("Notification")} </button>
+          switchTab
         </div>
       | AddTask => 
-        <div> <p> {string(`You have  ${Js.Int.toString(user.token)} token`)} </p> <AddTask setTasks user/>
-          <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button>
-          <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
-          <button onClick={_ => onNotification()}> {string("Notification")} </button>
+        <div> tokenCount <AddTask setTasks user/>
+          switchTab
         </div>
       }}
     </div>

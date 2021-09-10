@@ -43,8 +43,10 @@ let make = (~user) => {
     |> Js.Array.mapi((task, i) => <UnclaimTaskCard key={"task-" ++ string_of_int(i)} user task />)
     |> React.array
     }
-    <Button color="primary" variant=Button.Variant.contained onClick={_ => onAddTask()}>
-      {string("+ Add Task")}
-    </Button>
+    <div style=(ReactDOM.Style.make(~margin="auto", ~textAlign="center", ~padding="25px", ()))>
+      <Button color="primary" variant=Button.Variant.contained onClick={_ => onAddTask()}>
+        {string("+ Add Task")}
+      </Button>
+    </div>
   </div>
 }

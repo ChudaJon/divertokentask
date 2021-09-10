@@ -86,7 +86,7 @@ let addTask = (task: t) => {
   db->Database.ref(~path, ())->Database.Reference.push(~value, ())
 }
 
-let vote = (task: t, vote: int, byUser: User.t, setVoteText) => {
+let vote = (task: t, vote: int, byUser: User.t) => {
 
   Js.log2("before if else", task.voted)
   // If the user hasn't voted
@@ -101,7 +101,6 @@ let vote = (task: t, vote: int, byUser: User.t, setVoteText) => {
     | Some(id) => `${path}/${id}`
     | None => `${path}/unidentified}`
     }
-    setVoteText(_ => "Unvote")
 
     Js.log2("before2", task.voted)
 
@@ -118,8 +117,6 @@ let vote = (task: t, vote: int, byUser: User.t, setVoteText) => {
     | Some(id) => `${path}/${id}`
     | None => `${path}/unidentified}`
     }
-    setVoteText(_ => "Vote")
-    Js.log2("after2", task.voted)
 
     db->Database.ref(~path, ())->Database.Reference.update(~value, ())
   }
