@@ -38,9 +38,9 @@ let make = () => {
       {switch url->Routes.url2route {
       | Register => <Register />
       | UnclaimTask => <UnclaimTask user />
-      | TaskList => <TaskList />
+      | TaskList => <TaskList user />
       | Notification => <Notification />
-      | AddTask => <AddTask setTasks />
+      | AddTask => <AddTask setTasks user />
       }}
       <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button>
       <button onClick={_ => onTaskList()}> {string("Your Task")} </button>

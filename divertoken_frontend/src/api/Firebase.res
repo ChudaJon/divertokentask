@@ -262,12 +262,14 @@ module Divertask = {
         ~cancelCallback={err => Js.log2("cancel",err)}
     ) |> ignore;
 
-    let stopListen = () => Database.Reference.off(
+    let stopListen = () => {
+      Database.Reference.off(
         Database.ref(db, ~path, ()),
         ~eventType,
         ~callback,
         ()
     );
+    }
     stopListen
   }
 

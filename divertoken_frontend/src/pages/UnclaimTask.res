@@ -13,17 +13,36 @@ let make = (~user) => {
     setTaskList(prevTasks => list{task, ...prevTasks})
   }
 
+  let onDataChange = (id: option<string>, data: Js.Json.t) => {
+    // Js.log3("task has changed", data, `with ID = ${id->Belt.Option.getWithDefault("no-id")}`)
+    setTaskList(taskList => taskList->Belt.List.map(t => 
+    if (t.id == id){
+      data->Task.fromJson(id, _)
+    } else {
+      t
+    }))
+  }
+
+
   useEffect0(() => {
     let stopListen = Firebase.Divertask.listenToPath("tasks", ~onData, ())
+    let stopListen2 = Firebase.Divertask.listenToPath("tasks", ~eventType=#child_changed, ~onData=onDataChange, ())
 
-    Some(stopListen)
+    let uninstall = () => {
+      stopListen()
+      stopListen2()
+    }
+
+    Some(uninstall)
   })
 
   <div>
     {tasks
+    -> Belt.List.keep(t => t.status == Open)
     |> Array.of_list
     |> Js.Array.mapi((task, i) => <UnclaimTaskCard key={"task-" ++ string_of_int(i)} user task />)
-    |> React.array}
+    |> React.array
+    }
     <Button color="primary" variant=Button.Variant.contained onClick={_ => onAddTask()}>
       {string("+ Add Task")}
     </Button>
