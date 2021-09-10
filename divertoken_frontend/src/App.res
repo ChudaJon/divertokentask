@@ -29,17 +29,35 @@ let make = () => {
   | None => <div> {string("Please Login")} </div>
   | Some(user) =>
     <div>
-      <p> {string(`You have  ${Js.Int.toString(user.token)} token`)} </p>
       {switch url->Routes.url2route {
       | Register => <Register />
-      | UnclaimTask => <UnclaimTask user/>
-      | TaskList => <TaskList user/>
-      | Notification => <Notification />
-      | AddTask => <AddTask setTasks user/>
+      | UnclaimTask => 
+        <div> 
+          <p> {string(`You have  ${Js.Int.toString(user.token)} token`)} </p> <UnclaimTask user/>
+          <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button> 
+          <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
+          <button onClick={_ => onNotification()}> {string("Notification")} </button>
+        </div>
+      | TaskList => 
+        <div> 
+          <p> {string(`You have  ${Js.Int.toString(user.token)} token`)} </p> <TaskList user/> 
+          <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button>
+          <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
+          <button onClick={_ => onNotification()}> {string("Notification")} </button>
+        </div>
+      | Notification => 
+        <div> <Notification />          
+          <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button>
+          <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
+          <button onClick={_ => onNotification()}> {string("Notification")} </button>
+        </div>
+      | AddTask => 
+        <div> <p> {string(`You have  ${Js.Int.toString(user.token)} token`)} </p> <AddTask setTasks user/>
+          <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button>
+          <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
+          <button onClick={_ => onNotification()}> {string("Notification")} </button>
+        </div>
       }}
-      <button onClick={_ => onUnclaimedTask()}> {string("Unclaimed")} </button>
-      <button onClick={_ => onTaskList()}> {string("Your Task")} </button>
-      <button onClick={_ => onNotification()}> {string("Notification")} </button>
     </div>
   }
 }
