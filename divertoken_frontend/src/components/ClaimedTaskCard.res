@@ -5,11 +5,14 @@ open MaterialUIDataType
 @react.component
 let make = (~user: User.t, ~task: Task.t) => {
 
+  let (showDone, setShowDone) = useState(_ => true);
+
   let (doneMsg, setDoneMsg) = useState(_ => false)
 
   let handleDoneMsgOpen = (evt) => {
     ReactEvent.Synthetic.preventDefault(evt);
     setDoneMsg(_ => true)
+    task->Task.done(user, setShowDone)->ignore
     // Send to be verified
   }
 
@@ -42,14 +45,15 @@ let make = (~user: User.t, ~task: Task.t) => {
           <Grid.Item xs={GridSize.size(8)}>
           </Grid.Item>
           <Grid.Item xs={GridSize.size(4)}>
+            { showDone ? 
             <Button
               color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
               {string("Done")}
-            </Button>
+            </Button> : {string("Task is being verified")}}
             <Snackbar _open={doneMsg} autoHideDuration={6000} onClose={handleDoneMsgClose}>
-                <Alert onClose={handleDoneMsgClose} severity="info">
-                    {string("Please wait for your task to be verified")}
-                </Alert>
+              <Alert onClose={handleDoneMsgClose} severity="info">
+                  {string("Please wait for your task to be verified")}
+              </Alert>
             </Snackbar>
           </Grid.Item>
         </Grid.Container>

@@ -74,7 +74,7 @@ let toJson = (task: t) => {
 let createTask = (~deadline=?, content: string, ~user: Divertoken.User.t) => {
   id: None,
   content: content,
-  vote: 0,
+  vote: 1,
   status: Open,
   deadline: deadline,
   voted: Js.Dict.fromList(list{(user.id, 1)})
@@ -139,4 +139,19 @@ let claim = (task: t, byUser: User.t) => {
   }
 
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
+}
+
+let done = (task: t, byUser: User.t, setShowDone) => {
+
+  task.status = Done;
+  let task = {...task, status: task.status}
+  let value = task->toJson
+  let path = switch task.id {
+  | Some(id) => `${path}/${id}`
+  | None => `${path}/unidentified}`
+  }
+
+  setShowDone(_ => false)
+  db->Database.ref(~path, ())->Database.Reference.update(~value, ())
+
 }
