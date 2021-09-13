@@ -24,7 +24,7 @@ let make = (~user: User.t, ~task: Task.t) => {
     <Grid.Container>
       <div style=(ReactDOM.Style.make(~margin="auto", ~width="50%", ~display="block", ()))>
         <div className="box"
-          style={ReactDOM.Style.make(~margin="10px", ~padding="10px", ~border="1px solid black", ~borderColor="#8C8C8C", ~borderRadius="3px 3px",())}>
+          style={ReactDOM.Style.make(~margin="10px", ~padding="10px",~backgroundColor="#FFFFFF", ~borderRadius="3px 3px",())}>
           <Grid.Item xs={GridSize.size(12)}>
             <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ()))>
               <Typography variant=Typography.Variant.h5> {string(task.content)} </Typography>

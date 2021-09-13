@@ -88,11 +88,9 @@ let addTask = (task: t) => {
 
 let vote = (task: t, vote: int, byUser: User.t) => {
 
-  Js.log2("before if else", task.voted)
   // If the user hasn't voted
   if (Js.Dict.get(task.voted, byUser.id) == Some(0) || Js.Dict.get(task.voted, byUser.id) == None ){
 
-    Js.log2("before1", task.voted)
     Js.Dict.set(task.voted, byUser.id, 1)
     byUser->User.spendToken(vote)->ignore
     let task = {...task, vote: task.vote + vote}
@@ -102,12 +100,10 @@ let vote = (task: t, vote: int, byUser: User.t) => {
     | None => `${path}/unidentified}`
     }
 
-    Js.log2("before2", task.voted)
 
     db->Database.ref(~path, ())->Database.Reference.update(~value, ())
   } else { // unvote
 
-    Js.log2("after1", task.voted)
     Js.Dict.set(task.voted, byUser.id, 0)
     byUser->User.spendToken(-1)->ignore
 
@@ -124,10 +120,8 @@ let vote = (task: t, vote: int, byUser: User.t) => {
 
 let claim = (task: t, byUser: User.t) => {
 
-  Js.log2("bef", task.status)
   // Use user later
   task.status = Claim;
-  Js.log2("after", task.status)
   let task = {...task, status: task.status}
   let value = task->toJson
   let path = switch task.id {
@@ -136,9 +130,13 @@ let claim = (task: t, byUser: User.t) => {
   }
 
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
+
+  // Send notification to those who voted on this task
+
+
 }
 
-let done = (task: t, byUser: User.t, setShowDone) => {
+let done = (task: t, byUser: User.t , setShowDone) => {
 
   task.status = Done;
   let task = {...task, status: task.status}
