@@ -4,31 +4,41 @@ open MaterialUI
 @react.component
 let make = (~user) => {  
     
-  let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})
+  let (notifications: list<Notification.t>, setNotificationList) = useState(_ => list{})
 
-  let onData = (id: option<string>, data: Js.Json.t) => {
-    let task = Task.fromJson(id, data)
+  let onDataAdded = (id: option<string>, data: Js.Json.t) => {
+    let notification = Notification.fromJson(id, data)
 
-    setTaskList(prevTasks => list{task, ...prevTasks})
+    setNotificationList(prevNotication => list{notification, ...prevNotication})
+  }
+
+  let onDataChange = (id: option<string>, data: Js.Json.t) => {
+    // Js.log3("task has changed", data, `with ID = ${id->Belt.Option.getWithDefault("no-id")}`)
+    setNotificationList(notificationList => notificationList->Belt.List.map(t => 
+    if (t.id == id){
+      data->Notification.fromJson(id, _)
+    } else {
+      t
+    }))
   }
 
   useEffect0(() => {
-    let stopListen = Firebase.Divertask.listenToPath("tasks", ~onData, ())
-    // let stopListen2 = Firebase.Divertask.listenToPath("tasks", ~eventType=#child_changed, ~onData=onDataChange, ())
+    let stopListen = Firebase.Divertask.listenToPath("notifications", ~eventType=#child_added, ~onData=onDataAdded, ())
+    let stopListen2 = Firebase.Divertask.listenToPath("notifications", ~eventType=#child_changed, ~onData=onDataChange, ())
 
     let uninstall = () => {
       stopListen()
-      // stopListen2()
+      stopListen2()
     }
 
     Some(uninstall)
   })
 
   <div>
-    {tasks
-    -> Belt.List.keep(t => t.status == Claim || t.status == Done)
+    {notifications
+    // -> Belt.List.keep(t => t.status == Claim || t.status == Done)
     |> Array.of_list
-    |> Js.Array.mapi((task, i) => <NotificationCard key={"task-" ++ string_of_int(i)} user task />)
+    |> Js.Array.mapi((notification, i) => <NotificationCard key={"notification-" ++ string_of_int(i)} user notification />)
     |> React.array}
   </div>
 }

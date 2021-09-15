@@ -83,7 +83,7 @@ let createTask = (~deadline=?, content: string, ~user: Divertoken.User.t) => {
 let addTask = (task: t) => {
   let value = task->toJson
 
-  db->Database.ref(~path, ())->Database.Reference.push(~value, ())
+  db->Database.ref(~path="tasks", ())->Database.Reference.push(~value, ())
 }
 
 let vote = (task: t, vote: int, byUser: User.t) => {
@@ -131,9 +131,6 @@ let claim = (task: t, byUser: User.t) => {
 
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 
-  // Send notification to those who voted on this task
-
-
 }
 
 let done = (task: t, byUser: User.t , setShowDone) => {
@@ -147,6 +144,20 @@ let done = (task: t, byUser: User.t , setShowDone) => {
   }
 
   setShowDone(_ => false)
+  db->Database.ref(~path, ())->Database.Reference.update(~value, ())
+
+}
+
+let verify = (task: t, byUser: User.t , setShowDone) => {
+
+  task.status = DoneAndVerified;
+  let task = {...task, status: task.status}
+  let value = task->toJson
+  let path = switch task.id {
+  | Some(id) => `${path}/${id}`
+  | None => `${path}/unidentified}`
+  }
+
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 
 }

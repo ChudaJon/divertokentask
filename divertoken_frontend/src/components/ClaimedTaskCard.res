@@ -13,6 +13,9 @@ let make = (~user: User.t, ~task: Task.t) => {
     ReactEvent.Synthetic.preventDefault(evt);
     setDoneMsg(_ => true)
     task->Task.done(user, setShowDone)->ignore
+    task->Notification.allNotifications(user, VerifyWait)->ignore
+    task->Notification.allNotifications(user, Verify)->ignore
+
     // Send to be verified
   }
 

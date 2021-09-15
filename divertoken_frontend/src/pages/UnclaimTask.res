@@ -7,7 +7,7 @@ let make = (~user) => {
 
   let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})
 
-  let onData = (id: option<string>, data: Js.Json.t) => {
+  let onDataAdded = (id: option<string>, data: Js.Json.t) => {
     Js.log2("task", data)
     let task = data->Task.fromJson(id, _)
     setTaskList(prevTasks => list{task, ...prevTasks})
@@ -25,7 +25,7 @@ let make = (~user) => {
 
 
   useEffect0(() => {
-    let stopListen = Firebase.Divertask.listenToPath("tasks", ~onData, ())
+    let stopListen = Firebase.Divertask.listenToPath("tasks", ~eventType=#child_added, ~onData=onDataAdded, ())
     let stopListen2 = Firebase.Divertask.listenToPath("tasks", ~eventType=#child_changed, ~onData=onDataChange, ())
 
     let uninstall = () => {

@@ -12,6 +12,7 @@ let make = (~user: User.t, ~task: Task.t) => {
 
   let claim = (user: User.t, task: Task.t) => {
     task->Task.claim(user)->ignore
+    task->Notification.allNotifications(user, Claimed)->ignore
   }
 
   <div style=(ReactDOM.Style.make(~display="flex", ()))>

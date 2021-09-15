@@ -1,9 +1,26 @@
+type notiType = 
+  | Claimed
+  | VerifyWait
+  | Verify
+  | Done
+
 type t = {
   id: option<string>,
   task_id: option<string>,
+  notiType: notiType
 };
 
 module Database = Firebase.Database
+
+let numbertoType = n => {
+  switch(n){
+    |0 => Claimed
+    |1 => VerifyWait
+    |2 => Verify
+    |3 => Done
+    |_ => Claimed
+  }
+}
 
 let path = "notifications"
 let db = Firebase.Divertask.db
@@ -14,6 +31,7 @@ let fromJson = (id: option<string>, data: Js.Json.t) => {
       {
         id: id,
         task_id: (Decode.field("task_id", Decode.string)->Decode.optional)(json),
+        notiType:  Decode.field("notiType", Decode.int)(json)->numbertoType,
       }
     }
   )
@@ -26,22 +44,49 @@ let toJson = (notification: t) => {
   | None => []
   }
   ->Js.Array.concat(
-    notification.task_id->Belt.Option.mapWithDefault([], x => [("deadline", Encode.string(x))]),
+    [    
+      ("notiType", 
+      switch notification.notiType {
+          | Claimed => 0
+          | VerifyWait => 1
+          | Verify => 2
+          | Done => 3
+      }->Encode.int),
+    ]
+  )
+  ->Js.Array.concat(
+    notification.task_id->Belt.Option.mapWithDefault([], x => [("task_id", Encode.string(x))]),
   )
   ->Array.to_list
   ->Encode.object_
 }
 
-let createNotification = (~taskId: option<string>) => {
-    id: None,
-    task_id: taskId
+let createNotification = (~taskId: option<string>, ~notificationType) => {
+  id: None,
+  task_id: taskId,
+  notiType: notificationType
 }
 
-let claimNotification = (task: Task.t, byUser: User.t) => {
+let addNotification = (notification: t) => {
+  let value = notification->toJson
 
-    // Check who voted on the task & create notification for that user on this task id
-    let taskEntries = Js.Dict.entries(task.voted)
-    for x in 0 to Array.length(taskEntries) {
-        Js.log(x)
+  db->Database.ref(~path="notifications", ())->Database.Reference.push(~value, ())
+}
+
+let onSave = (~task_id : option<string>, ~notificationType) =>{
+  createNotification(~taskId=task_id, ~notificationType)
+  -> addNotification
+  -> ignore
+}
+
+let allNotifications = (task: Task.t, byUser: User.t, notificationType) => {
+  
+  // Check who voted on the task & create notification for that user on this task id
+  let taskEntries = Js.Dict.entries(task.voted)
+  for x in 0 to Array.length(taskEntries)-1 {
+    let (thisUser, voted) = taskEntries[x]
+    if (voted == 1) {
+      onSave(~task_id=task.id, ~notificationType=notificationType)
     }
+  }
 }
