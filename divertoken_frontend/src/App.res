@@ -28,7 +28,7 @@ let make = () => {
   let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
 
   let switchTab = 
-  <div> 
+  <div style=(ReactDOM.Style.make(~padding="25px", ()))> 
     <Grid.Container spacing=3>
       <Grid.Item xs={GridSize.size(4)}>
         <Button onClick={_ => onUnclaimedTask()} fullWidth=true>

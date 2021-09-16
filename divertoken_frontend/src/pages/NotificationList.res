@@ -36,7 +36,6 @@ let make = (~user) => {
 
   <div>
     {notifications
-    // -> Belt.List.keep(t => t.status == Claim || t.status == Done)
     |> Array.of_list
     |> Js.Array.mapi((notification, i) => <NotificationCard key={"notification-" ++ string_of_int(i)} user notification />)
     |> React.array}

@@ -7,7 +7,7 @@ type notiType =
 type t = {
   id: option<string>,
   task_id: option<string>,
-  notiType: notiType
+  mutable notiType: notiType
 };
 
 module Database = Firebase.Database
@@ -89,4 +89,12 @@ let allNotifications = (task: Task.t, byUser: User.t, notificationType) => {
       onSave(~task_id=task.id, ~notificationType=notificationType)
     }
   }
+}
+
+// Function to get task by taskID, change status of that task to DoneAndVerified & notification type to Done
+let handlePressVerify = (/*task: Task.t, */byUser: User.t, notificationType) => {
+
+  // get task by task ID
+  // task.status = DoneAndVerified
+  notificationType.notiType = Done
 }
