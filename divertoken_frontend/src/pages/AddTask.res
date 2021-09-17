@@ -2,7 +2,7 @@ open React
 open MaterialUI
 
 @react.component
-let make = (~setTasks, ~user) => {
+let make = (~user) => {
   let (taskContent, setTaskContent) = React.useState(() => "")
   let (dueDate, setDueDate) = React.useState(() => Js.Date.make())
 
@@ -12,15 +12,10 @@ let make = (~setTasks, ~user) => {
     setTaskContent(value)
   }
 
-  let onSave = ()=>{
-    switch(taskContent) {
-      |""=> ()
-      |task => {
-        task
-        -> Task.createTask(~deadline=dueDate, ~user)
-        -> Task.addTask
-        -> ignore
-      }
+  let onSave = () => {
+    switch taskContent {
+    | "" => ()
+    | task => task->Task.createTask(~deadline=dueDate, ~user)->Task.addTask->ignore
     }
   }
 
@@ -37,12 +32,8 @@ let make = (~setTasks, ~user) => {
           format="dd-MM-yyyy HH:mm"
           showTodayButton=true
           value=dueDate
-          onChange={newDate=>setDueDate(_=>newDate)}
-          views=[
-            MaterialUI_DatePicker.DateView.date,
-            "hours",
-            "minutes",
-          ]
+          onChange={newDate => setDueDate(_ => newDate)}
+          views=[MaterialUI_DatePicker.DateView.date, "hours", "minutes"]
         />
       </Picker.UtilsProvider>
     </Item>
@@ -53,7 +44,6 @@ let make = (~setTasks, ~user) => {
         variant=Button.Variant.contained
         onClick={_ => {
           onUnclaimedTask()
-          // setTasks(prevTasks => List.append(prevTasks, list{taskContent}))
           onSave()
         }}>
         {string("Save")}
