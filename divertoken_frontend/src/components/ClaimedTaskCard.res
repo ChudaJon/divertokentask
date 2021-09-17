@@ -16,8 +16,6 @@ let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBa
     task->Notification.allNotifications(user, VerifyWait)->ignore
     task->Notification.allNotifications(user, Verify)->ignore
     setNotificationBadge(_ => notificationBadge+1)
-    Js.log2("done", notificationBadge)
-
   }
 
   let handleDoneMsgClose = () => {

@@ -13,9 +13,9 @@ module Provider = {
   let make = (~children) => {
     let (tasks: list<Task.t>, setTaskList) = React.useState(_ => list{})
     let onData = (id: option<string>, data: Js.Json.t) => {
-      // Js.log2("task in context", data)
+      Js.log2("task in context", data)
       let task = Task.fromJson(id, data)
-      // Js.log2("task in context after", task)
+      Js.log2("task in context after", task)
 
       setTaskList(prevTasks => list{task, ...prevTasks})
     }

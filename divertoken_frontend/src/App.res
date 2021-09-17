@@ -30,6 +30,7 @@ let make = () => {
   let onUnclaimedTask = () => RescriptReactRouter.push(Routes.route2Str(UnclaimTask))
   let onTaskList = () => RescriptReactRouter.push(Routes.route2Str(TaskList))
   let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
+  let onViewTask = () => RescriptReactRouter.push(Routes.route2Str(ViewTask))
 
   let handleNotifications = () => {
     onNotification()
@@ -89,18 +90,15 @@ let make = () => {
                 </Grid.Item>
               </Grid.Container>
             </div>
-            <UnclaimTask user />
+            <UnclaimTask user notificationBadge setNotificationBadge />
             switchTab
           </div>
-          <UnclaimTask user notificationBadge setNotificationBadge />
-          switchTab
-        </div>
       | TaskList => 
         <div>
           <div style=(ReactDOM.Style.make(~padding="10px", ()))> 
               <Grid.Container>
                 <Grid.Item xs={GridSize.size(12)}>
-                  <Grid.Container justify=Justify.center spacing=10>
+                  <Grid.Container justify=Justify.center spacing=10> 
                     <Grid.Item>
                       <Typography variant=Typography.Variant.h5>
                         {string("Your Tasks")}
@@ -113,7 +111,7 @@ let make = () => {
                 </Grid.Item>
               </Grid.Container>
             </div>
-          <TaskList user notificationBadge setNotificationBadge /> 
+          <TaskList user notificationBadge setNotificationBadge />
           switchTab
         </div>
       | Notification => 
@@ -136,10 +134,12 @@ let make = () => {
           switchTab
         </div>
       | AddTask => 
-        <div> tokenCount <AddTask setTasks user/>
+        <div> tokenCount <AddTask user/>
           switchTab
         </div>
+      | ViewTask => <ViewTask user />
       }}
+      </Context_Tasks.Provider>
     </div>
   }
 }

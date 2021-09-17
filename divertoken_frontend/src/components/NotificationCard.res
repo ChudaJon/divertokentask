@@ -26,8 +26,12 @@ let make = (~user: User.t, ~notification: Notification.t, ~notificationBadge, ~s
     Js.log2("verify", notificationBadge)
     }
 
+    // let linkToTask = () => {
+    //   <ViewTask user notification notificationBadge setNotificationBadge />
+    // }
+
     <div style=(ReactDOM.Style.make(~display="flex", ()))>
-    <Grid.Container>
+    <Grid.Container >
       <div style=(ReactDOM.Style.make(~margin="auto", ~width="50%", ~display="block", ()))>
         <div className="box"
           style={ReactDOM.Style.make(~margin="10px", ~padding="15px 25px", ~backgroundColor="#FFFFFF", ())}>
@@ -36,9 +40,11 @@ let make = (~user: User.t, ~notification: Notification.t, ~notificationBadge, ~s
                 {
                   switch(notification.notiType){
                     | Claimed => 
-                      <Typography variant=Typography.Variant.h6>
-                        {string("Your task has been claimed")}
-                      </Typography>
+                      <Button /*onClick={_ => linkToTask()}*/> 
+                        <Typography variant=Typography.Variant.h6>
+                          {string("Your task has been claimed")}
+                        </Typography>
+                      </Button>
                     | VerifyWait => 
                       <Typography variant=Typography.Variant.h6>
                         {string("Your task is being verified")}

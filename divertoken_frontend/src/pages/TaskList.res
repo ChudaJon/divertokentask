@@ -1,12 +1,13 @@
+open React
 @react.component
 let make = (~user, ~notificationBadge, ~setNotificationBadge) => {  
-    
+  
+  let {tasks} = React.useContext(Context_Tasks.context)
+
   let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})
 
   let onData = (id: option<string>, data: Js.Json.t) => {
-    Js.log2("task", data)
     let task = Task.fromJson(id, data)
-    Js.log2("task after", task)
 
     setTaskList(prevTasks => list{task, ...prevTasks})
   }
