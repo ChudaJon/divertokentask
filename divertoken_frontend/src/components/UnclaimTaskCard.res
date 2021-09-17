@@ -3,7 +3,7 @@ open MaterialUI
 open MaterialUIDataType
 
 @react.component
-let make = (~user: User.t, ~task: Task.t) => {
+let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBadge) => {
 
   let vote = (user: User.t, task: Task.t) => {
     let amount = 1
@@ -13,7 +13,13 @@ let make = (~user: User.t, ~task: Task.t) => {
   let claim = (user: User.t, task: Task.t) => {
     task->Task.claim(user)->ignore
     task->Notification.allNotifications(user, Claimed)->ignore
+    setNotificationBadge(_ => notificationBadge+1)
+    Js.log2("claimed", notificationBadge)
   }
+
+  useEffect1(()=>{
+    None
+  }, [notificationBadge])
 
   <div style=(ReactDOM.Style.make(~display="flex", ()))>
     <Grid.Container>

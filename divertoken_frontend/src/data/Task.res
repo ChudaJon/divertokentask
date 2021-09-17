@@ -161,3 +161,13 @@ let verify = (task: t, byUser: User.t , setShowDone) => {
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 
 }
+
+let verifyByTaskId = (taskId: string) => {
+  // tasks/<taskId>/status
+  
+  let value = list{("status",3->Json.Encode.int)} -> Json.Encode.object_
+  let path = `tasks/${taskId}`
+
+  db->Database.ref(~path, ())->Database.Reference.update(~value, ())
+
+}
