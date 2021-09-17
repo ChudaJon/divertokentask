@@ -2,7 +2,7 @@ open React
 open MaterialUI
 
 @react.component
-let make = (~setTasks) => {
+let make = (~setTasks, ~user) => {
   let (taskContent, setTaskContent) = React.useState(() => "")
   let (dueDate, setDueDate) = React.useState(() => Js.Date.make())
 
@@ -17,7 +17,7 @@ let make = (~setTasks) => {
       |""=> ()
       |task => {
         task
-        -> Task.createTask(~deadline=dueDate)
+        -> Task.createTask(~deadline=dueDate, ~user)
         -> Task.addTask
         -> ignore
       }
