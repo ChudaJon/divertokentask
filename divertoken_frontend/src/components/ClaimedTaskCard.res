@@ -3,7 +3,7 @@ open MaterialUI
 open MaterialUIDataType
 
 @react.component
-let make = (~user: User.t, ~task: Task.t) => {
+let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBadge) => {
 
   let (showDone, setShowDone) = useState(_ => true);
 
@@ -15,8 +15,9 @@ let make = (~user: User.t, ~task: Task.t) => {
     task->Task.done(user, setShowDone)->ignore
     task->Notification.allNotifications(user, VerifyWait)->ignore
     task->Notification.allNotifications(user, Verify)->ignore
+    setNotificationBadge(_ => notificationBadge+1)
+    Js.log2("done", notificationBadge)
 
-    // Send to be verified
   }
 
   let handleDoneMsgClose = () => {

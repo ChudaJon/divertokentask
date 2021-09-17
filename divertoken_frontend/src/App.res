@@ -9,6 +9,7 @@ let make = () => {
   let (tasks, setTasks) = useState(() => list{})
   let (maybeUser, setUser) = useState(() => None)
   let (auth, setAuth) = useState(() => "proto-user-0")
+  let (notificationBadge, setNotificationBadge) = useState(() => 0)
 
   let onData = (id:option<string>, data:Js.Json.t) => {
     let user = data->User.Codec.fromJson(id,_);
@@ -27,6 +28,11 @@ let make = () => {
   let onTaskList = () => RescriptReactRouter.push(Routes.route2Str(TaskList))
   let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
 
+  let handleNotifications = () => {
+    onNotification()
+    setNotificationBadge(_ => 0)
+  }
+
   let switchTab = 
   <div style=(ReactDOM.Style.make(~padding="25px", ()))> 
     <Grid.Container spacing=3>
@@ -41,8 +47,10 @@ let make = () => {
         </Button>
       </Grid.Item>
       <Grid.Item xs={GridSize.size(4)}>
-        <Button onClick={_ => onNotification()} fullWidth=true>
-          <Typography variant=Typography.Variant.h6>{string("Notifications")}</Typography>
+        <Button onClick={_ => handleNotifications()} fullWidth=true>
+          <Badge badgeContent={notificationBadge} color="secondary">
+            <Typography variant=Typography.Variant.h6>{string("Notifications")}</Typography>
+          </Badge>
         </Button>
       </Grid.Item>
     </Grid.Container>
@@ -72,7 +80,7 @@ let make = () => {
               </Grid.Item>  
             </Grid.Container>
           </div>
-          <UnclaimTask user/>
+          <UnclaimTask user notificationBadge setNotificationBadge />
           switchTab
         </div>
       | TaskList => 
@@ -91,7 +99,7 @@ let make = () => {
                 </Grid.Item>  
               </Grid.Container>
             </div>
-          <TaskList user/> 
+          <TaskList user notificationBadge setNotificationBadge /> 
           switchTab
         </div>
       | Notification => 
@@ -110,7 +118,7 @@ let make = () => {
                   </Grid.Item>  
                 </Grid.Container>
               </div>
-        <NotificationList user />          
+        <NotificationList user notificationBadge setNotificationBadge />          
           switchTab
         </div>
       | AddTask => 
