@@ -94,7 +94,5 @@ let allNotifications = (task: Task.t, byUser: User.t, notificationType) => {
 // Function to get task by taskID, change status of that task to DoneAndVerified & notification type to Done
 let handlePressVerify = (/*task: Task.t, */byUser: User.t, notificationType) => {
 
-  // get task by task ID
-  // task.status = DoneAndVerified
   notificationType.notiType = Done
 }

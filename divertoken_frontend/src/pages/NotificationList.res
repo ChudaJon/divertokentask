@@ -2,7 +2,7 @@ open React
 open MaterialUI
 
 @react.component
-let make = (~user) => {  
+let make = (~user, ~notificationBadge, ~setNotificationBadge) => {  
     
   let (notifications: list<Notification.t>, setNotificationList) = useState(_ => list{})
 
@@ -37,7 +37,7 @@ let make = (~user) => {
   <div>
     {notifications
     |> Array.of_list
-    |> Js.Array.mapi((notification, i) => <NotificationCard key={"notification-" ++ string_of_int(i)} user notification />)
+    |> Js.Array.mapi((notification, i) => <NotificationCard key={"notification-" ++ string_of_int(i)} user notification notificationBadge setNotificationBadge />)
     |> React.array}
   </div>
 }

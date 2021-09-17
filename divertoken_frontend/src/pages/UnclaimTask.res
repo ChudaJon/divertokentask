@@ -2,7 +2,7 @@ open React
 open MaterialUI
 
 @react.component
-let make = (~user) => {
+let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
   let onAddTask = () => RescriptReactRouter.push(Routes.route2Str(AddTask))
 
   let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})
@@ -40,7 +40,7 @@ let make = (~user) => {
     {tasks
     -> Belt.List.keep(t => t.status == Open)
     |> Array.of_list
-    |> Js.Array.mapi((task, i) => <UnclaimTaskCard key={"task-" ++ string_of_int(i)} user task />)
+    |> Js.Array.mapi((task, i) => <UnclaimTaskCard key={"task-" ++ string_of_int(i)} user task notificationBadge setNotificationBadge />)
     |> React.array
     }
     <div style=(ReactDOM.Style.make(~margin="auto", ~textAlign="center", ~padding="25px", ()))>
