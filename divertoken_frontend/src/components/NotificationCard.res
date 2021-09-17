@@ -3,7 +3,7 @@ open MaterialUI
 open MaterialUIDataType
 
 @react.component
-let make = (~user: User.t, ~notification: Notification.t) => {
+let make = (~user: User.t, ~notification: Notification.t, ~notificationBadge, ~setNotificationBadge) => {
 
     // Switch to which type of notification
     let notificationSwitch = () => {
@@ -17,12 +17,13 @@ let make = (~user: User.t, ~notification: Notification.t) => {
 
     // Send notification for verified task & change status in Your Tasks
     let handleVerify = () => {
-      // Firebase.Divertask.child("tasks").child(notification.task_id).get().then(snapshot => ...)
-      let stopListen = Firebase.Divertask.listenToPath({"/task/" ++ Js.String2.make(notification.task_id)}, ~eventType=#value, ())
-      Js.log2("value", stopListen)
       Notification.handlePressVerify(user, notification)
-      // task->Notification.allNotifications(user, Done)->ignore
-      ()
+      switch(notification.task_id){
+        |Some(taskId) =>  Task.verifyByTaskId(taskId) -> ignore
+        |None => ()
+      }
+    setNotificationBadge(_ => notificationBadge+1)
+    Js.log2("verify", notificationBadge)
     }
 
     <div style=(ReactDOM.Style.make(~display="flex", ()))>
