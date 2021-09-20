@@ -26,9 +26,12 @@ let make = (~user: User.t, ~notification: Notification.t, ~notificationBadge, ~s
     Js.log2("verify", notificationBadge)
     }
 
-    // let linkToTask = () => {
-    //   <ViewTask user notification notificationBadge setNotificationBadge />
-    // }
+    let linkToTask = () => {
+      switch(notification.task_id) {
+        |Some(taskId) => RescriptReactRouter.push(Routes.route2Str(ViewTask(taskId)))
+        |None => ()
+      }
+    }
 
     <div style=(ReactDOM.Style.make(~display="flex", ()))>
     <Grid.Container >
@@ -37,14 +40,13 @@ let make = (~user: User.t, ~notification: Notification.t, ~notificationBadge, ~s
           style={ReactDOM.Style.make(~margin="10px", ~padding="15px 25px", ~backgroundColor="#FFFFFF", ())}>
           <Grid.Item xs={GridSize.size(12)}>
             <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ()))>
+              <Button onClick={_ => linkToTask()}> 
                 {
                   switch(notification.notiType){
                     | Claimed => 
-                      <Button /*onClick={_ => linkToTask()}*/> 
-                        <Typography variant=Typography.Variant.h6>
-                          {string("Your task has been claimed")}
-                        </Typography>
-                      </Button>
+                      <Typography variant=Typography.Variant.h6>
+                        {string("Your task has been claimed")}
+                      </Typography>
                     | VerifyWait => 
                       <Typography variant=Typography.Variant.h6>
                         {string("Your task is being verified")}
@@ -64,6 +66,7 @@ let make = (~user: User.t, ~notification: Notification.t, ~notificationBadge, ~s
                       </Typography>
                   }
                 }
+            </Button>
             </div>
           </Grid.Item>
         </div>

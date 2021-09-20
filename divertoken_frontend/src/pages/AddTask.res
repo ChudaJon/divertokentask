@@ -15,7 +15,7 @@ let make = (~user) => {
   let onSave = () => {
     switch taskContent {
     | "" => ()
-    | task => task->Task.createTask(~deadline=dueDate, ~user)->Task.addTask->ignore
+    | task => task->Task.createTask(~deadline=dueDate, ~user)->Task.addTask(user)->ignore
     }
   }
 

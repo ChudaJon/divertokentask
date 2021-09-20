@@ -26,11 +26,12 @@ let make = () => {
   }, [auth])
 
   let url = RescriptReactRouter.useUrl()
-
+  let taskId = ""
+  let notification = Notification.createNotification(~taskId = None, ~notificationType= Claimed)
   let onUnclaimedTask = () => RescriptReactRouter.push(Routes.route2Str(UnclaimTask))
   let onTaskList = () => RescriptReactRouter.push(Routes.route2Str(TaskList))
   let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
-  let onViewTask = () => RescriptReactRouter.push(Routes.route2Str(ViewTask))
+  let onViewTask = () => RescriptReactRouter.push(Routes.route2Str(ViewTask(taskId)))
 
   let handleNotifications = () => {
     onNotification()
@@ -137,7 +138,7 @@ let make = () => {
         <div> tokenCount <AddTask user/>
           switchTab
         </div>
-      | ViewTask => <ViewTask user />
+      | ViewTask(taskId) => <ViewTask taskId user notificationBadge setNotificationBadge />
       }}
       </Context_Tasks.Provider>
     </div>

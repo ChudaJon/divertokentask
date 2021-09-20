@@ -80,9 +80,11 @@ let createTask = (~deadline=?, content: string, ~user: Divertoken.User.t) => {
   voted: Js.Dict.fromList(list{(user.id, 1)})
 }
 
-let addTask = (task: t) => {
+let addTask = (task: t,  byUser: User.t) => {
   let value = task->toJson
 
+  Js.Dict.set(task.voted, byUser.id, 1)
+  byUser->User.spendToken(1)->ignore
   db->Database.ref(~path="tasks", ())->Database.Reference.push(~value, ())
 }
 
@@ -112,6 +114,12 @@ let vote = (task: t, vote: int, byUser: User.t) => {
     let path = switch task.id {
     | Some(id) => `${path}/${id}`
     | None => `${path}/unidentified}`
+    }
+
+    // Delete the task if vote count is 0
+    if (task.vote == 0) {
+      //Delete task
+      ()
     }
 
     db->Database.ref(~path, ())->Database.Reference.update(~value, ())
@@ -170,4 +178,12 @@ let verifyByTaskId = (taskId: string) => {
 
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 
+}
+
+// Function to give user who claimed task tokens equal to the number of votes when task is DoneAndVerified
+let giveToken = (user: User.t, task: t) => {
+
+  if (task.status == DoneAndVerified){
+    user->User.spendToken(-(task.vote))->ignore
+  }
 }

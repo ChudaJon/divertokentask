@@ -6,26 +6,31 @@ open MaterialUI_IconButton
 
 // Page for when you press on the notication and it leads you to the task associated with it
 @react.component
-let make = (~user: User.t, /*~notification: Notification.t, */~notificationBadge, ~setNotificationBadge/*~task: Task.t */) => {
+let make = (~user: User.t, ~taskId: string, ~notificationBadge, ~setNotificationBadge) => {
 
     let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
 
     // Send notification for verified task & change status in Your Tasks
-    // let handleVerify = () => {
+    let handleVerify = () => {
     //   Notification.handlePressVerify(user, notification)
-    //   switch(notification.task_id){
-    //     |Some(taskId) =>  Task.verifyByTaskId(taskId) -> ignore
-    //     |None => ()
-    //   }
-    //   setNotificationBadge(_ => notificationBadge+1)
-    //   Js.log2("verify", notificationBadge)
+      Task.verifyByTaskId(taskId) -> ignore
+      setNotificationBadge(_ => notificationBadge+1)
+    }
+
+    // let handleNotitype = () => {
+    //     switch notification.notiType {
+    //         | Claimed => "Claimed"
+    //         | VerifyWait => "Waiting on Verification"
+    //         | Verify => "Ready to be Verified"
+    //         | Done => "Verification and Task complete"
+    //     }
     // }
 
-    // let handleOption = () => {
-    //     switch(notification.task_id){
-    //     |Some(taskId) => taskId
-    //     |None => ""
-    //   }
+    // let handleNotifcationId = () => {
+    //     switch notification.id {
+    //         |Some(notificationId) => notificationId
+    //         |None => ""
+    //     }
     // }
 
     <div>
@@ -38,16 +43,19 @@ let make = (~user: User.t, /*~notification: Notification.t, */~notificationBadge
             <Grid.Container>
                 <div style=(ReactDOM.Style.make(~margin="auto", ~padding="30px", ~width="50%", ~display="block", ()))>
                     <div className="box" style={ReactDOM.Style.make(~margin="10px", ~padding="30px 0px 200px 30px", ~backgroundColor="#FFFFFF", ~borderRadius="3px 3px",())}>
-                        <Typography variant=Typography.Variant.h4> {string("Title/ID of Task")} </Typography>
+                        <Typography variant=Typography.Variant.h4> {string("taskId= " ++ taskId)} </Typography>
                         <div style=(ReactDOM.Style.make(~padding="30px 0px 0px 0px", ()))>
-                            <Typography variant=Typography.Variant.h6> {string("handleOption()")} </Typography>
+                            <Typography variant=Typography.Variant.h6> {string("notitype= " /*++ handleNotitype()*/)} </Typography>
                         </div>
                         <div style=(ReactDOM.Style.make(~padding="30px 0px 0px 0px", ()))>
-                            <Typography variant=Typography.Variant.h6> {string("Maybe some info/picture about the verification ")} </Typography>
+                            <Typography variant=Typography.Variant.h6> {string("notificationID=" /*++ handleNotifcationId()*/)} </Typography>
                         </div>
+                        // { notification.notiType == Verify ?
                         <div style={ReactDOM.Style.make(~padding="30px 0px 0px", ())}>
-                          <Button variant=Button.Variant.contained color="primary" /*onClick={_=> handleVerify()}*/ >{string("Verify")}</Button>
-                        </div>
+                            <Button variant=Button.Variant.contained color="primary" onClick={_=> handleVerify()} >{string("Verify")}</Button>
+                        </div> 
+                        // : <div />
+                        // }
                     </div>
                 </div>
             </Grid.Container>
