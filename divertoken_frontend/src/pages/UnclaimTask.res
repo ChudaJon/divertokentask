@@ -10,7 +10,6 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
   let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})
 
   let onDataAdded = (id: option<string>, data: Js.Json.t) => {
-    Js.log2("task", data)
     let task = data->Task.fromJson(id, _)
     setTaskList(prevTasks => list{task, ...prevTasks})
   }
@@ -28,6 +27,13 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
     )
   }
 
+
+  let onDataRemove = (id: option<string>, data: Js.Json.t) => {
+    let task = data->Task.fromJson(id, _)
+    // Keep only ones that did not get deleted
+    setTaskList(prevTasks => Belt.List.keep( prevTasks, t => t.id != task.id))
+  }
+
   useEffect0(() => {
     let stopListen = Firebase.Divertask.listenToPath(
       "tasks",
@@ -42,9 +48,17 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
       (),
     )
 
+    let stopListen3 = Firebase.Divertask.listenToPath(
+      "tasks",
+      ~eventType=#child_removed,
+      ~onData=onDataRemove,
+      (),
+    )
+
     let uninstall = () => {
       stopListen()
       stopListen2()
+      stopListen3()
     }
 
     Some(uninstall)

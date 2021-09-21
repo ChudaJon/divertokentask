@@ -118,11 +118,10 @@ let vote = (task: t, vote: int, byUser: User.t) => {
 
     // Delete the task if vote count is 0
     if (task.vote == 0) {
-      //Delete task
-      ()
+      db->Database.ref(~path, ())->Database.Reference.remove(())
+    } else {
+      db->Database.ref(~path, ())->Database.Reference.update(~value, ())
     }
-
-    db->Database.ref(~path, ())->Database.Reference.update(~value, ())
   }
 }
 
@@ -156,7 +155,7 @@ let done = (task: t, byUser: User.t , setShowDone) => {
 
 }
 
-let verify = (task: t, byUser: User.t , setShowDone) => {
+let verify = (task: t, byUser: User.t) => {
 
   task.status = DoneAndVerified;
   let task = {...task, status: task.status}
@@ -182,8 +181,5 @@ let verifyByTaskId = (taskId: string) => {
 
 // Function to give user who claimed task tokens equal to the number of votes when task is DoneAndVerified
 let giveToken = (user: User.t, task: t) => {
-
-  if (task.status == DoneAndVerified){
-    user->User.spendToken(-(task.vote))->ignore
-  }
+  user->User.spendToken(-(task.vote))->ignore
 }
