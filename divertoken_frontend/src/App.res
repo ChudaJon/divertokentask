@@ -81,9 +81,11 @@ let make = () => {
                         {string("Unclaimed Tasks")}
                       </Typography>
                     </Grid.Item>
-                    <Grid.Item>
-                      <Typography variant=Typography.Variant.h6> tokenCount </Typography>
-                    </Grid.Item>
+                    <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
+                      <Grid.Item>
+                        <Typography variant=Typography.Variant.h6> tokenCount </Typography>
+                      </Grid.Item>
+                    </div>
                   </Grid.Container>
                 </Grid.Item>
               </Grid.Container>
@@ -102,9 +104,11 @@ let make = () => {
                         {string("Your Tasks")}
                       </Typography>
                     </Grid.Item>
-                    <Grid.Item>
-                      <Typography variant=Typography.Variant.h6> tokenCount </Typography>
-                    </Grid.Item>
+                    <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
+                      <Grid.Item>
+                        <Typography variant=Typography.Variant.h6> tokenCount </Typography>
+                      </Grid.Item>
+                    </div>
                   </Grid.Container>
                 </Grid.Item>
               </Grid.Container>
@@ -115,24 +119,43 @@ let make = () => {
       | Notification => 
         <div>
           <div style=(ReactDOM.Style.make(~padding="10px", ()))> 
-                <Grid.Container>
-                  <Grid.Item xs={GridSize.size(12)}>
-                    <Grid.Container justify=Justify.center spacing=10>
-                      <Grid.Item>
-                        <Typography variant=Typography.Variant.h5>{string("Notifications")}</Typography> 
-                      </Grid.Item>
-                      <Grid.Item>
-                        <Typography variant=Typography.Variant.h6>tokenCount</Typography>
-                      </Grid.Item>
-                    </Grid.Container>
-                  </Grid.Item>  
+            <Grid.Container>
+              <Grid.Item xs={GridSize.size(12)}>
+                <Grid.Container justify=Justify.center spacing=10>
+                  <Grid.Item>
+                    <Typography variant=Typography.Variant.h5>{string("Notifications")}</Typography> 
+                  </Grid.Item>
+                  <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
+                    <Grid.Item>
+                      <Typography variant=Typography.Variant.h6> tokenCount </Typography>
+                    </Grid.Item>
+                  </div>
                 </Grid.Container>
-              </div>
+              </Grid.Item>  
+            </Grid.Container>
+          </div>
         <NotificationList user />          
           switchTab
         </div>
       | AddTask => 
-        <div> tokenCount <AddTask user/>
+        <div>
+        <div style=(ReactDOM.Style.make(~padding="10px", ()))> 
+            <Grid.Container>
+              <Grid.Item xs={GridSize.size(12)}>
+                <Grid.Container justify=Justify.center spacing=10>
+                  <Grid.Item>
+                    <Typography variant=Typography.Variant.h5>{string("Create a New Task")}</Typography> 
+                  </Grid.Item>
+                  <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
+                    <Grid.Item>
+                      <Typography variant=Typography.Variant.h6> tokenCount </Typography>
+                    </Grid.Item>
+                  </div>
+                </Grid.Container>
+              </Grid.Item>  
+            </Grid.Container>
+          </div>
+          <AddTask user/>
           switchTab
         </div>
       | ViewTask(taskId) => 

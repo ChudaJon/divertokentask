@@ -37,11 +37,11 @@ let make = (~user: User.t, ~notification: Notification.t) => {
                         switch(notification.notiType){
                           | Claimed => 
                             <Typography variant=Typography.Variant.h6>
-                              {string("Your task '" ++ task.content ++ "' has been claimed")}
+                              {string("Your task '" ++ task.content ++ "' has been claimed by " ++ user.displayName)}
                             </Typography>
                           | VerifyWait => 
                             <Typography variant=Typography.Variant.h6>
-                              {string("Your task '" ++ task.content ++ "' is being verified")}
+                              {string("Your task '" ++ task.content ++ "' is being verified by " ++ user.displayName)}
                             </Typography>
                           | Verify => 
                             <div>
@@ -51,7 +51,7 @@ let make = (~user: User.t, ~notification: Notification.t) => {
                             </div>
                           | Done =>
                             <Typography variant=Typography.Variant.h6>
-                              {string("Your task '" ++ task.content ++ "' has been verified")}
+                              {string("Your task '" ++ task.content ++ "' has been verified by " ++ user.displayName)}
                             </Typography>
                         }
                       }
