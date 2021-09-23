@@ -67,9 +67,11 @@ let make = () => {
         : <div> {string(`You have  ${Js.Int.toString(user.token)} token`)} </div>
     }
     <div>
+      // <AuthContext.Provider>
       <Context_Tasks.Provider>
         {switch url->Routes.url2route {
         | Register => <Register />
+        | Login => <Login />
         | UnclaimTask =>
           <div>
             <div style={ReactDOM.Style.make(~padding="10px", ())}>
@@ -162,6 +164,7 @@ let make = () => {
         <ViewTask taskId user notificationBadge setNotificationBadge />
       }}
       </Context_Tasks.Provider>
+      // </AuthContext.Provider>
     </div>
   }
 }
