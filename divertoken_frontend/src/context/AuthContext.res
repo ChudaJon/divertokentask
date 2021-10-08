@@ -2,9 +2,9 @@ open React
 
 let authContext = React.createContext()
 
-let useAuth = () => {
-  React.useContext(authContext)
-}
+// let useAuth = () => {
+//   React.useContext(authContext)
+// }
 
 module Provider = {
 
@@ -12,8 +12,9 @@ module Provider = {
 
   let (currentUser, setCurrentUser) = React.useState(_ => ())
 
-  let signup = (email:string, password:string) => {
-    Firebase.Auth.createUserWithEmailAndPassword(~email, ~password)
+  let signup = (~email:string, ~password:string) => {
+    // Firebase.Divertask.auth->Firebase.Auth.createUserWithEmailAndPassword(~email, ~password)
+    ()
   }
   useEffect1(() => {
     // let unsubscribe = Firebase.Auth.onAuthStateChanged(user: Firebase.Auth.User.t)

@@ -27,17 +27,26 @@ let make = () => {
   let passwordConfirmRef = React.useRef("")
   let (error, setError) = React.useState(_ => "")
 
-  // let handleSubmit = (evt) => {
-  //   ReactEvent.Synthetic.preventDefault(evt)
-  //   if (passwordRef !== passwordConfirmRef){
-  //     setError(_ => "Passwords do not match")
-  //   }
+  let handleSubmit = (evt) => {
+    ReactEvent.Synthetic.preventDefault(evt)
+    if (passwordRef !== passwordConfirmRef){
+      setError(_ => "Passwords do not match")
+    }
 
-  //   //try
-  //   AuthContext.Provider.signup(emailRef.current, passwordRef.current)
+    //try
+    // AuthContext.Provider.signup(~email="song@divertise.asia", ~password="123456+")
+    // ->ignore
+    Firebase.Divertask.auth->Firebase.Auth.createUserWithEmailAndPassword(
+      ~email="song@divertise.asia", ~password="123456+"
+    )->Promise.then(x=>{
+      Js.log2("got result", x)
+      Promise.resolve(())
+    })->ignore
 
-  //   // catch
-  // }
+    // catch
+
+    ()
+  }
 
   let onChange = (evt:ReactEvent.Form.t) => {
     let t = ReactEvent.Form.target(evt)
@@ -80,6 +89,7 @@ let make = () => {
         </div>
         <div style=(ReactDOM.Style.make(~margin="auto", ~textAlign="center", ~borderRadius="4px", ~cursor="pointer", ~padding="25px", ()))>
           <Button
+            onClick=handleSubmit
             color="primary" variant=Button.Variant.contained size="large">
             {string("Register")}
           </Button>

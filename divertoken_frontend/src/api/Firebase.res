@@ -160,6 +160,8 @@ module Storage = {
 
 module Auth = {
   type t
+
+
   module User = {
     type t
     type profile = {"displayName": Js.nullable<string>, "photoURL": Js.nullable<string>}
@@ -200,6 +202,10 @@ module Auth = {
   @send
   external signInWithCustomToken: (t, ~token: string) => Js.Promise.t<User.t> =
     "signInWithCustomToken"
+  
+  @send external signInWithEmailAndPassword: (t, ~email: string, ~password: string) 
+  => Js.Promise.t<{..}> = "signInWithEmailAndPassword";
+
   @send external signOut: t => Js.Promise.t<unit> = "signOut"
 }
 
@@ -242,6 +248,7 @@ type options = {
 
 @module external database: Database.t = "firebase/database"
 @module external messaging: Messaging.t = "firebase/messaging"
+@module external auth: Auth.t = "firebase/auth"
 
 module Divertask = {
   let options = firebaseConfig
@@ -250,8 +257,10 @@ module Divertask = {
 
   let _ = database; /** This is required ato load firebase.database seperately. */
   let _ = messaging; /** This is required to load firebase.messaging. */
+  let _ = auth;
 
   let db = App.database(app)
+  let auth = App.auth(app)
   type key = string;
 
   let listenToPath = (path, ~eventType:Database.eventType=#child_added, ~onData:(option<key>, Js.Json.t)=>unit, ()) => 

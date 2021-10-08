@@ -29,6 +29,15 @@ let make = () => {
     )
   }
 
+  let onLogin = _evt => {
+    Firebase.Divertask.auth->Firebase.Auth.signInWithEmailAndPassword(
+      ~email="song@divertise.asia", ~password="123456+"
+    )->Promise.then(x=>{
+      Js.log2("got result", x)
+      Promise.resolve(())
+    })->ignore
+  }
+
   let textFieldStyle = ReactDOM.Style.make(~fontSize="25px", ~display="flex", ~justifyContent="center", ~margin="16px 0px", ());
 
   <div style=(ReactDOM.Style.make(~padding="50px 0px 0px 0px", ~display="flex", ~justifyContent="center", ())) >
@@ -48,6 +57,7 @@ let make = () => {
     </div>
     <div style=(ReactDOM.Style.make(~margin="auto", ~textAlign="center", ~borderRadius="4px", ~cursor="pointer", ~padding="25px", ()))>
       <Button
+        onClick=onLogin
         color="primary" variant=Button.Variant.contained size="large">
         {string("Sign In")}
       </Button>
