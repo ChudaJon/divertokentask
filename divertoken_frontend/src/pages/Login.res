@@ -34,6 +34,12 @@ let make = () => {
       ~email="song@divertise.asia", ~password="123456+"
     )->Promise.then(x=>{
       Js.log2("got result", x)
+      let user = x["user"];
+      Js.log2("user", user);
+      
+      let displayName = user["displayName"];
+      let email = user["email"];
+      Js.log3(">>", displayName, email)
       Promise.resolve(())
     })->ignore
   }
