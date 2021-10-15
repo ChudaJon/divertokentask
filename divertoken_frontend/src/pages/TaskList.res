@@ -1,15 +1,11 @@
 open React
-open MaterialUI
-
 @react.component
 let make = (~user, ~notificationBadge, ~setNotificationBadge) => {  
-    
+  
   let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})
 
   let onData = (id: option<string>, data: Js.Json.t) => {
-    Js.log2("task", data)
     let task = Task.fromJson(id, data)
-    Js.log2("task after", task)
 
     setTaskList(prevTasks => list{task, ...prevTasks})
   }
@@ -27,8 +23,7 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
   })
 
   <div>
-    {tasks
-    -> Belt.List.keep(t => t.status == Claim || t.status == Done)
+    {tasks->Belt.List.keep(t => t.status == Claim || t.status == Done || t.status == DoneAndVerified)
     |> Array.of_list
     |> Js.Array.mapi((task, i) => <ClaimedTaskCard key={"task-" ++ string_of_int(i)} user task notificationBadge setNotificationBadge />)
     |> React.array}

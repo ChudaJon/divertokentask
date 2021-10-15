@@ -5,7 +5,8 @@ open MaterialUIDataType
 @react.component
 let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBadge) => {
 
-  let (showDone, setShowDone) = useState(_ => true);
+  // Show Done Button or not
+  let (_, setShowDone) = useState(_ => true);
 
   let (doneMsg, setDoneMsg) = useState(_ => false)
 
@@ -16,8 +17,6 @@ let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBa
     task->Notification.allNotifications(user, VerifyWait)->ignore
     task->Notification.allNotifications(user, Verify)->ignore
     setNotificationBadge(_ => notificationBadge+1)
-    Js.log2("done", notificationBadge)
-
   }
 
   let handleDoneMsgClose = () => {
@@ -50,16 +49,25 @@ let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBa
           </Grid.Item>
           <Grid.Container>
             <Grid.Item xs={GridSize.size(6)}>
-            { task.status == Claim ? 
-            <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ~fontFamily="Arial", ~fontSize="15px", ()))>
+
+            { switch (task.status) {
+              | Claim => 
+              <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ~fontFamily="Arial", ~fontSize="15px", ()))>
                 <Button
                   color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
                   {string("Done")}
                 </Button> 
-              </div> : 
-              <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ~fontFamily="Arial", ~fontSize="15px", ()))>
-                {string("Task is being verified")} 
-              </div>}
+              </div>
+              | Done => 
+                <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ~fontFamily="Arial", ~fontSize="15px", ()))>
+                  {string("Task is being verified")} 
+                </div>
+              | DoneAndVerified => 
+                <div style=(ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ~fontFamily="Arial", ~fontSize="15px", ()))>
+                  {string("Task has been verified! Enjoy your tokens")} 
+                </div>
+              | _ => <div> {string("")}  </div>
+            }}
               <Snackbar _open={doneMsg} autoHideDuration={6000} onClose={handleDoneMsgClose}>
                 <Alert onClose={handleDoneMsgClose} severity="info">
                     {string("Please wait for your task to be verified")}
