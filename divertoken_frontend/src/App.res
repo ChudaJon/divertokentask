@@ -72,6 +72,7 @@ let make = () => {
         {switch url->Routes.url2route {
         | Register => <Register />
         | Login => <Login />
+        | ForgotPassword => <ForgotPassword />
         | UnclaimTask =>
           <div>
             <div style={ReactDOM.Style.make(~padding="10px", ())}>
