@@ -9,6 +9,8 @@ let firebaseConfig = {
   "measurementId": "G-WJYLW54XT7",
 }
 
+module Analytics = Firebase_Analytics;
+
 module Error = {
   type t<'e> = 'e
 }
@@ -226,6 +228,7 @@ module App = {
   type t
   @send external auth: t => Auth.t = "auth"
   @send external database: t => Database.t = "database"
+  @send external analytics: t => Analytics.t = "analytics"
   /* external delete */
   @send external messaging: t => Messaging.t = "messaging"
   @send external storage: t => Storage.t = "storage"
@@ -245,24 +248,25 @@ type options = {
 }
 
 @scope("default") @module("firebase/app") external initializeApp: (~options: options) => App.t = "initializeApp"
-@scope("default") @module("firebase/analytics") external getAnalytics: (~app: App.t) => App.t = "getAnalytics"
 
 @module external database: Database.t = "firebase/database"
 @module external messaging: Messaging.t = "firebase/messaging"
+@module external analytics: Analytics.t = "firebase/analytics"
 @module external auth: Auth.t = "firebase/auth"
 
 module Divertask = {
   let options = firebaseConfig
 
   let app = initializeApp(~options)
-  let analytics = getAnalytics(~app)
 
   let _ = database; /** This is required ato load firebase.database seperately. */
   let _ = messaging; /** This is required to load firebase.messaging. */
+  let _ = analytics; /** This is required to load firebase.analytics. */
   let _ = auth;
 
   let db = App.database(app)
   let auth = App.auth(app)
+  let analytics = App.analytics(app)
   type key = string;
 
   let listenToPath = (path, ~eventType:Database.eventType=#child_added, ~onData:(option<key>, Js.Json.t)=>unit, ()) => 
