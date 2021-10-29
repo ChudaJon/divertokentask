@@ -245,6 +245,7 @@ type options = {
 }
 
 @scope("default") @module("firebase/app") external initializeApp: (~options: options) => App.t = "initializeApp"
+@scope("default") @module("firebase/analytics") external getAnalytics: (~app: App.t) => App.t = "getAnalytics"
 
 @module external database: Database.t = "firebase/database"
 @module external messaging: Messaging.t = "firebase/messaging"
@@ -254,6 +255,7 @@ module Divertask = {
   let options = firebaseConfig
 
   let app = initializeApp(~options)
+  let analytics = getAnalytics(~app)
 
   let _ = database; /** This is required ato load firebase.database seperately. */
   let _ = messaging; /** This is required to load firebase.messaging. */
