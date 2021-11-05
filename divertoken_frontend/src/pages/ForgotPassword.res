@@ -10,14 +10,14 @@ let make = () => {
   <div style=(ReactDOM.Style.make(~backgroundColor="#FFFFFF", ~borderRadius="3px 3px", ~width="30%", ()))>
   <Grid.Container> 
     <Container>
-    <div style=(ReactDOM.Style.make( ~textAlign="left", ~padding="80px 16px 30px 16px", ~fontFamily="Arial", ~fontSize="25px", ()))>
+    <div style=(ReactDOM.Style.make(~textAlign="left", ~fontWeight="bold", ~padding="80px 16px 30px 16px", ~fontFamily="Arial", ~fontSize="25px", ()))>
       {string("Forgot your password?")}
     </div>
-		<div style=(ReactDOM.Style.make(~margin="auto", ~textAlign="left", ~padding="0px 16px 30px 16px", ~fontFamily="Arial", ~fontSize="17px", ()))>
+		<div style=(ReactDOM.Style.make(~margin="auto", ~textAlign="left", ~padding="0px 16px 20px 16px", ~fontFamily="Arial", ~fontSize="17px", ()))>
       {string("Please enter the email you used to create your account. We will send you a reset password link")}
     </div>
     <div style=textFieldStyle>
-      <Item> <TextField label="Your Email" name="email" variant=TextField.Variant.outlined fullWidth=true /> </Item>
+      <Item> <TextField label="Your Email" name="email" _type="email" variant=TextField.Variant.outlined fullWidth=true /> </Item>
     </div>
     
     <div style=(ReactDOM.Style.make(~margin="auto", ~textAlign="center", ~borderRadius="4px", ~cursor="pointer", ~padding="25px 0px 50px 0px", ()))>
