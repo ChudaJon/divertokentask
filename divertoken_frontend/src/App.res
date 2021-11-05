@@ -35,29 +35,30 @@ let make = () => {
     setNotificationBadge(_ => 0)
   }
 
-  let switchTab = 
-  <div style=(ReactDOM.Style.make(~padding="25px", ()))> 
-    <Grid.Container spacing=3>
-      <Grid.Item xs={GridSize.size(4)}>
-        <Button onClick={_ => onUnclaimedTask()} fullWidth=true>
-          <Typography variant=Typography.Variant.h6>{string("Unclaimed Tasks")}</Typography>
-        </Button>
-      </Grid.Item>
-      <Grid.Item xs={GridSize.size(4)}>
-        <Button onClick={_ => onTaskList()} fullWidth=true> 
-          <Typography variant=Typography.Variant.h6>{string("Your Tasks")}</Typography>
-        </Button>
-      </Grid.Item>
-      <Grid.Item xs={GridSize.size(4)}>
-        <Button onClick={_ => handleNotifications()} fullWidth=true>
-          <Badge badgeContent={notificationBadge} color="secondary">
-            <Typography variant=Typography.Variant.h6>{string("Notifications")}</Typography>
-          </Badge>
-        </Button>
-      </Grid.Item>
-    </Grid.Container>
-  </div>
+  let switchTab =
+    <div style={ReactDOM.Style.make(~padding="25px", ())}>
+      <Grid.Container spacing=3>
+        <Grid.Item xs={GridSize.size(4)}>
+          <Button onClick={_ => onUnclaimedTask()} fullWidth=true>
+            <Typography variant=Typography.Variant.h6> {string("Unclaimed Tasks")} </Typography>
+          </Button>
+        </Grid.Item>
+        <Grid.Item xs={GridSize.size(4)}>
+          <Button onClick={_ => onTaskList()} fullWidth=true>
+            <Typography variant=Typography.Variant.h6> {string("Your Tasks")} </Typography>
+          </Button>
+        </Grid.Item>
+        <Grid.Item xs={GridSize.size(4)}>
+          <Button onClick={_ => handleNotifications()} fullWidth=true>
+            <Badge badgeContent={notificationBadge} color="secondary">
+              <Typography variant=Typography.Variant.h6> {string("Notifications")} </Typography>
+            </Badge>
+          </Button>
+        </Grid.Item>
+      </Grid.Container>
+    </div>
 
+  Js.log3("user:: ", maybeUser, url)
   switch maybeUser {
   | None => <div> {string("Please Login")} </div>
   | Some(user) =>
@@ -83,7 +84,8 @@ let make = () => {
                         {string("Unclaimed Tasks")}
                       </Typography>
                     </Grid.Item>
-                    <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
+                    <div
+                      style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
                       <Grid.Item>
                         <Typography variant=Typography.Variant.h6> tokenCount </Typography>
                       </Grid.Item>
@@ -95,18 +97,19 @@ let make = () => {
             <UnclaimTask user notificationBadge setNotificationBadge />
             switchTab
           </div>
-      | TaskList => 
-        <div>
-          <div style=(ReactDOM.Style.make(~padding="10px", ()))> 
+        | TaskList =>
+          <div>
+            <div style={ReactDOM.Style.make(~padding="10px", ())}>
               <Grid.Container>
                 <Grid.Item xs={GridSize.size(12)}>
-                  <Grid.Container justify=Justify.center spacing=10> 
+                  <Grid.Container justify=Justify.center spacing=10>
                     <Grid.Item>
                       <Typography variant=Typography.Variant.h5>
                         {string("Your Tasks")}
                       </Typography>
                     </Grid.Item>
-                    <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
+                    <div
+                      style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
                       <Grid.Item>
                         <Typography variant=Typography.Variant.h6> tokenCount </Typography>
                       </Grid.Item>
@@ -115,54 +118,59 @@ let make = () => {
                 </Grid.Item>
               </Grid.Container>
             </div>
-          <TaskList user notificationBadge setNotificationBadge />
-          switchTab
-        </div>
-      | Notification => 
-        <div>
-          <div style=(ReactDOM.Style.make(~padding="10px", ()))> 
-            <Grid.Container>
-              <Grid.Item xs={GridSize.size(12)}>
-                <Grid.Container justify=Justify.center spacing=10>
-                  <Grid.Item>
-                    <Typography variant=Typography.Variant.h5>{string("Notifications")}</Typography> 
-                  </Grid.Item>
-                  <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
-                    <Grid.Item>
-                      <Typography variant=Typography.Variant.h6> tokenCount </Typography>
-                    </Grid.Item>
-                  </div>
-                </Grid.Container>
-              </Grid.Item>  
-            </Grid.Container>
+            <TaskList user notificationBadge setNotificationBadge />
+            switchTab
           </div>
-        <NotificationList user />          
-          switchTab
-        </div>
-      | AddTask => 
-        <div>
-        <div style=(ReactDOM.Style.make(~padding="10px", ()))> 
-            <Grid.Container>
-              <Grid.Item xs={GridSize.size(12)}>
-                <Grid.Container justify=Justify.center spacing=10>
-                  <Grid.Item>
-                    <Typography variant=Typography.Variant.h5>{string("Create a New Task")}</Typography> 
-                  </Grid.Item>
-                  <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
+        | Notification =>
+          <div>
+            <div style={ReactDOM.Style.make(~padding="10px", ())}>
+              <Grid.Container>
+                <Grid.Item xs={GridSize.size(12)}>
+                  <Grid.Container justify=Justify.center spacing=10>
                     <Grid.Item>
-                      <Typography variant=Typography.Variant.h6> tokenCount </Typography>
+                      <Typography variant=Typography.Variant.h5>
+                        {string("Notifications")}
+                      </Typography>
                     </Grid.Item>
-                  </div>
-                </Grid.Container>
-              </Grid.Item>  
-            </Grid.Container>
+                    <div
+                      style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
+                      <Grid.Item>
+                        <Typography variant=Typography.Variant.h6> tokenCount </Typography>
+                      </Grid.Item>
+                    </div>
+                  </Grid.Container>
+                </Grid.Item>
+              </Grid.Container>
+            </div>
+            <NotificationList user />
+            switchTab
           </div>
-          <AddTask user/>
-          switchTab
-        </div>
-      | ViewTask(taskId) => 
-        <ViewTask taskId user notificationBadge setNotificationBadge />
-      }}
+        | AddTask =>
+          <div>
+            <div style={ReactDOM.Style.make(~padding="10px", ())}>
+              <Grid.Container>
+                <Grid.Item xs={GridSize.size(12)}>
+                  <Grid.Container justify=Justify.center spacing=10>
+                    <Grid.Item>
+                      <Typography variant=Typography.Variant.h5>
+                        {string("Create a New Task")}
+                      </Typography>
+                    </Grid.Item>
+                    <div
+                      style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
+                      <Grid.Item>
+                        <Typography variant=Typography.Variant.h6> tokenCount </Typography>
+                      </Grid.Item>
+                    </div>
+                  </Grid.Container>
+                </Grid.Item>
+              </Grid.Container>
+            </div>
+            <AddTask user />
+            switchTab
+          </div>
+        | ViewTask(taskId) => <ViewTask taskId user notificationBadge setNotificationBadge />
+        }}
       </Context_Tasks.Provider>
       // </AuthContext.Provider>
     </div>
