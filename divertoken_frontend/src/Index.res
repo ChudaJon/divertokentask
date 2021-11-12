@@ -6,7 +6,6 @@ let makeContainer = () => {
   let container = document["createElement"]("div")
   container["className"] = "container"
 
-
   let content = document["createElement"]("div")
   content["className"] = "containerContent"
 

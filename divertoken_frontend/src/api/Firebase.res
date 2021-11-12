@@ -228,7 +228,9 @@ module Auth = {
   ) => Js.Promise.t<{..}> = "signInWithEmailAndPassword"
 
   @send external signOut: t => Js.Promise.t<unit> = "signOut"
-  @send external sendPasswordResetEmail: (t, ~email: string) => Js.Promise.t<{..}> = "sendPasswordResetEmail";
+  @send
+  external sendPasswordResetEmail: (t, ~email: string) => Js.Promise.t<{..}> =
+    "sendPasswordResetEmail"
 }
 
 module Messaging = {

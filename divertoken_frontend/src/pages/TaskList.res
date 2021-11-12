@@ -1,7 +1,6 @@
 open React
 @react.component
-let make = (~user, ~notificationBadge, ~setNotificationBadge) => {  
-  
+let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
   let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})
 
   let onData = (id: option<string>, data: Js.Json.t) => {
@@ -23,9 +22,15 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
   })
 
   <div>
-    {tasks->Belt.List.keep(t => t.status == Claim || t.status == Done || t.status == DoneAndVerified)
+    {tasks->Belt.List.keep(t =>
+      t.status == Claim || t.status == Done || t.status == DoneAndVerified
+    )
     |> Array.of_list
-    |> Js.Array.mapi((task, i) => <ClaimedTaskCard key={"task-" ++ string_of_int(i)} user task notificationBadge setNotificationBadge />)
+    |> Js.Array.mapi((task, i) =>
+      <ClaimedTaskCard
+        key={"task-" ++ string_of_int(i)} user task notificationBadge setNotificationBadge
+      />
+    )
     |> React.array}
   </div>
 }

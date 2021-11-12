@@ -2,8 +2,7 @@ open React
 open MaterialUI
 
 @react.component
-let make = (~user) => {  
-    
+let make = (~user) => {
   let (notifications: list<Notification.t>, setNotificationList) = useState(_ => list{})
 
   let onDataAdded = (id: option<string>, data: Js.Json.t) => {
@@ -14,17 +13,30 @@ let make = (~user) => {
 
   let onDataChange = (id: option<string>, data: Js.Json.t) => {
     // Js.log3("task has changed", data, `with ID = ${id->Belt.Option.getWithDefault("no-id")}`)
-    setNotificationList(notificationList => notificationList->Belt.List.map(t => 
-    if (t.id == id){
-      data->Notification.fromJson(id, _)
-    } else {
-      t
-    }))
+    setNotificationList(notificationList =>
+      notificationList->Belt.List.map(t =>
+        if t.id == id {
+          data->Notification.fromJson(id, _)
+        } else {
+          t
+        }
+      )
+    )
   }
 
   useEffect0(() => {
-    let stopListen = Firebase.Divertask.listenToPath("notifications", ~eventType=#child_added, ~onData=onDataAdded, ())
-    let stopListen2 = Firebase.Divertask.listenToPath("notifications", ~eventType=#child_changed, ~onData=onDataChange, ())
+    let stopListen = Firebase.Divertask.listenToPath(
+      "notifications",
+      ~eventType=#child_added,
+      ~onData=onDataAdded,
+      (),
+    )
+    let stopListen2 = Firebase.Divertask.listenToPath(
+      "notifications",
+      ~eventType=#child_changed,
+      ~onData=onDataChange,
+      (),
+    )
 
     let uninstall = () => {
       stopListen()
@@ -37,7 +49,9 @@ let make = (~user) => {
   <div>
     {notifications
     |> Array.of_list
-    |> Js.Array.mapi((notification, i) => <NotificationCard key={"notification-" ++ string_of_int(i)} user notification />)
+    |> Js.Array.mapi((notification, i) =>
+      <NotificationCard key={"notification-" ++ string_of_int(i)} user notification />
+    )
     |> React.array}
   </div>
 }

@@ -27,11 +27,10 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
     )
   }
 
-
   let onDataRemove = (id: option<string>, data: Js.Json.t) => {
     let task = data->Task.fromJson(id, _)
     // Keep only ones that did not get deleted
-    setTaskList(prevTasks => Belt.List.keep( prevTasks, t => t.id != task.id))
+    setTaskList(prevTasks => Belt.List.keep(prevTasks, t => t.id != task.id))
   }
 
   useEffect0(() => {
@@ -69,10 +68,13 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
   <div>
     {tasks->Belt.List.keep(t => t.status == Open)
     |> Array.of_list
-    |> Js.Array.mapi((task, i) => <UnclaimTaskCard key={"task-" ++ string_of_int(i)} user task notificationBadge setNotificationBadge />)
-    |> React.array
-    }
-    <div style=(ReactDOM.Style.make(~margin="auto", ~textAlign="center", ~padding="25px", ()))>
+    |> Js.Array.mapi((task, i) =>
+      <UnclaimTaskCard
+        key={"task-" ++ string_of_int(i)} user task notificationBadge setNotificationBadge
+      />
+    )
+    |> React.array}
+    <div style={ReactDOM.Style.make(~margin="auto", ~textAlign="center", ~padding="25px", ())}>
       <Button color="primary" variant=Button.Variant.contained onClick={_ => onAddTask()}>
         {string("+ Add Task")}
       </Button>

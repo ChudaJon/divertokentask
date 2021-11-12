@@ -4,25 +4,24 @@ type status =
   | Done
   | DoneAndVerified
 
-
 type t = {
   id: option<string>,
   content: string,
   vote: int,
   deadline: option<Js.Date.t>,
   mutable status: status,
-  voted: Js.Dict.t<int>
+  voted: Js.Dict.t<int>,
 }
 
 module Database = Firebase.Database
 
 let numbertoStatus = n => {
-  switch(n){
-    |0 => Open
-    |1 => Claim
-    |2 => Done
-    |3 => DoneAndVerified
-    |_ => Open
+  switch n {
+  | 0 => Open
+  | 1 => Claim
+  | 2 => Done
+  | 3 => DoneAndVerified
+  | _ => Open
   }
 }
 
@@ -37,8 +36,10 @@ let fromJson = (id: option<string>, data: Js.Json.t) => {
         content: Decode.field("content", Decode.string)->Decode.withDefault("?")(json),
         vote: Decode.field("vote", Decode.int)->Decode.withDefault(0)(json),
         deadline: (Decode.field("deadline", Decode.date)->Decode.optional)(json),
-        status:  Decode.field("status", Decode.int)(json)->numbertoStatus,
-        voted: Decode.field("voted", Decode.dict(Decode.int))->Decode.withDefault(Js.Dict.fromList(list{("0", 0)}))(json),
+        status: Decode.field("status", Decode.int)(json)->numbertoStatus,
+        voted: Decode.field("voted", Decode.dict(Decode.int))->Decode.withDefault(
+          Js.Dict.fromList(list{("0", 0)}),
+        )(json),
       }
     }
   )
@@ -49,13 +50,15 @@ let toJson = (task: t) => {
   [
     ("content", task.content->Encode.string),
     ("vote", task.vote->Encode.int),
-    ("status", 
+    (
+      "status",
       switch task.status {
-          | Open => 0
-          | Claim(_) => 1
-          | Done(_) => 2
-          | DoneAndVerified(_) => 3
-      }->Encode.int),
+      | Open => 0
+      | Claim(_) => 1
+      | Done(_) => 2
+      | DoneAndVerified(_) => 3
+      }->Encode.int,
+    ),
     ("voted", Encode.dict(Encode.int)(task.voted)),
   ]
   ->Js.Array.concat(
@@ -77,10 +80,10 @@ let createTask = (~deadline=?, content: string, ~user: Divertoken.User.t) => {
   vote: 1,
   status: Open,
   deadline: deadline,
-  voted: Js.Dict.fromList(list{(user.id, 1)})
+  voted: Js.Dict.fromList(list{(user.id, 1)}),
 }
 
-let addTask = (task: t,  byUser: User.t) => {
+let addTask = (task: t, byUser: User.t) => {
   let value = task->toJson
 
   Js.Dict.set(task.voted, byUser.id, 1)
@@ -89,10 +92,8 @@ let addTask = (task: t,  byUser: User.t) => {
 }
 
 let vote = (task: t, vote: int, byUser: User.t) => {
-
   // If the user hasn't voted
-  if (Js.Dict.get(task.voted, byUser.id) == Some(0) || Js.Dict.get(task.voted, byUser.id) == None ){
-
+  if Js.Dict.get(task.voted, byUser.id) == Some(0) || Js.Dict.get(task.voted, byUser.id) == None {
     Js.Dict.set(task.voted, byUser.id, 1)
     byUser->User.spendToken(vote)->ignore
     let task = {...task, vote: task.vote + vote}
@@ -102,9 +103,9 @@ let vote = (task: t, vote: int, byUser: User.t) => {
     | None => `${path}/unidentified}`
     }
 
-
     db->Database.ref(~path, ())->Database.Reference.update(~value, ())
-  } else { // unvote
+  } else {
+    // unvote
 
     Js.Dict.set(task.voted, byUser.id, 0)
     byUser->User.spendToken(-1)->ignore
@@ -117,8 +118,8 @@ let vote = (task: t, vote: int, byUser: User.t) => {
     }
 
     // Delete the task if vote count is 0
-    if (task.vote == 0) {
-      db->Database.ref(~path, ())->Database.Reference.remove(())
+    if task.vote == 0 {
+      db->Database.ref(~path, ())->Database.Reference.remove()
     } else {
       db->Database.ref(~path, ())->Database.Reference.update(~value, ())
     }
@@ -126,9 +127,8 @@ let vote = (task: t, vote: int, byUser: User.t) => {
 }
 
 let claim = (task: t, byUser: User.t) => {
-
   // Use user later
-  task.status = Claim;
+  task.status = Claim
   let task = {...task, status: task.status}
   let value = task->toJson
   let path = switch task.id {
@@ -137,12 +137,10 @@ let claim = (task: t, byUser: User.t) => {
   }
 
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
-
 }
 
-let done = (task: t, byUser: User.t , setShowDone) => {
-
-  task.status = Done;
+let done = (task: t, byUser: User.t, setShowDone) => {
+  task.status = Done
   let task = {...task, status: task.status}
   let value = task->toJson
   let path = switch task.id {
@@ -152,12 +150,10 @@ let done = (task: t, byUser: User.t , setShowDone) => {
 
   setShowDone(_ => false)
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
-
 }
 
 let verify = (task: t, byUser: User.t) => {
-
-  task.status = DoneAndVerified;
+  task.status = DoneAndVerified
   let task = {...task, status: task.status}
   let value = task->toJson
   let path = switch task.id {
@@ -166,20 +162,18 @@ let verify = (task: t, byUser: User.t) => {
   }
 
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
-
 }
 
 let verifyByTaskId = (taskId: string) => {
   // tasks/<taskId>/status
-  
-  let value = list{("status",3->Json.Encode.int)} -> Json.Encode.object_
+
+  let value = list{("status", 3->Json.Encode.int)}->Json.Encode.object_
   let path = `tasks/${taskId}`
 
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
-
 }
 
 // Function to give user who claimed task tokens equal to the number of votes when task is DoneAndVerified
 let giveToken = (user: User.t, task: t) => {
-  user->User.spendToken(-(task.vote))->ignore
+  user->User.spendToken(-task.vote)->ignore
 }
