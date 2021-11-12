@@ -40,6 +40,7 @@ let make = () => {
       let displayName = user["displayName"]
       let email = user["email"]
       Js.log3(">>", displayName, email)
+      RescriptReactRouter.push(Routes.route2Str(UnclaimTask))
       Promise.resolve()
     })
     ->ignore
