@@ -4,6 +4,7 @@ module Item = Grid.Item
 
 @react.component
 let make = () => {
+  let (email, setEmail) = React.useState(_ => "")
   let textFieldStyle = ReactDOM.Style.make(
     ~fontSize="25px",
     ~justifyContent="center",
@@ -12,7 +13,10 @@ let make = () => {
   )
 
   let resetPassword = _ =>
-    Firebase.Divertask.auth->Firebase.Auth.sendPasswordResetEmail(~email="")->ignore
+    Firebase.Divertask.auth
+    ->Firebase.Auth.sendPasswordResetEmail(~email)
+    ->Js.Promise.then_(x => Js.log2("forgot password return", x)->Js.Promise.resolve, _)
+    ->ignore
 
   <div
     style={ReactDOM.Style.make(
@@ -62,6 +66,10 @@ let make = () => {
                 _type="email"
                 variant=TextField.Variant.outlined
                 fullWidth=true
+                onChange={evt => {
+                  let val = ReactEvent.Synthetic.target(evt)["value"]
+                  setEmail(_ => val)
+                }}
               />
             </Item>
           </div>
