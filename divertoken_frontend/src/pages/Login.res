@@ -17,6 +17,22 @@ let defaultLogin = {
 let make = () => {
   let (_login, setLogin) = React.useState(() => defaultLogin)
 
+  let textLink = (text, route) =>
+    <div
+      style={ReactDOM.Style.make(
+        ~margin="auto",
+        ~color="#26212E",
+        ~textAlign="center",
+        ~borderRadius="4px",
+        ~padding="10px 0px 50px 0px",
+        ~fontFamily="Arial",
+        ~fontSize="14px",
+        ~textDecoration="none",
+        (),
+      )}>
+      <a href={Routes.route2Str(route)}> {string(text)} </a>
+    </div>
+
   let onChange = (evt: ReactEvent.Form.t) => {
     let t = ReactEvent.Form.target(evt)
 
@@ -113,21 +129,8 @@ let make = () => {
               {string("Sign In")}
             </Button>
           </div>
-          <div
-            style={ReactDOM.Style.make(
-              ~margin="auto",
-              ~color="#26212E",
-              ~textAlign="center",
-              ~borderRadius="4px",
-              ~padding="10px 0px 50px 0px",
-              ~fontFamily="Arial",
-              ~fontSize="14px",
-              ~textDecoration="none",
-              (),
-            )}>
-            // route to register
-            <a href={Routes.route2Str(Register)}> {string("Register")} </a>
-          </div>
+          {textLink("Register", Register)}
+          {textLink("Forgot password", ForgotPassword)}
         </Container>
       </Grid.Container>
     </div>
