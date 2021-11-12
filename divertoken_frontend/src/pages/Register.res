@@ -41,11 +41,22 @@ let make = () => {
       ~email=registration.email,
       ~password=registration.password,
     )
-    ->Promise.then(x => {
-      Js.log2("got result", x)
+    ->Promise.then(userCredential => {
+      Js.log2("got result", userCredential)
+
+      Js.log2("got result", userCredential.user)
       Promise.resolve()
     })
     ->ignore
+
+    User.addUser(
+      ~user={
+        id: "id" ++ registration.username,
+        displayName: registration.username,
+        token: 10,
+        email: registration.email,
+      },
+    )->ignore
 
     // catch
 

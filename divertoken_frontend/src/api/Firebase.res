@@ -9,7 +9,7 @@ let firebaseConfig = {
   "measurementId": "G-WJYLW54XT7",
 }
 
-module Analytics = Firebase_Analytics;
+module Analytics = Firebase_Analytics
 
 module Error = {
   type t<'e> = 'e
@@ -79,8 +79,11 @@ module Database = {
       "push"
 
     @send
-    external remove: (t, ~onComplete: Js.nullable<Error.t<'e>> => unit=?, unit) => Js.Promise.t<unit> =
-      "remove"
+    external remove: (
+      t,
+      ~onComplete: Js.nullable<Error.t<'e>> => unit=?,
+      unit,
+    ) => Js.Promise.t<unit> = "remove"
   } = Reference
 
   and DataSnapshot: {
@@ -162,10 +165,22 @@ module Storage = {
 
 module Auth = {
   type t
+  type user = {
+    displayName: string,
+    email: Js.nullable<string>,
+    emailVerified: bool,
+    isAnonymous: bool,
+    phoneNumber: Js.nullable<string>,
+    photoUrl: Js.nullable<string>,
+    uid: string,
+  }
 
+  module UserCredential = {
+    type t = {user: user}
+  }
 
   module User = {
-    type t
+    type t = user
     type profile = {"displayName": Js.nullable<string>, "photoURL": Js.nullable<string>}
     @get external displayName: t => string = "displayName"
     @get external email: t => Js.nullable<string> = "email"
@@ -189,7 +204,7 @@ module Auth = {
     t,
     ~email: string,
     ~password: string,
-  ) => Js.Promise.t<User.t> = "createUserWithEmailAndPassword"
+  ) => Js.Promise.t<UserCredential.t> = "createUserWithEmailAndPassword"
   @send
   external onAuthStateChanged: (
     t,
@@ -204,9 +219,13 @@ module Auth = {
   @send
   external signInWithCustomToken: (t, ~token: string) => Js.Promise.t<User.t> =
     "signInWithCustomToken"
-  
-  @send external signInWithEmailAndPassword: (t, ~email: string, ~password: string) 
-  => Js.Promise.t<{..}> = "signInWithEmailAndPassword";
+
+  @send
+  external signInWithEmailAndPassword: (
+    t,
+    ~email: string,
+    ~password: string,
+  ) => Js.Promise.t<{..}> = "signInWithEmailAndPassword"
 
   @send external signOut: t => Js.Promise.t<unit> = "signOut"
 }
@@ -214,7 +233,6 @@ module Auth = {
 module Messaging = {
   type t
 
-  @send external isSupported: t => bool = "isSupported"
   @send external usePublicVapidKey: (t, string) => unit = "usePublicVapidKey"
   @send external onTokenRefresh: (t, unit => unit) => unit = "onTokenRefresh"
   @send external getToken: (t, unit) => Js.Promise.t<string> = "getToken"
@@ -244,10 +262,11 @@ type options = {
   "messagingSenderId": string,
   "appId": string,
   "measurementId": string,
-  "projectId": string
+  "projectId": string,
 }
 
-@scope("default") @module("firebase/app") external initializeApp: (~options: options) => App.t = "initializeApp"
+@scope("default") @module("firebase/app")
+external initializeApp: (~options: options) => App.t = "initializeApp"
 
 @module external database: Database.t = "firebase/database"
 @module external messaging: Messaging.t = "firebase/messaging"
@@ -259,46 +278,44 @@ module Divertask = {
 
   let app = initializeApp(~options)
 
-  let _ = database; /** This is required ato load firebase.database seperately. */
-  let _ = messaging; /** This is required to load firebase.messaging. */
-  let _ = analytics; /** This is required to load firebase.analytics. */
-  let _ = auth;
+  let _ = database /* * This is required ato load firebase.database seperately. */
+  let _ = messaging /* * This is required to load firebase.messaging. */
+  let _ = analytics /* * This is required to load firebase.analytics. */
+  let _ = auth
 
   let db = App.database(app)
   let auth = App.auth(app)
   let analytics = App.analytics(app)
-  type key = string;
+  type key = string
 
-  let listenToPath = (path, ~eventType:Database.eventType=#child_added, ~onData:(option<key>, Js.Json.t)=>unit, ()) => 
-  {
+  let listenToPath = (
+    path,
+    ~eventType: Database.eventType=#child_added,
+    ~onData: (option<key>, Js.Json.t) => unit,
+    (),
+  ) => {
     Js.log2("listening...", path)
-    let callback = snapshot => 
-      onData(Database.DataSnapshot.key(snapshot)->Js.Null.toOption, Database.DataSnapshot.val_(snapshot));
-    
-    Database.ref(db, ~path, ()) -> Database.Reference.on(
-        ~eventType,
-        ~callback,
-        ~cancelCallback={err => Js.log2("cancel",err)}
-    ) |> ignore;
+    let callback = snapshot =>
+      onData(
+        Database.DataSnapshot.key(snapshot)->Js.Null.toOption,
+        Database.DataSnapshot.val_(snapshot),
+      )
+
+    Database.ref(db, ~path, ())->Database.Reference.on(~eventType, ~callback, ~cancelCallback=err =>
+      Js.log2("cancel", err)
+    ) |> ignore
 
     let stopListen = () => {
-      Database.Reference.off(
-        Database.ref(db, ~path, ()),
-        ~eventType,
-        ~callback,
-        ()
-    );
+      Database.Reference.off(Database.ref(db, ~path, ()), ~eventType, ~callback, ())
     }
     stopListen
   }
 
-
-  let messaging = if(App.isSupportedMessaging(app)){
-      Some(App.messaging(app))
+  let messaging = if App.isSupportedMessaging(app) {
+    Some(App.messaging(app))
   } else {
-      None
+    None
   }
-
 }
 
-let _ = Divertask.app;
+let _ = Divertask.app
