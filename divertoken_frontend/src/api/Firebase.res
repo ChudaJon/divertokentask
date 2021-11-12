@@ -229,8 +229,12 @@ module Auth = {
 
   @send external signOut: t => Js.Promise.t<unit> = "signOut"
   @send
-  external sendPasswordResetEmail: (t, ~email: string) => Js.Promise.t<{..}> =
-    "sendPasswordResetEmail"
+  external sendPasswordResetEmail: (
+    t,
+    ~email: string,
+    ~actionCodeSetting: {..}=?,
+    unit,
+  ) => Js.Promise.t<{..}> = "sendPasswordResetEmail"
 }
 
 module Messaging = {

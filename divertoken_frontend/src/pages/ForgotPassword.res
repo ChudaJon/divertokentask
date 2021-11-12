@@ -14,7 +14,13 @@ let make = () => {
 
   let resetPassword = _ =>
     Firebase.Divertask.auth
-    ->Firebase.Auth.sendPasswordResetEmail(~email)
+    ->Firebase.Auth.sendPasswordResetEmail(
+      ~email,
+      ~actionCodeSetting={
+        "url": "http://localhost:5050/reset-password-success", //TODO: change hostname in prod
+      },
+      (),
+    )
     ->Js.Promise.then_(x => Js.log2("forgot password return", x)->Js.Promise.resolve, _)
     ->ignore
 
