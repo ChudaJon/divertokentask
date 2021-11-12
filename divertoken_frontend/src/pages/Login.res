@@ -15,7 +15,7 @@ let defaultLogin = {
 
 @react.component
 let make = () => {
-  let (login, setLogin) = React.useState(() => defaultLogin)
+  let (_login, setLogin) = React.useState(() => defaultLogin)
 
   let onChange = (evt: ReactEvent.Form.t) => {
     let t = ReactEvent.Form.target(evt)

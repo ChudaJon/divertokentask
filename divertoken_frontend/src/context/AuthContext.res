@@ -11,7 +11,7 @@ module Provider = {
 
   let (currentUser, setCurrentUser) = React.useState(_ => ())
 
-  let signup = (~email: string, ~password: string) => {
+  let signup = (~email as _: string, ~password as _: string) => {
     // Firebase.Divertask.auth->Firebase.Auth.createUserWithEmailAndPassword(~email, ~password)
     ()
   }

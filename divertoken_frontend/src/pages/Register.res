@@ -21,15 +21,11 @@ let defaultRegistration = {
 let make = () => {
   let (registration, setRegistration) = React.useState(() => defaultRegistration)
 
-  let usernameRef = React.useRef("")
-  let emailRef = React.useRef("")
-  let passwordRef = React.useRef("")
-  let passwordConfirmRef = React.useRef("")
-  let (error, setError) = React.useState(_ => "")
+  let (_error, setError) = React.useState(_ => "")
 
   let handleSubmit = evt => {
     ReactEvent.Synthetic.preventDefault(evt)
-    if passwordRef !== passwordConfirmRef {
+    if registration.password !== registration.confirmedPassword {
       setError(_ => "Passwords do not match")
     }
 

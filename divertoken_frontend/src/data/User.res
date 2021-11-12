@@ -10,7 +10,7 @@ module Database = Firebase.Database
 
 module Codec = {
   open Json
-  let fromJson = (id: option<string>, data: Js.Json.t) => {
+  let fromJson = (_id: option<string>, data: Js.Json.t) => {
     data->(
       json => {
         {

@@ -77,11 +77,11 @@ let onSave = (~task_id: option<string>, ~notificationType) => {
   createNotification(~taskId=task_id, ~notificationType)->addNotification->ignore
 }
 
-let allNotifications = (task: Task.t, byUser: User.t, notificationType) => {
+let allNotifications = (task: Task.t, _byUser: User.t, notificationType) => {
   // Check who voted on the task & create notification for that user on this task id
   let taskEntries = Js.Dict.entries(task.voted)
   for x in 0 to Array.length(taskEntries) - 1 {
-    let (thisUser, voted) = taskEntries[x]
+    let (_thisUser, voted) = taskEntries[x]
     if voted == 1 {
       onSave(~task_id=task.id, ~notificationType)
     }

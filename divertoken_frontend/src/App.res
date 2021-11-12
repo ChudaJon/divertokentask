@@ -6,7 +6,7 @@ open MaterialUIDataType
 @react.component
 let make = () => {
   let (maybeUser, setUser) = useState(() => None)
-  let (auth, setAuth) = useState(() => "proto-user-0")
+  let (auth, _setAuth) = useState(() => "proto-user-0")
   let (notificationBadge, setNotificationBadge) = useState(() => 0)
 
   let onData = (id: option<string>, data: Js.Json.t) => {

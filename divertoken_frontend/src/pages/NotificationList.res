@@ -1,5 +1,4 @@
 open React
-open MaterialUI
 
 @react.component
 let make = (~user) => {
@@ -14,13 +13,7 @@ let make = (~user) => {
   let onDataChange = (id: option<string>, data: Js.Json.t) => {
     // Js.log3("task has changed", data, `with ID = ${id->Belt.Option.getWithDefault("no-id")}`)
     setNotificationList(notificationList =>
-      notificationList->Belt.List.map(t =>
-        if t.id == id {
-          data->Notification.fromJson(id, _)
-        } else {
-          t
-        }
-      )
+      notificationList->Belt.List.map(t => t.id == id ? data->Notification.fromJson(id, _) : t)
     )
   }
 
