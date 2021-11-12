@@ -72,6 +72,7 @@ let make = () => {
     Js.log2("user:: ", user)
     if user != defaultUser {
       User.addUser(~user)->ignore
+      RescriptReactRouter.push(Routes.route2Str(Login))
     }
 
     None
