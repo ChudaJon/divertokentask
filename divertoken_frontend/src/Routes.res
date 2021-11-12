@@ -1,6 +1,10 @@
 type routes =
   | Register
   | Login
+  | ForgotPassword
+  | ForgotPasswordSuccess
+  | ResetPassword
+  | ResetPasswordSuccess
   | UnclaimTask
   | TaskList
   | Notification
@@ -11,6 +15,10 @@ let url2route = (url: RescriptReactRouter.url) =>
   switch url.path {
   | list{"register"} => Register
   | list{"login"} => Login
+  | list{"forgot-password"} => ForgotPassword
+  | list{"forgot-password-success"} => ForgotPasswordSuccess
+  | list{"reset-password"} => ResetPassword
+  | list{"reset-password-success"} => ResetPasswordSuccess
   | list{"unclaim-task"} => UnclaimTask
   | list{"task-list"} => TaskList
   | list{"notification"} => Notification
@@ -23,6 +31,10 @@ let route2Str = route =>
   switch route {
   | Register => "/register"
   | Login => "/login"
+  | ForgotPassword => "/forgot-password"
+  | ForgotPasswordSuccess => "forgot-password-success"
+  | ResetPassword => "reset-password"
+  | ResetPasswordSuccess => "reset-password-success"
   | UnclaimTask => "/unclaim-task"
   | TaskList => "/task-list"
   | Notification => "/notification"
