@@ -1,4 +1,5 @@
 open React
+@module("/src/styles/TaskList.module.scss") external styles: 'a = "default"
 @react.component
 let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
   let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})

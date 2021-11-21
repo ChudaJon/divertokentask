@@ -34,7 +34,7 @@ let make = () => {
     onNotification()
     setNotificationBadge(_ => 0)
   }
-
+  //Nav
   let switchTab =
     <div style={ReactDOM.Style.make(~padding="25px", ())}>
       <Grid.Container spacing=3>
@@ -58,7 +58,7 @@ let make = () => {
       </Grid.Container>
     </div>
 
-  Js.log3("user:: ", maybeUser, url)
+  //Switch Page Content
   switch maybeUser {
   | None => <div> {string("Please Login")} </div>
   | Some(user) =>
