@@ -17,9 +17,17 @@ let defaultRegistration = {
   confirmedPassword: "",
 }
 
+let defaultUser: User.t = {
+  id: "",
+  displayName: "",
+  token: 0,
+  email: "",
+}
+
 @react.component
 let make = () => {
   let (registration, setRegistration) = React.useState(() => defaultRegistration)
+  let (user, setUser) = React.useState(() => defaultUser)
 
   let (_error, setError) = React.useState(_ => "")
 
@@ -39,25 +47,32 @@ let make = () => {
     )
     ->Promise.then(userCredential => {
       Js.log2("got result", userCredential)
-
-      Js.log2("got result", userCredential.user)
+      // Js.log2("got result", userCredential.user)
+      let user = userCredential.user
+      setUser(_ => {
+        id: user.uid,
+        displayName: registration.username,
+        token: 10,
+        email: user.email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
+      })
       Promise.resolve()
     })
     ->ignore
-
-    User.addUser(
-      ~user={
-        id: "id" ++ registration.username,
-        displayName: registration.username,
-        token: 10,
-        email: registration.email,
-      },
-    )->ignore
 
     // catch
 
     ()
   }
+
+  React.useEffect1(() => {
+    Js.log2("user:: ", user)
+    if user != defaultUser {
+      User.addUser(~user)->ignore
+      RescriptReactRouter.push(Routes.route2Str(Login))
+    }
+
+    None
+  }, [user])
 
   let onChange = (evt: ReactEvent.Form.t) => {
     let t = ReactEvent.Form.target(evt)
