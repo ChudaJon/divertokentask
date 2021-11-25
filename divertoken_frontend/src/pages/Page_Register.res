@@ -17,17 +17,10 @@ let defaultRegistration = {
   confirmedPassword: "",
 }
 
-let defaultUser: user = {
-  id: "",
-  displayName: "",
-  token: 0,
-  email: "",
-}
-
 @react.component
 let make = () => {
   let (registration, setRegistration) = React.useState(() => defaultRegistration)
-  let (user, setUser) = React.useState(() => defaultUser)
+  let (user: option<user>, setUser) = React.useState(() => None)
 
   let (_error, setError) = React.useState(_ => "")
 
@@ -37,9 +30,6 @@ let make = () => {
       setError(_ => "Passwords do not match")
     }
 
-    //try
-    // AuthContext.Provider.signup(~email="song@divertise.asia", ~password="123456+")
-    // ->ignore
     Firebase.Divertask.auth
     ->Firebase.Auth.createUserWithEmailAndPassword(
       ~email=registration.email,
@@ -47,12 +37,12 @@ let make = () => {
     )
     ->Promise.then(({user}) => {
       Js.log2("Register result", user)
-      setUser(_ => {
+      setUser(_ => Some({
         id: user.uid,
         displayName: registration.username,
         token: 10,
         email: user.email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
-      })
+      }))
       Promise.resolve()
     })
     ->ignore
@@ -60,9 +50,12 @@ let make = () => {
 
   React.useEffect1(() => {
     Js.log2("user:: ", user)
-    if user != defaultUser {
+
+    switch user {
+    | Some(user) =>
       User.addUser(~user)->ignore
       RescriptReactRouter.push(Routes.route2Str(Login))
+    | None => ()
     }
 
     None
