@@ -11,6 +11,7 @@ type routes =
   | Notification
   | AddTask
   | ViewTask(string)
+  | Account
 
 let url2route = (url: RescriptReactRouter.url) =>
   switch url.path {
@@ -26,6 +27,7 @@ let url2route = (url: RescriptReactRouter.url) =>
   | list{"notification"} => Notification
   | list{"add-task"} => AddTask
   | list{"view-task", taskId} => ViewTask(taskId)
+  | list{"account"} => Account
   | _ => UnclaimTask
   }
 
@@ -43,6 +45,7 @@ let route2Str = route =>
   | Notification => "/notification"
   | AddTask => "/add-task"
   | ViewTask(taskId) => "/view-task/" ++ taskId
+  | Account => "/account"
   }
 
 let push = route => RescriptReactRouter.push(route->route2Str)

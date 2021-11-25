@@ -43,8 +43,8 @@ let make = (
     | UnclaimTask => setCurrentTab(_ => UnClaimed)
     | TaskList => setCurrentTab(_ => YourTask)
     | Notification => setCurrentTab(_ => Notification)
+    | Account => setCurrentTab(_ => Account)
     | _ => ()
-    // | Account => setCurrentTab(_ => Account)
     }
     None
   }, [])
@@ -56,7 +56,7 @@ let make = (
     | Notification =>
       clearNotification() //TODO: should be call in notification page instead
       Routes.push(Notification)
-    | Account => ()
+    | Account => Routes.push(Account)
     }
     None
   }, [currentTab])

@@ -71,6 +71,15 @@ module RouterWithAuth = {
         </Layout_Main>
       | ViewTask(taskId) => <Page_ViewTask taskId user notificationBadge setNotificationBadge />
       | Logout => <div> {string("Logging out")} </div>
+      | Account =>
+        <Layout_Main
+          tokenCount
+          notificationBadge
+          setNotificationBadge
+          title="Create a New Task"
+          onLogout={_ => onLogout()}>
+          {string("Account page")}
+        </Layout_Main>
       | _ =>
         <Layout_Main
           tokenCount
