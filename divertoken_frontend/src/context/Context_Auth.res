@@ -1,10 +1,10 @@
 type context = option<Data.User.t>
 let defaultContext: context = None
 
-let authContext = React.createContext(defaultContext)
+let context = React.createContext(defaultContext)
 
 module Provider = {
-  let provider = React.Context.provider(authContext)
+  let provider = React.Context.provider(context)
 
   @react.component
   let make = (~user, ~children) => {
