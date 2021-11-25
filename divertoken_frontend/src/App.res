@@ -22,7 +22,7 @@ module RouterNoAuth = {
 
 module RouterWithAuth = {
   @react.component
-  let make = (~user: User.t) => {
+  let make = (~user: User.t, ~onLogout) => {
     let tokenCount = {
       user.token != 1
         ? <div> {string(`You have  ${Js.Int.toString(user.token)} tokens`)} </div>
@@ -32,6 +32,14 @@ module RouterWithAuth = {
     let (notificationBadge, setNotificationBadge) = useState(() => 0)
 
     let url = RescriptReactRouter.useUrl()
+
+    React.useEffect1(() => {
+      switch url->Routes.url2route {
+      | Logout => onLogout()
+      | _ => ()
+      }
+      None
+    }, [url])
 
     <Context_Tasks.Provider>
       {switch url->Routes.url2route {
@@ -48,6 +56,7 @@ module RouterWithAuth = {
           <Page_AddTask user />
         </Layout_Main>
       | ViewTask(taskId) => <Page_ViewTask taskId user notificationBadge setNotificationBadge />
+      | Logout => <div> {string("Logging out")} </div>
       | _ =>
         <Layout_Main tokenCount notificationBadge setNotificationBadge title="Unclaimed Tasks">
           <Page_UnclaimTask user notificationBadge setNotificationBadge />
@@ -61,6 +70,8 @@ module RouterWithAuth = {
 let make = () => {
   let (maybeUser, setUser) = useState(() => Loading)
   let (auth, _setAuth) = useState(() => "proto-user-0")
+
+  let onLogout = () => setUser(_ => Success(None))
 
   useEffect1(() => {
     let onData = (id: option<string>, data: Js.Json.t) => {

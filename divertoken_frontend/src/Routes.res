@@ -5,6 +5,7 @@ type routes =
   | ForgotPasswordSuccess
   | ResetPassword
   | ResetPasswordSuccess
+  | Logout
   | UnclaimTask
   | TaskList
   | Notification
@@ -19,6 +20,7 @@ let url2route = (url: RescriptReactRouter.url) =>
   | list{"forgot-password-success"} => ForgotPasswordSuccess
   | list{"reset-password"} => ResetPassword
   | list{"reset-password-success"} => ResetPasswordSuccess
+  | list{"logout"} => Logout
   | list{"unclaim-task"} => UnclaimTask
   | list{"task-list"} => TaskList
   | list{"notification"} => Notification
@@ -35,6 +37,7 @@ let route2Str = route =>
   | ForgotPasswordSuccess => "forgot-password-success"
   | ResetPassword => "reset-password"
   | ResetPasswordSuccess => "reset-password-success"
+  | Logout => "logout"
   | UnclaimTask => "/unclaim-task"
   | TaskList => "/task-list"
   | Notification => "/notification"
