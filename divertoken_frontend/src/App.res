@@ -13,6 +13,8 @@ let make = () => {
   useEffect1(() => {
     let onData = (id: option<string>, data: Js.Json.t) => {
       let user = data->User.Codec.fromJson(id, _)
+
+      Js.log2("Got user", user)
       setUser(_ => Success(Some(user)))
     }
     let stopListen = Firebase.Divertask.listenToPath(
