@@ -177,6 +177,6 @@ let make = () => {
       </Context_Tasks.Provider>
       // </AuthContext.Provider>
     </div>
-  | _ => <div> {string("Please Login")} </div>
+  | _ => <Login />
   }
 }
