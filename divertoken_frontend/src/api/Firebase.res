@@ -37,7 +37,7 @@ module Database = {
     @send
     external once: (
       t,
-      ~eventType: @string [#value | #child_added | #child_changed | #child_removed | #child_moved],
+      ~eventType: [#value | #child_added | #child_changed | #child_removed | #child_moved],
       ~successCallback: DataSnapshot.t => unit=?,
       unit,
     ) => Js.Promise.t<DataSnapshot.t> = "once"
@@ -45,7 +45,7 @@ module Database = {
     @send
     external on: (
       t,
-      ~eventType: @string [#value | #child_added | #child_changed | #child_removed | #child_moved],
+      ~eventType: [#value | #child_added | #child_changed | #child_removed | #child_moved],
       ~callback: DataSnapshot.t => unit,
       ~cancelCallback: Error.t<'e> => unit=?,
     ) => t = "on"
@@ -53,7 +53,7 @@ module Database = {
     @send
     external off: (
       t,
-      ~eventType: @string [#value | #child_added | #child_changed | #child_removed | #child_moved],
+      ~eventType: [#value | #child_added | #child_changed | #child_removed | #child_moved],
       ~callback: DataSnapshot.t => unit=?,
       unit,
     ) => unit = "off"
