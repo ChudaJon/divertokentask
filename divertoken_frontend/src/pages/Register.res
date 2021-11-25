@@ -175,7 +175,9 @@ let make = () => {
               (),
             )}>
             // route to login
-            <a href="/"> {string("Log in")} </a>
+            <Button onClick={_ => RescriptReactRouter.push(Routes.Login->Routes.route2Str)}>
+              {string("Log in")}
+            </Button>
           </div>
         </Container>
       </Grid.Container>

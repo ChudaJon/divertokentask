@@ -30,7 +30,9 @@ let make = () => {
         ~textDecoration="none",
         (),
       )}>
-      <a href={Routes.route2Str(route)}> {string(text)} </a>
+      <Button onClick={_ => Routes.route2Str(route)->RescriptReactRouter.push}>
+        {string(text)}
+      </Button>
     </div>
 
   let onChange = (evt: ReactEvent.Form.t) => {
