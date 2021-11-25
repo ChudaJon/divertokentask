@@ -1,45 +1,23 @@
 open MaterialUI
 open MaterialUI.DataType
 
+type tab = UnClaimed | YourTask | Notification | Account
+
 module SwitchTabs = {
   @react.component
-  let make = (~notificationBadge, ~clearNotification) => {
-    let onUnclaimedTask = _ => Routes.push(UnclaimTask)
-    let onTaskList = _ => Routes.push(TaskList)
-    let onNotification = _ => {
-      Routes.push(Notification)
-      clearNotification()
-    }
+  let make = (~currentTab, ~setCurrentTab, ~notificationBadge) => {
+    let onChange = (_event, newTab) => setCurrentTab(_ => newTab)
 
-    let tab = (~text, ~onClick) =>
-      <Button onClick fullWidth=true>
-        <Typography variant=Typography.Variant.h6> {React.string(text)} </Typography>
-      </Button>
-
-    let tabWithBadge = (~text, ~onClick, ~badgeContent) =>
-      <Button onClick fullWidth=true>
-        <Badge badgeContent color="secondary">
-          <Typography variant=Typography.Variant.h6> {React.string(text)} </Typography>
-        </Badge>
-      </Button>
-
-    <div style={ReactDOM.Style.make(~padding="25px", ())}>
-      <Grid.Container spacing=3>
-        <Grid.Item xs={GridSize.size(4)}>
-          {tab(~text="Unclaimed Tasks", ~onClick=onUnclaimedTask)}
-        </Grid.Item>
-        <Grid.Item xs={GridSize.size(4)}>
-          {tab(~text="Your Tasks", ~onClick=onTaskList)}
-        </Grid.Item>
-        <Grid.Item xs={GridSize.size(4)}>
-          {tabWithBadge(
-            ~text="Notifications",
-            ~onClick=onNotification,
-            ~badgeContent=notificationBadge,
-          )}
-        </Grid.Item>
-      </Grid.Container>
-    </div>
+    <BottomNavigation showLabels=true value={currentTab} onChange>
+      <BottomNavigationAction label="Unclaimed Tasks" icon={<Icon.FormatListBulleted />} />
+      <BottomNavigationAction label="Your Tasks" icon={<Icon.Person />} />
+      <BottomNavigationAction
+        label="Notifications"
+        icon={<Badge badgeContent=notificationBadge color="secondary">
+          <Icon.Notifications />
+        </Badge>}
+      />
+    </BottomNavigation>
   }
 }
 
@@ -52,7 +30,32 @@ let make = (
   ~onLogout,
   ~children,
 ) => {
+  let url = RescriptReactRouter.useUrl()
+  let (currentTab, setCurrentTab) = React.useState(_ => UnClaimed)
   let clearNotification = () => setNotificationBadge(_ => 0)
+
+  React.useEffect1(() => {
+    switch url->Routes.url2route {
+    | UnclaimTask => setCurrentTab(_ => UnClaimed)
+    | TaskList => setCurrentTab(_ => YourTask)
+    | Notification => setCurrentTab(_ => Notification)
+    | _ => ()
+    // | Account => setCurrentTab(_ => Account)
+    }
+    None
+  }, [])
+
+  React.useEffect1(() => {
+    switch currentTab {
+    | UnClaimed => Routes.push(UnclaimTask)
+    | YourTask => Routes.push(TaskList)
+    | Notification =>
+      clearNotification() //TODO: should be call in notification page instead
+      Routes.push(Notification)
+    | Account => ()
+    }
+    None
+  }, [currentTab])
 
   <div>
     <div style={ReactDOM.Style.make(~padding="10px", ())}>
@@ -72,7 +75,7 @@ let make = (
       </Grid.Container>
     </div>
     {children}
-    <SwitchTabs clearNotification notificationBadge />
+    <SwitchTabs currentTab setCurrentTab notificationBadge />
     <Button
       variant={Button.Variant.contained} color={NoTransparentColor.secondary} onClick=onLogout>
       {React.string("Logout")}
