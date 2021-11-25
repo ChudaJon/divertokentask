@@ -49,7 +49,7 @@ let login = (_username, _password): Js.Promise.t<t> =>
   Js.Promise.resolve({
     id: "proto-user-0",
     displayName: "test",
-    token: 10,
+    token: Env.defaultToken,
     email: "divertask@divertise.asia",
   })
 
@@ -57,5 +57,5 @@ let addUser = (~user: t) => {
   let db = Firebase.Divertask.db
   let value = user->Codec.toJson
 
-  db->Database.ref(~path="users", ())->Database.Reference.push(~value, ())
+  db->Database.ref(~path=`users/${user.id}`, ())->Database.Reference.set(~value, ())
 }
