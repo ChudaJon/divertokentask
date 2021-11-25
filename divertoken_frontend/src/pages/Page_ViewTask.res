@@ -14,9 +14,9 @@ let make = (~user: user, ~taskId: string, ~notificationBadge, ~setNotificationBa
 
   let onNotification = () => Routes.push(Notification)
 
-  let allTasks = React.useContext(Context_Tasks.context)
+  let tasks = React.useContext(Context_Tasks.context)
 
-  let optionTask = allTasks->Belt.List.getBy(t => t.id == Some(taskId))
+  let optionTask = tasks->Belt.Array.getBy(t => t.id == Some(taskId))
 
   let statusToString = (status: Task.status) => {
     switch status {

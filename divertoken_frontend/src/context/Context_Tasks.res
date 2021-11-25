@@ -1,8 +1,9 @@
 open Data
+open Belt
 
-type context = list<task>
+type context = array<task>
 
-let defaultContext = list{}
+let defaultContext = []
 
 let context: React.Context.t<context> = React.createContext(defaultContext)
 
@@ -13,35 +14,25 @@ module Provider = {
 
   @react.component
   let make = (~children) => {
-    let (tasks: list<task>, setTaskList) = React.useState(_ => list{})
-
-    let onDataAdded = (id: option<string>, data: Js.Json.t) => {
-      let task = data->Task.fromJson(id, _)
-      setTaskList(prevTasks => list{task, ...prevTasks})
-    }
-
-    let onDataChange = (id: option<string>, data: Js.Json.t) =>
-      setTaskList(taskList =>
-        taskList->Belt.List.map(t => t.id == id ? data->Task.fromJson(id, _) : t)
-      )
+    let (tasks: array<task>, setTasks) = React.useState(_ => [])
 
     React.useEffect0(() => {
-      let stopListen = Firebase.Divertask.listenToPath(
-        "tasks",
-        ~eventType=#child_added,
-        ~onData=onDataAdded,
-        (),
-      )
-      let stopListen2 = Firebase.Divertask.listenToPath(
-        "tasks",
-        ~eventType=#child_changed,
-        ~onData=onDataChange,
-        (),
-      )
+      open Firebase.Divertask
+      let onTaskAdded = (id, data) =>
+        setTasks(prevTasks => prevTasks->Array.concat([data->Task.fromJson(id, _)]))
+      let onTaskChange = (id, data) =>
+        setTasks(taskList => taskList->Array.map(t => t.id == id ? data->Task.fromJson(id, _) : t))
+      let onTaskRemove = (id, _data) =>
+        setTasks(prevTasks => prevTasks->Array.keep(t => t.id != id))
+
+      let stopListen = listenToPath("tasks", ~eventType=#child_added, ~onData=onTaskAdded, ())
+      let stopListen2 = listenToPath("tasks", ~eventType=#child_changed, ~onData=onTaskChange, ())
+      let stopListen3 = listenToPath("tasks", ~eventType=#child_removed, ~onData=onTaskRemove, ())
 
       let uninstall = () => {
         stopListen()
         stopListen2()
+        stopListen3()
       }
 
       Some(uninstall)

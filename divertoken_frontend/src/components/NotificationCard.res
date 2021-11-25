@@ -13,12 +13,12 @@ module Styles = {
 
 @react.component
 let make = (~user: user, ~notification: notification) => {
-  let allTasks = React.useContext(Context_Tasks.context)
+  let tasks = React.useContext(Context_Tasks.context)
 
   let taskId = notification.task_id->Belt.Option.getWithDefault("")
 
   let linkToTask = () => Routes.push(ViewTask(taskId))
-  let optionTask = allTasks->Belt.List.getBy(t => t.id == Some(taskId))
+  let optionTask = tasks->Belt.Array.getBy(t => t.id == Some(taskId))
 
   switch optionTask {
   | Some(task) =>
