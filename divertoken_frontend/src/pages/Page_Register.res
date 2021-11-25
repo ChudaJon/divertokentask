@@ -41,8 +41,9 @@ let make = () => {
         token: 10,
         email: email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
       }
+
       User.addUser(~user)->ignore
-      RescriptReactRouter.push(Routes.route2Str(Login))
+      Routes.push(Login)
       Promise.resolve()
     })
     ->ignore
