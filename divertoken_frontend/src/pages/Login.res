@@ -15,7 +15,7 @@ let defaultLogin = {
 
 @react.component
 let make = () => {
-  let (_login, setLogin) = React.useState(() => defaultLogin)
+  let (login, setLogin) = React.useState(() => defaultLogin)
 
   let textLink = (text, route) =>
     <div
