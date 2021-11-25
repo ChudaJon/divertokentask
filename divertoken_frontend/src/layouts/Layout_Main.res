@@ -8,11 +8,10 @@ module SwitchTabs = {
   let make = (~currentTab, ~setCurrentTab, ~notificationBadge) => {
     let onChange = (_event, newTab) => setCurrentTab(_ => newTab)
 
-    <BottomNavigation showLabels=true value={currentTab} onChange>
-      <BottomNavigationAction label="Unclaimed Tasks" icon={<Icon.FormatListBulleted />} />
-      <BottomNavigationAction label="Your Tasks" icon={<Icon.Person />} />
+    <BottomNavigation value={currentTab} onChange>
+      <BottomNavigationAction icon={<Icon.FormatListBulleted />} />
+      <BottomNavigationAction icon={<Icon.Person />} />
       <BottomNavigationAction
-        label="Notifications"
         icon={<Badge badgeContent=notificationBadge color="secondary">
           <Icon.Notifications />
         </Badge>}
