@@ -2,6 +2,17 @@ open React
 open MaterialUI
 module Item = Grid.Item
 
+module Styles = {
+  let descriptionText = ReactDOM.Style.make(
+    ~margin="auto",
+    ~textAlign="left",
+    ~padding="0px 16px 20px 16px",
+    ~fontFamily="Arial",
+    ~fontSize="17px",
+    (),
+  )
+}
+
 @react.component
 let make = () => {
   let (email, setEmail) = React.useState(_ => "")
@@ -25,15 +36,7 @@ let make = () => {
 
   <Layout_FormPage>
     <Form title="Forgot your password?">
-      <div
-        style={ReactDOM.Style.make(
-          ~margin="auto",
-          ~textAlign="left",
-          ~padding="0px 16px 20px 16px",
-          ~fontFamily="Arial",
-          ~fontSize="17px",
-          (),
-        )}>
+      <div style={Styles.descriptionText}>
         {string(
           "Please enter the email you used to create your account. We will send you a reset password link",
         )}
