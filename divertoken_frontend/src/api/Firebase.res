@@ -166,7 +166,7 @@ module Storage = {
 module Auth = {
   type t
   type user = {
-    displayName: string,
+    displayName: Js.nullable<string>,
     email: Js.nullable<string>,
     emailVerified: bool,
     isAnonymous: bool,
@@ -211,6 +211,7 @@ module Auth = {
     ~nextOrObserver: Js.Null.t<User.t> => unit,
     ~error: Error.t => unit=?,
     ~completed: unit => unit=?,
+    unit,
   ) => unit = "onAuthStateChanged"
   @send
   external signInAnonymously: (t, unit) => Js.Promise.t<UserCredential.t> = "signInAnonymously"

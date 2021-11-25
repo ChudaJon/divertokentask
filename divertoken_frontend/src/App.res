@@ -87,41 +87,65 @@ module RouterWithAuth = {
 
 @react.component
 let make = () => {
-  let (user: apiState<option<user>, string>, setUser) = useState(() => Loading)
+  let (firebaseUser: option<Firebase.Auth.user>, setFirebaseUser) = React.useState(_ => None)
+  let (user: option<user>, setUser) = React.useState(_ => None)
 
-  let onLogout = () =>
-    Firebase.Divertask.auth
-    ->Firebase.Auth.signOut
-    ->Promise.then(_ => setUser(_ => Success(None))->Promise.resolve)
-    ->ignore
+  React.useEffect0(() => {
+    open Firebase.Divertask
+    let onNext = nullableUser => {
+      Js.log2("Firebase user change", nullableUser)
+      nullableUser
+      ->Js.Null.toOption
+      ->((user: option<Firebase.Auth.User.t>) => setFirebaseUser(_ => user))
+    }
+    auth->Firebase.Auth.onAuthStateChanged(~nextOrObserver=onNext, ())
+    None
+  })
 
-  let onLoginSuccess = user => {
-    setUser(_ => Success(Some(user)))
-    Routes.push(UnclaimTask)
-  }
-
-  useEffect1(() => {
-    switch user {
-    | Success(Some({id})) =>
+  React.useEffect1(() => {
+    switch firebaseUser {
+    | Some({uid, email, displayName}) =>
       let onData = (id: option<string>, data) => {
         let user = data->User.Codec.fromJson(id, _)
-
         Js.log2("Got user from listener", user)
-        setUser(_ => Success(Some(user)))
+        switch user {
+        | Some(user) => setUser(_ => Some(user))
+        | None =>
+          User.addUser(
+            ~user={
+              id: uid,
+              displayName: displayName->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
+              token: 10,
+              email: email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
+            },
+          )->ignore
+        }
       }
       let stopListen = Firebase.Divertask.listenToPath(
-        `users/${id}`,
+        `users/${uid}`,
         ~eventType=#value,
         ~onData,
         (),
       )
       Some(stopListen)
-    | _ => None
+    | None =>
+      setUser(_ => None)
+      None
     }
-  }, [user])
+  }, [firebaseUser])
 
-  switch user {
-  | Success(Some(user)) => <RouterWithAuth user onLogout />
-  | _ => <RouterNoAuth onLoginSuccess />
-  }
+  let onLogout = () =>
+    Firebase.Divertask.auth
+    ->Firebase.Auth.signOut
+    ->Promise.then(_ => Routes.push(Login)->Promise.resolve)
+    ->ignore
+
+  let onLoginSuccess = () => Routes.push(UnclaimTask)
+
+  <Context_Auth.Provider user>
+    {switch user {
+    | Some(user) => <RouterWithAuth user onLogout />
+    | _ => <RouterNoAuth onLoginSuccess />
+    }}
+  </Context_Auth.Provider>
 }

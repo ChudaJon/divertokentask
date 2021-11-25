@@ -1,5 +1,3 @@
-open Data
-
 type login = {
   username: string,
   password: string,
@@ -29,20 +27,7 @@ let make = (~onLoginSuccess) => {
   let onLogin = _evt => {
     Firebase.Divertask.auth
     ->Firebase.Auth.signInWithEmailAndPassword(~email=login.username, ~password=login.password)
-    ->Promise.then(({user: {uid, displayName, email}}) => {
-      Js.log("TODO: Set user")
-      Js.log4("displayName", displayName, "email", email)
-
-      let user: user = {
-        id: uid,
-        displayName: displayName,
-        token: 10,
-        email: email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
-      }
-      onLoginSuccess(user)
-
-      Promise.resolve()
-    })
+    ->Promise.then(({user: _}) => onLoginSuccess()->Promise.resolve)
     ->Promise.catch(err => Js.log2("Login error", err)->Promise.resolve)
     ->ignore
   }
