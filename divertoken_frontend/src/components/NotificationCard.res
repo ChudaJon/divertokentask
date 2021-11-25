@@ -3,6 +3,14 @@ open MaterialUI
 open MaterialUIDataType
 open Data
 
+module Styles = {
+  open ReactDOM.Style
+  let container = make(~margin="auto", ~width="50%", ~display="block", ())
+  let box = make(~margin="10px", ~padding="15px 25px", ~backgroundColor="#FFFFFF", ())
+
+  let button = make(~margin="auto", ~padding="10px 3px", ())
+}
+
 @react.component
 let make = (~user: user, ~notification: notification) => {
   let allTasks = React.useContext(Context_Tasks.context)
@@ -15,17 +23,11 @@ let make = (~user: user, ~notification: notification) => {
   switch optionTask {
   | Some(task) =>
     <Grid.Container>
-      <div style={ReactDOM.Style.make(~margin="auto", ~width="50%", ~display="block", ())}>
-        <div
-          className="box"
-          style={ReactDOM.Style.make(
-            ~margin="10px",
-            ~padding="15px 25px",
-            ~backgroundColor="#FFFFFF",
-            (),
-          )}>
+      <div style={Styles.container}>
+        //TODO: Change to use either flex or block
+        <div className="box" style={Styles.box}>
           <Grid.Item xs={GridSize.size(12)}>
-            <div style={ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ())}>
+            <div style={Styles.button}>
               <Button onClick={_ => linkToTask()}>
                 <Typography variant=Typography.Variant.h6>
                   {string(
