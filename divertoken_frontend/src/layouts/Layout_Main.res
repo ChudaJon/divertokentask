@@ -6,6 +6,10 @@ type tab = UnClaimed | YourTask | Notification | Account
 module SwitchTabs = {
   @react.component
   let make = (~currentTab, ~setCurrentTab, ~notificationBadge) => {
+    let user = React.useContext(Context_Auth.context)
+    let userStr =
+      user->Belt.Option.mapWithDefault("", ({email}) => email->Js.String2.slice(~from=0, ~to_=2))
+
     let onChange = (_event, newTab) => setCurrentTab(_ => newTab)
 
     <BottomNavigation value={currentTab} onChange>
@@ -16,6 +20,7 @@ module SwitchTabs = {
           <Icon.Notifications />
         </Badge>}
       />
+      <BottomNavigationAction icon={<Avatar> {React.string(userStr)} </Avatar>} />
     </BottomNavigation>
   }
 }
