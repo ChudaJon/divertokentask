@@ -36,7 +36,7 @@ let make = () => {
       let user: user = {
         id: uid,
         displayName: registration.email,
-        token: 10,
+        token: Env.defaultToken,
         email: email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
       }
 
