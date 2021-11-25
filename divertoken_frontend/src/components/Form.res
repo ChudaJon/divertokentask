@@ -50,19 +50,8 @@ module SubmitButton = {
 
 module TextLink = {
   @react.component
-  let make = (~text, ~onClick) =>
-    <div
-      style={ReactDOM.Style.make(
-        ~margin="auto",
-        ~color="#26212E",
-        ~textAlign="center",
-        ~borderRadius="4px",
-        ~padding="10px 0px 50px 0px",
-        ~fontFamily="Arial",
-        ~fontSize="14px",
-        ~textDecoration="none",
-        (),
-      )}>
-      <Button onClick> {React.string(text)} </Button>
-    </div>
+  let make = (~text, ~onClick) => {
+    let style = ReactDOM.Style.make(~textAlign="center", ~fontFamily="Arial", ~cursor="pointer", ())
+    <Grid.Item> <div onClick style> <Link> {React.string(text)} </Link> </div> </Grid.Item>
+  }
 }
