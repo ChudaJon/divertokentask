@@ -3,7 +3,7 @@ open MaterialUI.DataType
 
 module SwitchTabs = {
   @react.component
-  let make = (~title, ~notificationBadge, ~clearNotification) => {
+  let make = (~notificationBadge, ~clearNotification) => {
     let onUnclaimedTask = _ => Routes.push(UnclaimTask)
     let onTaskList = _ => Routes.push(TaskList)
     let onNotification = _ => {
@@ -25,7 +25,9 @@ module SwitchTabs = {
 
     <div style={ReactDOM.Style.make(~padding="25px", ())}>
       <Grid.Container spacing=3>
-        <Grid.Item xs={GridSize.size(4)}> {tab(~text=title, ~onClick=onUnclaimedTask)} </Grid.Item>
+        <Grid.Item xs={GridSize.size(4)}>
+          {tab(~text="Unclaimed Tasks", ~onClick=onUnclaimedTask)}
+        </Grid.Item>
         <Grid.Item xs={GridSize.size(4)}>
           {tab(~text="Your Tasks", ~onClick=onTaskList)}
         </Grid.Item>
@@ -58,9 +60,7 @@ let make = (
         <Grid.Item xs={GridSize.size(12)}>
           <Grid.Container justify=Justify.center spacing=10>
             <Grid.Item>
-              <Typography variant=Typography.Variant.h5>
-                {React.string("Unclaimed Tasks")}
-              </Typography>
+              <Typography variant=Typography.Variant.h5> {React.string(title)} </Typography>
             </Grid.Item>
             <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
               <Grid.Item>
@@ -72,7 +72,7 @@ let make = (
       </Grid.Container>
     </div>
     {children}
-    <SwitchTabs title clearNotification notificationBadge />
+    <SwitchTabs clearNotification notificationBadge />
     <Button
       variant={Button.Variant.contained} color={NoTransparentColor.secondary} onClick=onLogout>
       {React.string("Logout")}
