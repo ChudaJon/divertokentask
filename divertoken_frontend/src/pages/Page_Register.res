@@ -74,7 +74,7 @@ let make = () => {
 
   <Layout_FormPage>
     <Form title="Register to Divertask">
-      <Form.TextInput label="Username" name="username" onChange />
+      <Form.TextInput label="Username" name="username" onChange autoFocus=true />
       <Form.TextInput label="Password" _type="password" name="password" onChange />
       <Form.TextInput label="Confirm Password" _type="password" name="cpassword" onChange />
       <Form.SubmitButton onClick=handleSubmit />

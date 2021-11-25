@@ -41,7 +41,9 @@ let make = () => {
           "Please enter the email you used to create your account. We will send you a reset password link",
         )}
       </div>
-      <Form.TextInput label="Your Email" name="email" _type="email" onChange=onEmailChange />
+      <Form.TextInput
+        label="Your Email" name="email" _type="email" onChange=onEmailChange autoFocus=true
+      />
       <Form.SubmitButton text="Send Me a Link" onClick=resetPassword />
     </Form>
   </Layout_FormPage>

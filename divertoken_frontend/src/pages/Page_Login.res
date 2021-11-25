@@ -44,7 +44,7 @@ let make = () => {
 
   <Layout_FormPage>
     <Form title="Sign In to Divertask">
-      <Form.TextInput label="Username" name="username" onChange />
+      <Form.TextInput label="Username" name="username" onChange autoFocus=true />
       <Form.TextInput label="Password" _type="password" name="password" onChange />
       <Form.SubmitButton text="Sign In" onClick=onLogin />
       <Form.TextLink text="Register" onClick={_ => Routes.push(Register)} />

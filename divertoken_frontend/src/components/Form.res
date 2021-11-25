@@ -31,11 +31,13 @@ let make = (~title, ~children=React.null) => {
 
 module TextInput = {
   @react.component
-  let make = (~label, ~name, ~_type=?, ~onChange) => {
+  let make = (~label, ~name, ~_type=?, ~autoFocus=?, ~onChange) => {
     let style = ReactDOM.Style.make(~fontSize="25px", ~margin="10px", ~textAlign="center", ())
 
     <Grid.Item>
-      <div style> <TextField label name ?_type variant=TextField.Variant.outlined onChange /> </div>
+      <div style>
+        <TextField ?autoFocus label name ?_type variant=TextField.Variant.outlined onChange />
+      </div>
     </Grid.Item>
   }
 }
