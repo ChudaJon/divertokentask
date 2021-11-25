@@ -72,12 +72,12 @@ let make = () => {
       // <AuthContext.Provider>
       <Context_Tasks.Provider>
         {switch url->Routes.url2route {
-        | Register => <Register />
-        | Login => <Login />
-        | ForgotPassword => <ForgotPassword />
-        | ForgotPasswordSuccess => <ForgotPasswordSuccess />
-        | ResetPassword => <ResetPassword />
-        | ResetPasswordSuccess => <ResetPasswordSuccess />
+        | Register => <Page_Register />
+        | Login => <Page_Login />
+        | ForgotPassword => <Page_ForgotPassword />
+        | ForgotPasswordSuccess => <Page_ForgotPasswordSuccess />
+        | ResetPassword => <Page_ResetPassword />
+        | ResetPasswordSuccess => <Page_ResetPasswordSuccess />
         | UnclaimTask =>
           <div>
             <div style={ReactDOM.Style.make(~padding="10px", ())}>
@@ -99,7 +99,7 @@ let make = () => {
                 </Grid.Item>
               </Grid.Container>
             </div>
-            <UnclaimTask user notificationBadge setNotificationBadge />
+            <Page_UnclaimTask user notificationBadge setNotificationBadge />
             switchTab
           </div>
         | TaskList =>
@@ -123,7 +123,7 @@ let make = () => {
                 </Grid.Item>
               </Grid.Container>
             </div>
-            <TaskList user notificationBadge setNotificationBadge />
+            <Page_TaskList user notificationBadge setNotificationBadge />
             switchTab
           </div>
         | Notification =>
@@ -147,7 +147,7 @@ let make = () => {
                 </Grid.Item>
               </Grid.Container>
             </div>
-            <NotificationList user />
+            <Page_NotificationList user />
             switchTab
           </div>
         | AddTask =>
@@ -171,14 +171,14 @@ let make = () => {
                 </Grid.Item>
               </Grid.Container>
             </div>
-            <AddTask user />
+            <Page_AddTask user />
             switchTab
           </div>
-        | ViewTask(taskId) => <ViewTask taskId user notificationBadge setNotificationBadge />
+        | ViewTask(taskId) => <Page_ViewTask taskId user notificationBadge setNotificationBadge />
         }}
       </Context_Tasks.Provider>
       // </AuthContext.Provider>
     </div>
-  | _ => <Login />
+  | _ => <Page_Login />
   }
 }
