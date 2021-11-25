@@ -1,4 +1,3 @@
-open React
 open MaterialUI
 
 module Item = Grid.Item
@@ -73,100 +72,13 @@ let make = () => {
     })
   }
 
-  let textFieldStyle = ReactDOM.Style.make(
-    ~fontSize="25px",
-    ~display="flex",
-    ~justifyContent="center",
-    ~margin="16px 0px",
-    (),
-  )
-
   <Layout_FormPage>
-    <Grid.Container>
-      <Container>
-        <div
-          style={ReactDOM.Style.make(
-            ~margin="auto",
-            ~textAlign="center",
-            ~padding="100px 16px 30px 16px",
-            ~fontFamily="Arial",
-            ~fontSize="25px",
-            (),
-          )}>
-          {string("Register to Divertask")}
-        </div>
-        <div style=textFieldStyle>
-          // <Item> <TextField label="Username" name="username" value=registration.username variant=TextField.Variant.outlined onChange /> </Item>
-          <Item>
-            <TextField
-              label="Username" name="username" variant=TextField.Variant.outlined onChange
-            />
-          </Item>
-        </div>
-        <div style=textFieldStyle>
-          // <Item> <TextField label="Username" name="username" value=registration.username variant=TextField.Variant.outlined onChange /> </Item>
-          <Item>
-            <TextField
-              label="Email Address" name="email" variant=TextField.Variant.outlined onChange
-            />
-          </Item>
-        </div>
-        <div style=textFieldStyle>
-          // <Item> <TextField label="Username" _type="password" name="username" value=registration.username variant=TextField.Variant.outlined onChange /> </Item>
-          <Item>
-            <TextField
-              label="Password"
-              _type="password"
-              name="password"
-              variant=TextField.Variant.outlined
-              onChange
-            />
-          </Item>
-        </div>
-        <div style=textFieldStyle>
-          // <Item> <TextField label="Confirm Password" _type="password" name="cpassword" value=registration.confirmedPassword variant=TextField.Variant.outlined onChange /> </Item>
-          <Item>
-            <TextField
-              label="Confirm Password"
-              _type="password"
-              name="cpassword"
-              variant=TextField.Variant.outlined
-              onChange
-            />
-          </Item>
-        </div>
-        <div
-          style={ReactDOM.Style.make(
-            ~margin="auto",
-            ~textAlign="center",
-            ~borderRadius="4px",
-            ~cursor="pointer",
-            ~padding="25px",
-            (),
-          )}>
-          <Button
-            onClick=handleSubmit color="primary" variant=Button.Variant.contained size="large">
-            {string("Register")}
-          </Button>
-        </div>
-        <div
-          style={ReactDOM.Style.make(
-            ~margin="auto",
-            ~color="#26212E",
-            ~textAlign="center",
-            ~borderRadius="4px",
-            ~padding="10px 0px 50px 0px",
-            ~fontFamily="Arial",
-            ~fontSize="14px",
-            ~textDecoration="none",
-            (),
-          )}>
-          // route to login
-          <Button onClick={_ => RescriptReactRouter.push(Routes.Login->Routes.route2Str)}>
-            {string("Log in")}
-          </Button>
-        </div>
-      </Container>
-    </Grid.Container>
+    <Form title="Register to Divertask">
+      <Form.TextInput label="Username" name="username" onChange />
+      <Form.TextInput label="Password" _type="password" name="password" onChange />
+      <Form.TextInput label="Confirm Password" _type="password" name="cpassword" onChange />
+      <Form.SubmitButton onClick=handleSubmit />
+      <Form.TextLink text="Log in" onClick={_ => Routes.push(Login)} />
+    </Form>
   </Layout_FormPage>
 }
