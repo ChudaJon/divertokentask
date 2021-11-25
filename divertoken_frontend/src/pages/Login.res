@@ -72,64 +72,56 @@ let make = () => {
     (),
   )
 
-  <div
-    style={ReactDOM.Style.make(
-      ~padding="50px 0px 0px 0px",
-      ~display="flex",
-      ~justifyContent="center",
-      (),
-    )}>
-    <MaterialUI.Paper style={ReactDOM.Style.make(~width="30%", ())}>
-      <Grid.Container>
-        <Container>
-          <div
-            style={ReactDOM.Style.make(
-              ~margin="auto",
-              ~textAlign="center",
-              ~padding="80px 16px 30px 16px",
-              ~fontFamily="Arial",
-              ~fontSize="25px",
-              (),
-            )}>
-            {string("Sign In to Divertask")}
-          </div>
-          <div style=textFieldStyle>
-            // <Item> <TextField label="Username" name="username" value=registration.username variant=TextField.Variant.outlined onChange /> </Item>
-            <Item>
-              <TextField
-                label="Username" name="username" variant=TextField.Variant.outlined onChange
-              />
-            </Item>
-          </div>
-          <div style=textFieldStyle>
-            // <Item> <TextField label="Username" _type="password" name="username" value=registration.username variant=TextField.Variant.outlined onChange /> </Item>
-            <Item>
-              <TextField
-                label="Password"
-                _type="password"
-                name="password"
-                variant=TextField.Variant.outlined
-                onChange
-              />
-            </Item>
-          </div>
-          <div
-            style={ReactDOM.Style.make(
-              ~margin="auto",
-              ~textAlign="center",
-              ~borderRadius="4px",
-              ~cursor="pointer",
-              ~padding="25px",
-              (),
-            )}>
-            <Button onClick=onLogin color="primary" variant=Button.Variant.contained size="large">
-              {string("Sign In")}
-            </Button>
-          </div>
-          {textLink("Register", Register)}
-          {textLink("Forgot password", ForgotPassword)}
-        </Container>
-      </Grid.Container>
-    </MaterialUI.Paper>
-  </div>
+  <LayoutFormPage>
+    <Grid.Container>
+      <Container>
+        <div
+          style={ReactDOM.Style.make(
+            ~margin="auto",
+            ~textAlign="center",
+            ~padding="80px 16px 30px 16px",
+            ~fontFamily="Arial",
+            ~fontSize="25px",
+            (),
+          )}>
+          {string("Sign In to Divertask")}
+        </div>
+        <div style=textFieldStyle>
+          // <Item> <TextField label="Username" name="username" value=registration.username variant=TextField.Variant.outlined onChange /> </Item>
+          <Item>
+            <TextField
+              label="Username" name="username" variant=TextField.Variant.outlined onChange
+            />
+          </Item>
+        </div>
+        <div style=textFieldStyle>
+          // <Item> <TextField label="Username" _type="password" name="username" value=registration.username variant=TextField.Variant.outlined onChange /> </Item>
+          <Item>
+            <TextField
+              label="Password"
+              _type="password"
+              name="password"
+              variant=TextField.Variant.outlined
+              onChange
+            />
+          </Item>
+        </div>
+        <div
+          style={ReactDOM.Style.make(
+            ~margin="auto",
+            ~textAlign="center",
+            ~borderRadius="4px",
+            ~cursor="pointer",
+            ~padding="25px",
+            (),
+          )}>
+          <Button onClick=onLogin color="primary" variant=Button.Variant.contained size="large">
+            {string("Sign In")}
+          </Button>
+        </div>
+        {textLink("Register", Register)}
+        {textLink("Forgot password", ForgotPassword)}
+      </Container>
+    </Grid.Container>
+  </LayoutFormPage>
 }
