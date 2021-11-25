@@ -39,9 +39,12 @@ let make = () => {
       let displayName = user["displayName"]
       let email = user["email"]
 
+      Js.log4("displayName", displayName, "email", email)
+
       Routes.push(UnclaimTask)
       Promise.resolve()
     })
+    ->Promise.catch(err => Js.log2("Login error", err)->Promise.resolve)
     ->ignore
   }
 
