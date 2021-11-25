@@ -70,7 +70,11 @@ let make = () => {
   let (maybeUser, setUser) = useState(() => Loading)
   let (auth, _setAuth) = useState(() => "proto-user-0")
 
-  let onLogout = () => setUser(_ => Success(None))
+  let onLogout = () =>
+    Firebase.Divertask.auth
+    ->Firebase.Auth.signOut
+    ->Promise.then(_ => setUser(_ => Success(None))->Promise.resolve)
+    ->ignore
 
   useEffect1(() => {
     let onData = (id: option<string>, data: Js.Json.t) => {
