@@ -3,7 +3,7 @@ open MaterialUI
 open MaterialUIDataType
 
 @react.component
-let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBadge) => {
+let make = (~user: Data.user, ~task: Data.task, ~notificationBadge, ~setNotificationBadge) => {
   // Show Done Button or not
   let (_, setShowDone) = useState(_ => true)
 
@@ -12,9 +12,9 @@ let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBa
   let handleDoneMsgOpen = evt => {
     ReactEvent.Synthetic.preventDefault(evt)
     setDoneMsg(_ => true)
-    task->Task.done(user, setShowDone)->ignore
-    task->Notification.allNotifications(user, VerifyWait)->ignore
-    task->Notification.allNotifications(user, Verify)->ignore
+    task->Data.Task.done(user, setShowDone)->ignore
+    task->Data.Notification.allNotifications(user, VerifyWait)->ignore
+    task->Data.Notification.allNotifications(user, Verify)->ignore
     setNotificationBadge(_ => notificationBadge + 1)
   }
 

@@ -2,10 +2,11 @@ open React
 open MaterialUI
 open MaterialUI_Icon
 open MaterialUIDataType
+open Data
 
 // Page for when you press on the notication and it leads you to the task associated with it
 @react.component
-let make = (~user: User.t, ~taskId: string, ~notificationBadge, ~setNotificationBadge) => {
+let make = (~user: user, ~taskId: string, ~notificationBadge, ~setNotificationBadge) => {
   // For decline option
   let (openModal, setOpenModal) = React.useState(_ => false)
   let handleOpen = () => setOpenModal(_ => true)
@@ -17,7 +18,7 @@ let make = (~user: User.t, ~taskId: string, ~notificationBadge, ~setNotification
 
   let optionTask = allTasks->Belt.List.getBy(t => t.id == Some(taskId))
 
-  let statusToString = (status: Divertoken.Task.status) => {
+  let statusToString = (status: Task.status) => {
     switch status {
     | Claim => "Claimed"
     | Done => "Done"

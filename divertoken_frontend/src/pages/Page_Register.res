@@ -45,7 +45,7 @@ let make = () => {
     })
     ->ignore
 
-    User.addUser(
+    Data.User.addUser(
       ~user={
         id: "id" ++ registration.username,
         displayName: registration.username,

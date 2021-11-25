@@ -1,5 +1,6 @@
 open React
 open MaterialUI
+open Data
 
 @react.component
 let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
@@ -7,7 +8,7 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
 
   let tasksFromContext = React.useContext(Context_Tasks.context)
 
-  let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})
+  let (tasks: list<task>, setTaskList) = useState(_ => list{})
 
   let onDataAdded = (id: option<string>, data: Js.Json.t) => {
     let task = data->Task.fromJson(id, _)
@@ -34,25 +35,10 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
   }
 
   useEffect0(() => {
-    let stopListen = Firebase.Divertask.listenToPath(
-      "tasks",
-      ~eventType=#child_added,
-      ~onData=onDataAdded,
-      (),
-    )
-    let stopListen2 = Firebase.Divertask.listenToPath(
-      "tasks",
-      ~eventType=#child_changed,
-      ~onData=onDataChange,
-      (),
-    )
-
-    let stopListen3 = Firebase.Divertask.listenToPath(
-      "tasks",
-      ~eventType=#child_removed,
-      ~onData=onDataRemove,
-      (),
-    )
+    open Firebase.Divertask
+    let stopListen = listenToPath("tasks", ~eventType=#child_added, ~onData=onDataAdded, ())
+    let stopListen2 = listenToPath("tasks", ~eventType=#child_changed, ~onData=onDataChange, ())
+    let stopListen3 = listenToPath("tasks", ~eventType=#child_removed, ~onData=onDataRemove, ())
 
     let uninstall = () => {
       stopListen()

@@ -1,26 +1,27 @@
 open React
 open MaterialUI
 open MaterialUIDataType
+open Data
 
 @react.component
-let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBadge) => {
+let make = (~user: user, ~task: task, ~notificationBadge, ~setNotificationBadge) => {
   // For Popup delete
   let (openModal, setOpenModal) = React.useState(_ => false)
   let handleOpen = () => setOpenModal(_ => true)
   let handleClose = () => setOpenModal(_ => false)
 
-  let vote = (user: User.t, task: Task.t) => {
+  let vote = (user: user, task: task) => {
     let amount = 1
     task->Task.vote(amount, user)->ignore
   }
 
-  let claim = (user: User.t, task: Task.t) => {
+  let claim = (user: user, task: task) => {
     task->Task.claim(user)->ignore
     task->Notification.allNotifications(user, Claimed)->ignore
     setNotificationBadge(_ => notificationBadge + 1)
   }
 
-  let handleModal = (user: User.t, task: Task.t) => {
+  let handleModal = (user: user, task: task) => {
     // Check vote count
     if task.vote == 1 {
       handleOpen()
@@ -29,7 +30,7 @@ let make = (~user: User.t, ~task: Task.t, ~notificationBadge, ~setNotificationBa
     }
   }
 
-  let handleDelete = (user: User.t, task: Task.t) => {
+  let handleDelete = (user: user, task: task) => {
     handleClose()
     vote(user, task)
   }

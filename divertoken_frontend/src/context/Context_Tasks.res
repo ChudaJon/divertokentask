@@ -1,4 +1,6 @@
-type context = list<Task.t>
+open Data
+
+type context = list<task>
 
 let defaultContext = list{}
 
@@ -11,24 +13,17 @@ module Provider = {
 
   @react.component
   let make = (~children) => {
-    let (tasks: list<Task.t>, setTaskList) = React.useState(_ => list{})
+    let (tasks: list<task>, setTaskList) = React.useState(_ => list{})
 
     let onDataAdded = (id: option<string>, data: Js.Json.t) => {
       let task = data->Task.fromJson(id, _)
       setTaskList(prevTasks => list{task, ...prevTasks})
     }
 
-    let onDataChange = (id: option<string>, data: Js.Json.t) => {
+    let onDataChange = (id: option<string>, data: Js.Json.t) =>
       setTaskList(taskList =>
-        taskList->Belt.List.map(t =>
-          if t.id == id {
-            data->Task.fromJson(id, _)
-          } else {
-            t
-          }
-        )
+        taskList->Belt.List.map(t => t.id == id ? data->Task.fromJson(id, _) : t)
       )
-    }
 
     React.useEffect0(() => {
       let stopListen = Firebase.Divertask.listenToPath(

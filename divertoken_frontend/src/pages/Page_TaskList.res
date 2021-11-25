@@ -1,7 +1,9 @@
 open React
+open Data
+
 @react.component
 let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
-  let (tasks: list<Task.t>, setTaskList) = useState(_ => list{})
+  let (tasks: list<task>, setTaskList) = useState(_ => list{})
 
   let onData = (id: option<string>, data: Js.Json.t) => {
     let task = Task.fromJson(id, data)

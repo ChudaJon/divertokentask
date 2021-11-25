@@ -1,6 +1,7 @@
 open React
 open MaterialUI
 open MaterialUIDataType
+open Data
 
 @react.component
 let make = (~user) => {

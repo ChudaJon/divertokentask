@@ -1,9 +1,10 @@
 open React
 open MaterialUI
 open MaterialUIDataType
+open Data
 
 @react.component
-let make = (~user: User.t, ~notification: Notification.t) => {
+let make = (~user: user, ~notification: notification) => {
   let optionIdConvert = notiTaskId => {
     switch notiTaskId {
     | Some(notiTaskId) => notiTaskId

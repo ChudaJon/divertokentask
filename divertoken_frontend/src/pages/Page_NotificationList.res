@@ -1,8 +1,9 @@
 open React
+open Data
 
 @react.component
 let make = (~user) => {
-  let (notifications: list<Notification.t>, setNotificationList) = useState(_ => list{})
+  let (notifications: list<notification>, setNotificationList) = useState(_ => list{})
 
   let onDataAdded = (id: option<string>, data: Js.Json.t) => {
     let notification = Notification.fromJson(id, data)

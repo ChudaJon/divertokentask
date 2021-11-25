@@ -2,6 +2,7 @@ open Types
 
 open React
 open Routes
+open Data
 
 module RouterNoAuth = {
   @react.component
@@ -22,7 +23,7 @@ module RouterNoAuth = {
 
 module RouterWithAuth = {
   @react.component
-  let make = (~user: User.t, ~onLogout) => {
+  let make = (~user: user, ~onLogout) => {
     let tokenCount = {
       user.token != 1
         ? <div> {string(`You have  ${Js.Int.toString(user.token)} tokens`)} </div>
@@ -92,7 +93,7 @@ let make = () => {
 
   switch maybeUser {
   | Loading => <div> {string("Loading")} </div>
-  | Success(Some(user)) => <RouterWithAuth user />
+  | Success(Some(user)) => <RouterWithAuth user onLogout />
   | _ => <RouterNoAuth />
   }
 }
