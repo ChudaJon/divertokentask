@@ -4,7 +4,7 @@ open MaterialUIDataType
 open Data
 
 @react.component
-let make = (~user: user, ~task: task, ~notificationBadge, ~setNotificationBadge) => {
+let make = (~user: user, ~task: task, ~setNotificationBadge) => {
   // For Popup delete
   let (openModal, setOpenModal) = React.useState(_ => false)
   let handleOpen = () => setOpenModal(_ => true)
@@ -18,7 +18,7 @@ let make = (~user: user, ~task: task, ~notificationBadge, ~setNotificationBadge)
   let claim = (user: user, task: task) => {
     task->Task.claim(user)->ignore
     task->Notification.allNotifications(user, Claimed)->ignore
-    setNotificationBadge(_ => notificationBadge + 1)
+    setNotificationBadge(prev => prev + 1)
   }
 
   let handleModal = (user: user, task: task) => {
@@ -34,10 +34,6 @@ let make = (~user: user, ~task: task, ~notificationBadge, ~setNotificationBadge)
     handleClose()
     vote(user, task)
   }
-
-  useEffect1(() => {
-    None
-  }, [notificationBadge])
 
   <div style={ReactDOM.Style.make(~display="flex", ())}>
     <Grid.Container>

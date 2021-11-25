@@ -3,7 +3,7 @@ open Data
 
 @module("/src/styles/TaskList.module.scss") external styles: 'a = "default"
 @react.component
-let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
+let make = (~user, ~setNotificationBadge) => {
   let (tasks: list<task>, setTaskList) = useState(_ => list{})
 
   let onData = (id: option<string>, data: Js.Json.t) => {
@@ -30,9 +30,7 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
     )
     |> Array.of_list
     |> Js.Array.mapi((task, i) =>
-      <ClaimedTaskCard
-        key={"task-" ++ string_of_int(i)} user task notificationBadge setNotificationBadge
-      />
+      <ClaimedTaskCard key={"task-" ++ string_of_int(i)} user task setNotificationBadge />
     )
     |> React.array}
   </div>

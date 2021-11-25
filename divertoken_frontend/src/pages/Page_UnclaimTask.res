@@ -2,7 +2,7 @@ open React
 open MaterialUI
 
 @react.component
-let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
+let make = (~user, ~setNotificationBadge) => {
   let onAddTask = _ => Routes.push(AddTask)
 
   let tasks = React.useContext(Context_Tasks.context)
@@ -11,7 +11,7 @@ let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
     {tasks
     ->Belt.Array.keep(t => t.status == Open)
     ->Belt.Array.mapWithIndex((i, task) =>
-      <UnclaimTaskCard key={string_of_int(i)} user task notificationBadge setNotificationBadge />
+      <UnclaimTaskCard key={string_of_int(i)} user task setNotificationBadge />
     )
     ->React.array}
     <div style={ReactDOM.Style.make(~margin="auto", ~textAlign="center", ~padding="25px", ())}>

@@ -39,7 +39,7 @@ module RouterWithAuth = {
       | TaskList =>
         <Layout_Main
           notificationBadge setNotificationBadge title="Your Tasks" onLogout={_ => onLogout()}>
-          <Page_TaskList user notificationBadge setNotificationBadge />
+          <Page_TaskList user setNotificationBadge />
         </Layout_Main>
       | Notification =>
         <Layout_Main
@@ -54,7 +54,7 @@ module RouterWithAuth = {
           onLogout={_ => onLogout()}>
           <Page_AddTask user />
         </Layout_Main>
-      | ViewTask(taskId) => <Page_ViewTask taskId user notificationBadge setNotificationBadge />
+      | ViewTask(taskId) => <Page_ViewTask taskId user setNotificationBadge />
       | Logout => <div> {string("Logging out")} </div>
       | Account =>
         <Layout_Main
@@ -67,7 +67,7 @@ module RouterWithAuth = {
       | _ =>
         <Layout_Main
           notificationBadge setNotificationBadge title="Unclaimed Tasks" onLogout={_ => onLogout()}>
-          <Page_UnclaimTask user notificationBadge setNotificationBadge />
+          <Page_UnclaimTask user setNotificationBadge />
         </Layout_Main>
       }}
     </Context_Tasks.Provider>

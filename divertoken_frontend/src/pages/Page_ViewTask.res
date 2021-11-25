@@ -6,7 +6,7 @@ open Data
 
 // Page for when you press on the notication and it leads you to the task associated with it
 @react.component
-let make = (~user: user, ~taskId: string, ~notificationBadge, ~setNotificationBadge) => {
+let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
   // For decline option
   let (openModal, setOpenModal) = React.useState(_ => false)
   let handleOpen = () => setOpenModal(_ => true)
@@ -47,7 +47,7 @@ let make = (~user: user, ~taskId: string, ~notificationBadge, ~setNotificationBa
 
         let handleVerify = () => {
           // Handle notification
-          setNotificationBadge(_ => notificationBadge + 1)
+          setNotificationBadge(prev => prev + 1)
           Notification.allNotifications(task, user, Done)
 
           // Give user token and change status

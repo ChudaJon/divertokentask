@@ -4,7 +4,7 @@ open MaterialUIDataType
 @module("/src/styles/ClaimTaskCard.module.scss") external styles: 'a = "default"
 
 @react.component
-let make = (~user: Data.user, ~task: Data.task, ~notificationBadge, ~setNotificationBadge) => {
+let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
   // Show Done Button or not
   let (_, setShowDone) = useState(_ => true)
 
@@ -16,7 +16,7 @@ let make = (~user: Data.user, ~task: Data.task, ~notificationBadge, ~setNotifica
     task->Data.Task.done(user, setShowDone)->ignore
     task->Data.Notification.allNotifications(user, VerifyWait)->ignore
     task->Data.Notification.allNotifications(user, Verify)->ignore
-    setNotificationBadge(_ => notificationBadge + 1)
+    setNotificationBadge(prev => prev + 1)
   }
 
   let handleDoneMsgClose = () => {
