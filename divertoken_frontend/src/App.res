@@ -2,19 +2,19 @@ open React
 open Routes
 open MaterialUI
 open MaterialUIDataType
+open Types
 
 @react.component
 let make = () => {
-  let (maybeUser, setUser) = useState(() => None)
+  let (maybeUser, setUser) = useState(() => Loading)
   let (auth, _setAuth) = useState(() => "proto-user-0")
   let (notificationBadge, setNotificationBadge) = useState(() => 0)
 
-  let onData = (id: option<string>, data: Js.Json.t) => {
-    let user = data->User.Codec.fromJson(id, _)
-    setUser(_ => Some(user))
-  }
-
   useEffect1(() => {
+    let onData = (id: option<string>, data: Js.Json.t) => {
+      let user = data->User.Codec.fromJson(id, _)
+      setUser(_ => Success(Some(user)))
+    }
     let stopListen = Firebase.Divertask.listenToPath(
       `users/${auth}`,
       ~eventType=#value,
@@ -58,10 +58,9 @@ let make = () => {
       </Grid.Container>
     </div>
 
-  Js.log3("user:: ", maybeUser, url)
   switch maybeUser {
-  | None => <div> {string("Please Login")} </div>
-  | Some(user) =>
+  | Loading => <div> {string("Loading")} </div>
+  | Success(Some(user)) =>
     let tokenCount = {
       user.token != 1
         ? <div> {string(`You have  ${Js.Int.toString(user.token)} tokens`)} </div>
@@ -178,5 +177,6 @@ let make = () => {
       </Context_Tasks.Provider>
       // </AuthContext.Provider>
     </div>
+  | _ => <div> {string("Please Login")} </div>
   }
 }
