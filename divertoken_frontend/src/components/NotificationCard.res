@@ -5,19 +5,11 @@ open Data
 
 @react.component
 let make = (~user: user, ~notification: notification) => {
-  let optionIdConvert = notiTaskId => {
-    switch notiTaskId {
-    | Some(notiTaskId) => notiTaskId
-    | None => ""
-    }
-  }
-
-  let taskId = optionIdConvert(notification.task_id)
-
-  let linkToTask = () => Routes.push(ViewTask(taskId))
-
   let allTasks = React.useContext(Context_Tasks.context)
 
+  let taskId = notification.task_id->Belt.Option.getWithDefault("")
+
+  let linkToTask = () => Routes.push(ViewTask(taskId))
   let optionTask = allTasks->Belt.List.getBy(t => t.id == Some(taskId))
 
   switch optionTask {
