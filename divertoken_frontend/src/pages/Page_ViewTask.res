@@ -12,7 +12,7 @@ let make = (~user: user, ~taskId: string, ~notificationBadge, ~setNotificationBa
   let handleOpen = () => setOpenModal(_ => true)
   let handleClose = () => setOpenModal(_ => false)
 
-  let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
+  let onNotification = () => Routes.push(Notification)
 
   let allTasks = React.useContext(Context_Tasks.context)
 

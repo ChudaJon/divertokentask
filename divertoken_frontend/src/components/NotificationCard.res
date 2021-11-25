@@ -14,9 +14,7 @@ let make = (~user: user, ~notification: notification) => {
 
   let taskId = optionIdConvert(notification.task_id)
 
-  let linkToTask = () => {
-    RescriptReactRouter.push(Routes.route2Str(ViewTask(taskId)))
-  }
+  let linkToTask = () => Routes.push(ViewTask(taskId))
 
   let allTasks = React.useContext(Context_Tasks.context)
 

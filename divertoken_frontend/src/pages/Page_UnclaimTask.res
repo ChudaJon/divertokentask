@@ -4,7 +4,7 @@ open Data
 
 @react.component
 let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
-  let onAddTask = () => RescriptReactRouter.push(Routes.route2Str(AddTask))
+  let onAddTask = () => Routes.push(AddTask)
 
   let tasksFromContext = React.useContext(Context_Tasks.context)
 

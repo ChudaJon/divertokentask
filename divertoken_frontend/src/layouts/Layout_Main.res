@@ -3,9 +3,9 @@ open MaterialUI.DataType
 
 @react.component
 let make = (~title, ~notificationBadge, ~setNotificationBadge, ~tokenCount, ~children) => {
-  let onUnclaimedTask = () => RescriptReactRouter.push(Routes.route2Str(UnclaimTask))
-  let onTaskList = () => RescriptReactRouter.push(Routes.route2Str(TaskList))
-  let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
+  let onUnclaimedTask = () => Routes.push(UnclaimTask)
+  let onTaskList = () => Routes.push(TaskList)
+  let onNotification = () => Routes.push(Notification)
 
   let handleNotifications = () => {
     onNotification()

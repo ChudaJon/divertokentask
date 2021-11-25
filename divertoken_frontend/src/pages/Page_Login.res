@@ -32,14 +32,14 @@ let make = () => {
     Firebase.Divertask.auth
     ->Firebase.Auth.signInWithEmailAndPassword(~email=login.username, ~password=login.password)
     ->Promise.then(x => {
-      Js.log2("got result", x)
+      Js.log2("sign in result", x)
       let user = x["user"]
       Js.log2("user", user)
 
       let displayName = user["displayName"]
       let email = user["email"]
-      Js.log3(">>", displayName, email)
-      RescriptReactRouter.push(Routes.route2Str(UnclaimTask))
+
+      Routes.push(UnclaimTask)
       Promise.resolve()
     })
     ->ignore
