@@ -4,7 +4,7 @@ open Data
 
 module RouterNoAuth = {
   @react.component
-  let make = () => {
+  let make = (~onLoginSuccess) => {
     let url = RescriptReactRouter.useUrl()
 
     {
@@ -13,7 +13,7 @@ module RouterNoAuth = {
       | ForgotPassword => <Page_ForgotPassword />
       | ForgotPasswordSuccess => <Page_ForgotPasswordSuccess />
       | ResetPassword => <Page_ResetPassword />
-      | _ => <Page_Login />
+      | _ => <Page_Login onLoginSuccess />
       }
     }
   }
@@ -67,8 +67,7 @@ module RouterWithAuth = {
 
 @react.component
 let make = () => {
-  let (maybeUser, setUser) = useState(() => Loading)
-  let (auth, _setAuth) = useState(() => "proto-user-0")
+  let (user: apiState<option<user>, string>, setUser) = useState(() => Loading)
 
   let onLogout = () =>
     Firebase.Divertask.auth
@@ -76,26 +75,33 @@ let make = () => {
     ->Promise.then(_ => setUser(_ => Success(None))->Promise.resolve)
     ->ignore
 
+  let onLoginSuccess = user => {
+    setUser(_ => Success(Some(user)))
+    Routes.push(UnclaimTask)
+  }
+
   useEffect1(() => {
-    let onData = (id: option<string>, data: Js.Json.t) => {
-      let user = data->User.Codec.fromJson(id, _)
+    switch user {
+    | Success(Some({id})) =>
+      let onData = (id: option<string>, data) => {
+        let user = data->User.Codec.fromJson(id, _)
 
-      Js.log2("Got user", user)
-      setUser(_ => Success(Some(user)))
+        Js.log2("Got user from listener", user)
+        setUser(_ => Success(Some(user)))
+      }
+      let stopListen = Firebase.Divertask.listenToPath(
+        `users/${id}`,
+        ~eventType=#value,
+        ~onData,
+        (),
+      )
+      Some(stopListen)
+    | _ => None
     }
-    let stopListen = Firebase.Divertask.listenToPath(
-      `users/${auth}`,
-      ~eventType=#value,
-      ~onData,
-      (),
-    )
+  }, [user])
 
-    Some(stopListen)
-  }, [auth])
-
-  switch maybeUser {
-  | Loading => <div> {string("Loading")} </div>
+  switch user {
   | Success(Some(user)) => <RouterWithAuth user onLogout />
-  | _ => <RouterNoAuth />
+  | _ => <RouterNoAuth onLoginSuccess />
   }
 }

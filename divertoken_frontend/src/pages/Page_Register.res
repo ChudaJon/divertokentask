@@ -4,14 +4,12 @@ open Data
 module Item = Grid.Item
 
 type registration = {
-  username: string,
   email: string,
   password: string,
   confirmedPassword: string,
 }
 
 let defaultRegistration = {
-  username: "",
   email: "",
   password: "",
   confirmedPassword: "",
@@ -37,7 +35,7 @@ let make = () => {
       Js.log2("Register result", firebaseUser)
       let user: user = {
         id: uid,
-        displayName: registration.username,
+        displayName: registration.email,
         token: 10,
         email: email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
       }
@@ -46,6 +44,7 @@ let make = () => {
       Routes.push(Login)
       Promise.resolve()
     })
+    ->Promise.catch(err => Js.log2("Register error", err)->Promise.resolve)
     ->ignore
   }
 
@@ -54,7 +53,6 @@ let make = () => {
 
     setRegistration(r => {
       switch t["name"] {
-      | "username" => {...r, username: t["value"]}
       | "email" => {...r, email: t["value"]}
       | "password" => {...r, password: t["value"]}
       | "cpassword" => {...r, confirmedPassword: t["value"]}
@@ -65,7 +63,7 @@ let make = () => {
 
   <Layout_FormPage>
     <Form title="Register to Divertask">
-      <Form.TextInput label="Username" name="username" onChange autoFocus=true />
+      <Form.TextInput label="Email" name="email" onChange autoFocus=true />
       <Form.TextInput label="Password" _type="password" name="password" onChange />
       <Form.TextInput label="Confirm Password" _type="password" name="cpassword" onChange />
       <Form.SubmitButton onClick=handleSubmit />

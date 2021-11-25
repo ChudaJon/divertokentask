@@ -1,6 +1,4 @@
-open MaterialUI
-
-module Item = Grid.Item
+open Data
 
 type login = {
   username: string,
@@ -13,7 +11,7 @@ let defaultLogin = {
 }
 
 @react.component
-let make = () => {
+let make = (~onLoginSuccess) => {
   let (login, setLogin) = React.useState(() => defaultLogin)
 
   let onChange = (evt: ReactEvent.Form.t) => {
@@ -31,11 +29,18 @@ let make = () => {
   let onLogin = _evt => {
     Firebase.Divertask.auth
     ->Firebase.Auth.signInWithEmailAndPassword(~email=login.username, ~password=login.password)
-    ->Promise.then(({user: {displayName, email}}) => {
+    ->Promise.then(({user: {uid, displayName, email}}) => {
       Js.log("TODO: Set user")
       Js.log4("displayName", displayName, "email", email)
 
-      Routes.push(UnclaimTask)
+      let user: user = {
+        id: uid,
+        displayName: displayName,
+        token: 10,
+        email: email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
+      }
+      onLoginSuccess(user)
+
       Promise.resolve()
     })
     ->Promise.catch(err => Js.log2("Login error", err)->Promise.resolve)
