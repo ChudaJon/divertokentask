@@ -1,5 +1,3 @@
-open Types
-
 open React
 open Routes
 open Data
