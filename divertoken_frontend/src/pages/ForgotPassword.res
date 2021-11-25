@@ -17,7 +17,7 @@ let make = () => {
     ->Firebase.Auth.sendPasswordResetEmail(
       ~email,
       ~actionCodeSetting={
-        "url": "http://localhost:5050/reset-password-success", //TODO: change hostname in prod
+        "url": `${Env.host}reset-password-success`,
       },
       (),
     )
