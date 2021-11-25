@@ -16,15 +16,17 @@ module Styles = {
 
 @react.component
 let make = (~title, ~children=React.null) => {
-  <Container>
-    <Grid.Container justify={Justify.center} alignItems={AlignItems.center}>
-      <Grid.Item xs={GridSize.size(12)}>
-        <div style={Styles.title}> {React.string(title)} </div>
-      </Grid.Item>
-      {children}
-      <Grid.Item xs={GridSize.size(12)}> <div style={Styles.bottomPadding} /> </Grid.Item>
-    </Grid.Container>
-  </Container>
+  <form onSubmit={ReactEvent.Form.preventDefault}>
+    <Container>
+      <Grid.Container justify={Justify.center} alignItems={AlignItems.center}>
+        <Grid.Item xs={GridSize.size(12)}>
+          <div style={Styles.title}> {React.string(title)} </div>
+        </Grid.Item>
+        {children}
+        <Grid.Item xs={GridSize.size(12)}> <div style={Styles.bottomPadding} /> </Grid.Item>
+      </Grid.Container>
+    </Container>
+  </form>
 }
 
 module TextInput = {
@@ -45,7 +47,8 @@ module SubmitButton = {
 
     <Grid.Item xs={GridSize.size(12)}>
       <div style>
-        <Button onClick color="primary" variant=Button.Variant.contained size="large">
+        <Button
+          onClick color="primary" variant=Button.Variant.contained size="large" _type="submit">
           {React.string(text)}
         </Button>
       </div>
