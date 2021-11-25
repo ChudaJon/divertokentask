@@ -1,34 +1,13 @@
-open React
+type context = option<Data.User.t>
+let defaultContext: context = None
 
-let authContext = React.createContext()
-
-// let useAuth = () => {
-//   React.useContext(authContext)
-// }
+let authContext = React.createContext(defaultContext)
 
 module Provider = {
   let provider = React.Context.provider(authContext)
 
-  let (currentUser, setCurrentUser) = React.useState(_ => ())
-
-  let signup = (~email as _: string, ~password as _: string) => {
-    // Firebase.Divertask.auth->Firebase.Auth.createUserWithEmailAndPassword(~email, ~password)
-    ()
-  }
-  useEffect1(() => {
-    // let unsubscribe = Firebase.Auth.onAuthStateChanged(user: Firebase.Auth.User.t)
-    // setCurrentUser(_ => user)
-
-    // unsubscribe
-    None
-  }, [])
-
-  let value = {
-    (currentUser, signup)
-  }
-
   @react.component
-  let make = (~children) => {
-    React.createElement(provider, {"value": currentUser, "children": children})
+  let make = (~user, ~children) => {
+    React.createElement(provider, {"value": user, "children": children})
   }
 }
