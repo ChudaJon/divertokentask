@@ -20,8 +20,6 @@ let defaultRegistration = {
 @react.component
 let make = () => {
   let (registration, setRegistration) = React.useState(() => defaultRegistration)
-  let (user: option<user>, setUser) = React.useState(() => None)
-
   let (_error, setError) = React.useState(_ => "")
 
   let handleSubmit = evt => {
@@ -35,31 +33,20 @@ let make = () => {
       ~email=registration.email,
       ~password=registration.password,
     )
-    ->Promise.then(({user}) => {
-      Js.log2("Register result", user)
-      setUser(_ => Some({
-        id: user.uid,
+    ->Promise.then(({user: {uid, email} as firebaseUser}) => {
+      Js.log2("Register result", firebaseUser)
+      let user: user = {
+        id: uid,
         displayName: registration.username,
         token: 10,
-        email: user.email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
-      }))
+        email: email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
+      }
+      User.addUser(~user)->ignore
+      RescriptReactRouter.push(Routes.route2Str(Login))
       Promise.resolve()
     })
     ->ignore
   }
-
-  React.useEffect1(() => {
-    Js.log2("user:: ", user)
-
-    switch user {
-    | Some(user) =>
-      User.addUser(~user)->ignore
-      RescriptReactRouter.push(Routes.route2Str(Login))
-    | None => ()
-    }
-
-    None
-  }, [user])
 
   let onChange = (evt: ReactEvent.Form.t) => {
     let t = ReactEvent.Form.target(evt)
