@@ -79,13 +79,7 @@ let make = () => {
       ~justifyContent="center",
       (),
     )}>
-    <div
-      style={ReactDOM.Style.make(
-        ~backgroundColor="#FFFFFF",
-        ~borderRadius="3px 3px",
-        ~width="30%",
-        (),
-      )}>
+    <MaterialUI.Paper style={ReactDOM.Style.make(~width="30%", ())}>
       <Grid.Container>
         <Container>
           <div
@@ -136,6 +130,6 @@ let make = () => {
           {textLink("Forgot password", ForgotPassword)}
         </Container>
       </Grid.Container>
-    </div>
+    </MaterialUI.Paper>
   </div>
 }
