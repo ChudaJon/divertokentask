@@ -22,7 +22,7 @@ let make = () => {
     setLogin(r =>
       switch t["name"] {
       | "username" => {...r, username: t["value"]}
-      | "password" => {...r, password: t["password"]}
+      | "password" => {...r, password: t["value"]}
       | _ => r
       }
     )
@@ -31,14 +31,8 @@ let make = () => {
   let onLogin = _evt => {
     Firebase.Divertask.auth
     ->Firebase.Auth.signInWithEmailAndPassword(~email=login.username, ~password=login.password)
-    ->Promise.then(x => {
-      Js.log2("sign in result", x)
-      let user = x["user"]
-      Js.log2("user", user)
-
-      let displayName = user["displayName"]
-      let email = user["email"]
-
+    ->Promise.then(({user: {displayName, email}}) => {
+      Js.log("TODO: Set user")
       Js.log4("displayName", displayName, "email", email)
 
       Routes.push(UnclaimTask)

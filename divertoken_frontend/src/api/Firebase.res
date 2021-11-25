@@ -212,12 +212,15 @@ module Auth = {
     ~error: Error.t => unit=?,
     ~completed: unit => unit=?,
   ) => unit = "onAuthStateChanged"
-  @send external signInAnonymously: (t, unit) => Js.Promise.t<User.t> = "signInAnonymously"
   @send
-  external signInWithCredential: (t, ~credential: AuthCredential.t) => Js.Promise.t<User.t> =
-    "signInWithCredential"
+  external signInAnonymously: (t, unit) => Js.Promise.t<UserCredential.t> = "signInAnonymously"
   @send
-  external signInWithCustomToken: (t, ~token: string) => Js.Promise.t<User.t> =
+  external signInWithCredential: (
+    t,
+    ~credential: AuthCredential.t,
+  ) => Js.Promise.t<UserCredential.t> = "signInWithCredential"
+  @send
+  external signInWithCustomToken: (t, ~token: string) => Js.Promise.t<UserCredential.t> =
     "signInWithCustomToken"
 
   @send
@@ -225,7 +228,7 @@ module Auth = {
     t,
     ~email: string,
     ~password: string,
-  ) => Js.Promise.t<{..}> = "signInWithEmailAndPassword"
+  ) => Js.Promise.t<UserCredential.t> = "signInWithEmailAndPassword"
 
   @send external signOut: t => Js.Promise.t<unit> = "signOut"
   @send
