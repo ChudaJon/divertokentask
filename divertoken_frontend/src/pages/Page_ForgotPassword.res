@@ -24,7 +24,7 @@ let make = () => {
     ->Js.Promise.then_(x => Js.log2("forgot password return", x)->Js.Promise.resolve, _)
     ->ignore
 
-  <LayoutFormPage>
+  <Layout_FormPage>
     <Grid.Container>
       <Container>
         <div
@@ -85,5 +85,5 @@ let make = () => {
         </div>
       </Container>
     </Grid.Container>
-  </LayoutFormPage>
+  </Layout_FormPage>
 }

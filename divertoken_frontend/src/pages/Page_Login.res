@@ -72,7 +72,7 @@ let make = () => {
     (),
   )
 
-  <LayoutFormPage>
+  <Layout_FormPage>
     <Grid.Container>
       <Container>
         <div
@@ -123,5 +123,5 @@ let make = () => {
         {textLink("Forgot password", ForgotPassword)}
       </Container>
     </Grid.Container>
-  </LayoutFormPage>
+  </Layout_FormPage>
 }

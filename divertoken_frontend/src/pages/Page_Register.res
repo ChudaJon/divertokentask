@@ -81,7 +81,7 @@ let make = () => {
     (),
   )
 
-  <LayoutFormPage>
+  <Layout_FormPage>
     <Grid.Container>
       <Container>
         <div
@@ -168,5 +168,5 @@ let make = () => {
         </div>
       </Container>
     </Grid.Container>
-  </LayoutFormPage>
+  </Layout_FormPage>
 }
