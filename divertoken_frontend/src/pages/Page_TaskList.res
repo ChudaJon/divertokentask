@@ -1,6 +1,7 @@
 open React
 open Data
 
+@module("/src/styles/TaskList.module.scss") external styles: 'a = "default"
 @react.component
 let make = (~user, ~notificationBadge, ~setNotificationBadge) => {
   let (tasks: list<task>, setTaskList) = useState(_ => list{})

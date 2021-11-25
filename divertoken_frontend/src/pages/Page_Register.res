@@ -1,4 +1,5 @@
 open MaterialUI
+open Data
 
 module Item = Grid.Item
 
@@ -16,9 +17,17 @@ let defaultRegistration = {
   confirmedPassword: "",
 }
 
+let defaultUser: user = {
+  id: "",
+  displayName: "",
+  token: 0,
+  email: "",
+}
+
 @react.component
 let make = () => {
   let (registration, setRegistration) = React.useState(() => defaultRegistration)
+  let (user, setUser) = React.useState(() => defaultUser)
 
   let (_error, setError) = React.useState(_ => "")
 
@@ -36,27 +45,28 @@ let make = () => {
       ~email=registration.email,
       ~password=registration.password,
     )
-    ->Promise.then(userCredential => {
-      Js.log2("got result", userCredential)
-
-      Js.log2("got result", userCredential.user)
+    ->Promise.then(({user}) => {
+      Js.log2("Register result", user)
+      setUser(_ => {
+        id: user.uid,
+        displayName: registration.username,
+        token: 10,
+        email: user.email->Js.Nullable.toOption->Belt.Option.getWithDefault(""),
+      })
       Promise.resolve()
     })
     ->ignore
-
-    Data.User.addUser(
-      ~user={
-        id: "id" ++ registration.username,
-        displayName: registration.username,
-        token: 10,
-        email: registration.email,
-      },
-    )->ignore
-
-    // catch
-
-    ()
   }
+
+  React.useEffect1(() => {
+    Js.log2("user:: ", user)
+    if user != defaultUser {
+      User.addUser(~user)->ignore
+      RescriptReactRouter.push(Routes.route2Str(Login))
+    }
+
+    None
+  }, [user])
 
   let onChange = (evt: ReactEvent.Form.t) => {
     let t = ReactEvent.Form.target(evt)

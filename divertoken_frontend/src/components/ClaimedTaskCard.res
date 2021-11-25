@@ -1,6 +1,7 @@
 open React
 open MaterialUI
 open MaterialUIDataType
+@module("/src/styles/ClaimTaskCard.module.scss") external styles: 'a = "default"
 
 @react.component
 let make = (~user: Data.user, ~task: Data.task, ~notificationBadge, ~setNotificationBadge) => {
@@ -24,16 +25,8 @@ let make = (~user: Data.user, ~task: Data.task, ~notificationBadge, ~setNotifica
 
   <div style={ReactDOM.Style.make(~display="flex", ())}>
     <Grid.Container>
-      <div style={ReactDOM.Style.make(~margin="auto", ~width="50%", ~display="block", ())}>
-        <div
-          className="box"
-          style={ReactDOM.Style.make(
-            ~margin="10px",
-            ~padding="10px",
-            ~backgroundColor="#FFFFFF",
-            ~borderRadius="3px 3px",
-            (),
-          )}>
+      <div>
+        <div className={styles["box"]}>
           <Grid.Item xs={GridSize.size(12)}>
             <div style={ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ())}>
               <Typography variant=Typography.Variant.h5> {string(task.content)} </Typography>
