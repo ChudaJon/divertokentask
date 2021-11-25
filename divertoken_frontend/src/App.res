@@ -22,12 +22,6 @@ module RouterNoAuth = {
 module RouterWithAuth = {
   @react.component
   let make = (~user: user, ~onLogout) => {
-    let tokenCount = {
-      user.token != 1
-        ? <div> {string(`You have  ${Js.Int.toString(user.token)} tokens`)} </div>
-        : <div> {string(`You have  ${Js.Int.toString(user.token)} token`)} </div>
-    }
-
     let (notificationBadge, setNotificationBadge) = useState(() => 0)
 
     let url = RescriptReactRouter.useUrl()
@@ -44,25 +38,16 @@ module RouterWithAuth = {
       {switch url->Routes.url2route {
       | TaskList =>
         <Layout_Main
-          tokenCount
-          notificationBadge
-          setNotificationBadge
-          title="Your Tasks"
-          onLogout={_ => onLogout()}>
+          notificationBadge setNotificationBadge title="Your Tasks" onLogout={_ => onLogout()}>
           <Page_TaskList user notificationBadge setNotificationBadge />
         </Layout_Main>
       | Notification =>
         <Layout_Main
-          tokenCount
-          notificationBadge
-          setNotificationBadge
-          title="Notifications"
-          onLogout={_ => onLogout()}>
+          notificationBadge setNotificationBadge title="Notifications" onLogout={_ => onLogout()}>
           <Page_NotificationList user />
         </Layout_Main>
       | AddTask =>
         <Layout_Main
-          tokenCount
           notificationBadge
           setNotificationBadge
           title="Create a New Task"
@@ -73,7 +58,6 @@ module RouterWithAuth = {
       | Logout => <div> {string("Logging out")} </div>
       | Account =>
         <Layout_Main
-          tokenCount
           notificationBadge
           setNotificationBadge
           title="Create a New Task"
@@ -82,11 +66,7 @@ module RouterWithAuth = {
         </Layout_Main>
       | _ =>
         <Layout_Main
-          tokenCount
-          notificationBadge
-          setNotificationBadge
-          title="Unclaimed Tasks"
-          onLogout={_ => onLogout()}>
+          notificationBadge setNotificationBadge title="Unclaimed Tasks" onLogout={_ => onLogout()}>
           <Page_UnclaimTask user notificationBadge setNotificationBadge />
         </Layout_Main>
       }}

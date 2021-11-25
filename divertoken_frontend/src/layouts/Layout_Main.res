@@ -26,17 +26,20 @@ module SwitchTabs = {
 }
 
 @react.component
-let make = (
-  ~title,
-  ~notificationBadge,
-  ~setNotificationBadge,
-  ~tokenCount,
-  ~onLogout,
-  ~children,
-) => {
+let make = (~title, ~notificationBadge, ~setNotificationBadge, ~onLogout, ~children) => {
   let url = RescriptReactRouter.useUrl()
+  let user = React.useContext(Context_Auth.context)
   let (currentTab, setCurrentTab) = React.useState(_ => UnClaimed)
+
   let clearNotification = () => setNotificationBadge(_ => 0)
+
+  let tokenCount = switch user {
+  | Some({token}) =>
+    token > 1
+      ? <div> {React.string(`You have ${Js.Int.toString(token)} tokens`)} </div>
+      : <div> {React.string(`You have ${Js.Int.toString(token)} token`)} </div>
+  | None => <div> {React.string(`You don't have any tokens`)} </div>
+  }
 
   React.useEffect1(() => {
     switch url->Routes.url2route {
