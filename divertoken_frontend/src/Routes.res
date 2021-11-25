@@ -44,3 +44,5 @@ let route2Str = route =>
   | AddTask => "/add-task"
   | ViewTask(taskId) => "/view-task/" ++ taskId
   }
+
+let push = route => RescriptReactRouter.push(route->route2Str)
