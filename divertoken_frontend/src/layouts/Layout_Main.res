@@ -42,7 +42,14 @@ module SwitchTabs = {
 }
 
 @react.component
-let make = (~title, ~notificationBadge, ~setNotificationBadge, ~tokenCount, ~children) => {
+let make = (
+  ~title,
+  ~notificationBadge,
+  ~setNotificationBadge,
+  ~tokenCount,
+  ~onLogout,
+  ~children,
+) => {
   let clearNotification = () => setNotificationBadge(_ => 0)
 
   <div>
@@ -66,5 +73,9 @@ let make = (~title, ~notificationBadge, ~setNotificationBadge, ~tokenCount, ~chi
     </div>
     {children}
     <SwitchTabs title clearNotification notificationBadge />
+    <Button
+      variant={Button.Variant.contained} color={NoTransparentColor.secondary} onClick=onLogout>
+      {React.string("Logout")}
+    </Button>
   </div>
 }

@@ -43,21 +43,41 @@ module RouterWithAuth = {
     <Context_Tasks.Provider>
       {switch url->Routes.url2route {
       | TaskList =>
-        <Layout_Main tokenCount notificationBadge setNotificationBadge title="Your Tasks">
+        <Layout_Main
+          tokenCount
+          notificationBadge
+          setNotificationBadge
+          title="Your Tasks"
+          onLogout={_ => onLogout()}>
           <Page_TaskList user notificationBadge setNotificationBadge />
         </Layout_Main>
       | Notification =>
-        <Layout_Main tokenCount notificationBadge setNotificationBadge title="Notifications">
+        <Layout_Main
+          tokenCount
+          notificationBadge
+          setNotificationBadge
+          title="Notifications"
+          onLogout={_ => onLogout()}>
           <Page_NotificationList user />
         </Layout_Main>
       | AddTask =>
-        <Layout_Main tokenCount notificationBadge setNotificationBadge title="Create a New Task">
+        <Layout_Main
+          tokenCount
+          notificationBadge
+          setNotificationBadge
+          title="Create a New Task"
+          onLogout={_ => onLogout()}>
           <Page_AddTask user />
         </Layout_Main>
       | ViewTask(taskId) => <Page_ViewTask taskId user notificationBadge setNotificationBadge />
       | Logout => <div> {string("Logging out")} </div>
       | _ =>
-        <Layout_Main tokenCount notificationBadge setNotificationBadge title="Unclaimed Tasks">
+        <Layout_Main
+          tokenCount
+          notificationBadge
+          setNotificationBadge
+          title="Unclaimed Tasks"
+          onLogout={_ => onLogout()}>
           <Page_UnclaimTask user notificationBadge setNotificationBadge />
         </Layout_Main>
       }}
