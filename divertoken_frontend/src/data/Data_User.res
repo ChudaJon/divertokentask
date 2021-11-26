@@ -10,17 +10,17 @@ module Database = Firebase.Database
 
 module Codec = {
   open Json
-  let fromJson = (_id: option<string>, data: Js.Json.t) => {
-    data->(
+  let fromJson = (_id: option<string>, json: Js.Json.t) => {
+    open Decode
+
+    (
       json => {
-        {
-          id: Decode.field("id", Decode.string)(json),
-          displayName: Decode.field("display_name", Decode.string)->Decode.withDefault("?")(json),
-          token: Decode.field("token", Decode.int)->Decode.withDefault(0)(json),
-          email: Decode.field("email", Decode.string)->Decode.withDefault("")(json),
-        }
+        id: field("id", string)(json),
+        displayName: field("display_name", string)->withDefault("?")(json),
+        token: field("token", int)->withDefault(0)(json),
+        email: field("email", string)->withDefault("")(json),
       }
-    )
+    )->optional(json)
   }
 
   let toJson = (user: t) => {
@@ -45,22 +45,17 @@ let spendToken = (user, amount) => {
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 }
 
-let login = (_username, _password) => {
-  Js.Promise.resolve(
-    (
-      {
-        id: "proto-user-0",
-        displayName: "test",
-        token: 10,
-        email: "divertask@divertise.asia",
-      }: t
-    ),
-  )
-}
+let login = (_username, _password): Js.Promise.t<t> =>
+  Js.Promise.resolve({
+    id: "proto-user-0",
+    displayName: "test",
+    token: Env.defaultToken,
+    email: "divertask@divertise.asia",
+  })
 
 let addUser = (~user: t) => {
   let db = Firebase.Divertask.db
   let value = user->Codec.toJson
 
-  db->Database.ref(~path="users", ())->Database.Reference.push(~value, ())
+  db->Database.ref(~path=`users/${user.id}`, ())->Database.Reference.set(~value, ())
 }

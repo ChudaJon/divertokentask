@@ -74,7 +74,7 @@ let toJson = (task: t) => {
   ->Encode.object_
 }
 
-let createTask = (~deadline=?, content: string, ~user: Divertoken.User.t) => {
+let createTask = (~deadline=?, content: string, ~user: Data_User.t) => {
   id: None,
   content: content,
   vote: 1,
@@ -83,19 +83,19 @@ let createTask = (~deadline=?, content: string, ~user: Divertoken.User.t) => {
   voted: Js.Dict.fromList(list{(user.id, 1)}),
 }
 
-let addTask = (task: t, byUser: User.t) => {
+let addTask = (task: t, byUser: Data_User.t) => {
   let value = task->toJson
 
   Js.Dict.set(task.voted, byUser.id, 1)
-  byUser->User.spendToken(1)->ignore
+  byUser->Data_User.spendToken(1)->ignore
   db->Database.ref(~path="tasks", ())->Database.Reference.push(~value, ())
 }
 
-let vote = (task: t, vote: int, byUser: User.t) => {
+let vote = (task: t, vote: int, byUser: Data_User.t) => {
   // If the user hasn't voted
   if Js.Dict.get(task.voted, byUser.id) == Some(0) || Js.Dict.get(task.voted, byUser.id) == None {
     Js.Dict.set(task.voted, byUser.id, 1)
-    byUser->User.spendToken(vote)->ignore
+    byUser->Data_User.spendToken(vote)->ignore
     let task = {...task, vote: task.vote + vote}
     let value = task->toJson
     let path = switch task.id {
@@ -108,7 +108,7 @@ let vote = (task: t, vote: int, byUser: User.t) => {
     // unvote
 
     Js.Dict.set(task.voted, byUser.id, 0)
-    byUser->User.spendToken(-1)->ignore
+    byUser->Data_User.spendToken(-1)->ignore
 
     let task = {...task, vote: task.vote - vote}
     let value = task->toJson
@@ -126,7 +126,7 @@ let vote = (task: t, vote: int, byUser: User.t) => {
   }
 }
 
-let claim = (task: t, _byUser: User.t) => {
+let claim = (task: t, _byUser: Data_User.t) => {
   // Use user later
   task.status = Claim
   let task = {...task, status: task.status}
@@ -139,7 +139,7 @@ let claim = (task: t, _byUser: User.t) => {
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 }
 
-let done = (task: t, _byUser: User.t, setShowDone) => {
+let done = (task: t, _byUser: Data_User.t, setShowDone) => {
   task.status = Done
   let task = {...task, status: task.status}
   let value = task->toJson
@@ -152,7 +152,7 @@ let done = (task: t, _byUser: User.t, setShowDone) => {
   db->Database.ref(~path, ())->Database.Reference.update(~value, ())
 }
 
-let verify = (task: t, _byUser: User.t) => {
+let verify = (task: t, _byUser: Data_User.t) => {
   task.status = DoneAndVerified
   let task = {...task, status: task.status}
   let value = task->toJson
@@ -174,6 +174,6 @@ let verifyByTaskId = (taskId: string) => {
 }
 
 // Function to give user who claimed task tokens equal to the number of votes when task is DoneAndVerified
-let giveToken = (user: User.t, task: t) => {
-  user->User.spendToken(-task.vote)->ignore
+let giveToken = (user: Data_User.t, task: t) => {
+  user->Data_User.spendToken(-task.vote)->ignore
 }

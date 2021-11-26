@@ -1,13 +1,14 @@
 open React
 open MaterialUI
 open MaterialUIDataType
+open Data
 
 @react.component
 let make = (~user) => {
   let (taskContent, setTaskContent) = React.useState(() => "")
   let (dueDate, setDueDate) = React.useState(() => Js.Date.make())
 
-  let onUnclaimedTask = () => RescriptReactRouter.push(Routes.route2Str(UnclaimTask))
+  let onUnclaimedTask = () => Routes.push(UnclaimTask)
   let onChange = (e: ReactEvent.Form.t): unit => {
     let value = (e->ReactEvent.Form.target)["value"]
     setTaskContent(value)

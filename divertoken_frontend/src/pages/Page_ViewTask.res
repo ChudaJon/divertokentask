@@ -2,22 +2,23 @@ open React
 open MaterialUI
 open MaterialUI_Icon
 open MaterialUIDataType
+open Data
 
 // Page for when you press on the notication and it leads you to the task associated with it
 @react.component
-let make = (~user: User.t, ~taskId: string, ~notificationBadge, ~setNotificationBadge) => {
+let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
   // For decline option
   let (openModal, setOpenModal) = React.useState(_ => false)
   let handleOpen = () => setOpenModal(_ => true)
   let handleClose = () => setOpenModal(_ => false)
 
-  let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
+  let onNotification = () => Routes.push(Notification)
 
-  let allTasks = React.useContext(Context_Tasks.context)
+  let tasks = React.useContext(Context_Tasks.context)
 
-  let optionTask = allTasks->Belt.List.getBy(t => t.id == Some(taskId))
+  let optionTask = tasks->Belt.Array.getBy(t => t.id == Some(taskId))
 
-  let statusToString = (status: Divertoken.Task.status) => {
+  let statusToString = (status: Task.status) => {
     switch status {
     | Claim => "Claimed"
     | Done => "Done"
@@ -46,7 +47,7 @@ let make = (~user: User.t, ~taskId: string, ~notificationBadge, ~setNotification
 
         let handleVerify = () => {
           // Handle notification
-          setNotificationBadge(_ => notificationBadge + 1)
+          setNotificationBadge(prev => prev + 1)
           Notification.allNotifications(task, user, Done)
 
           // Give user token and change status
