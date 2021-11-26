@@ -4,9 +4,12 @@ open MaterialUI_Icon
 
 open Data
 
+type popUpType = Verify | Decline
+type popUpState = Hidden | Show(popUpType)
+
 module Popup = {
   @react.component
-  let make = (~user: user, ~task: task, ~showVerify, ~setNotificationBadge, ~handleClose) => {
+  let make = (~popUpState, ~user: user, ~task: task, ~setNotificationBadge, ~handleClose) => {
     let handleDecline = ignore // Handle decline
 
     let handleVerify = () => {
@@ -45,33 +48,50 @@ module Popup = {
       `${task.vote > 1 ? "tokens" : "token"}}`
     }
 
-    <>
-      <Typography id="modal-modal-description">
-        {string(showVerify ? verifyingTxt : decliningTxt)}
-      </Typography>
-      <Grid.Container spacing={2}>
-        <Grid.Item> {showVerify ? verifyBtn : declineBtn} </Grid.Item>
-        <Grid.Item> cancelBtn </Grid.Item>
-      </Grid.Container>
-    </>
+    let cardStle = ReactDOM.Style.make(
+      ~position="absolute",
+      ~backgroundColor="#FFFFFF",
+      ~top="50%",
+      ~left="50%",
+      ~transform="translate(-50%, -50%)",
+      ~width="50%",
+      ~borderRadius="3px 3px",
+      (),
+    )
+
+    <Modal _open={popUpState != Hidden} onClose=handleClose>
+      <Paper style=cardStle>
+        <Box p=4>
+          <Typography id="modal-modal-title" variant=Typography.Variant.h6 component="h2">
+            {string(popUpState == Show(Verify) ? "Verify Task" : "Decline Task")}
+          </Typography>
+          <div style={ReactDOM.Style.make(~padding="20px 0px 30px 0px", ())}>
+            <Typography id="modal-modal-description">
+              {string(popUpState == Show(Verify) ? verifyingTxt : decliningTxt)}
+            </Typography>
+            <Grid.Container spacing={2}>
+              <Grid.Item> {popUpState == Show(Verify) ? verifyBtn : declineBtn} </Grid.Item>
+              <Grid.Item> cancelBtn </Grid.Item>
+            </Grid.Container>
+          </div>
+        </Box>
+      </Paper>
+    </Modal>
   }
 }
 
 // Page for when you press on the notication and it leads you to the task associated with it
 @react.component
 let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
-  // For decline option
-  let (openModal, setOpenModal) = React.useState(_ => false)
-  let (showVerify, setShowVerify) = React.useState(_ => false)
-
-  let handleOpen = () => setOpenModal(_ => true)
-  let handleClose = () => setOpenModal(_ => false)
+  let tasks = React.useContext(Context_Tasks.context)
+  let (popUpState, setPopUpState) = React.useState(_ => Hidden)
 
   let onNotification = () => Routes.push(Notification)
-
-  let tasks = React.useContext(Context_Tasks.context)
-
   let optionTask = tasks->Belt.Array.getBy(t => t.id == Some(taskId))
+
+  let onClickVerify = _ => setPopUpState(_ => Show(Verify))
+  let onClickDecline = _ => setPopUpState(_ => Show(Decline))
+  let onClosePopUp = _ => setPopUpState(_ => Hidden)
 
   let statusToString = (status: Task.status) => {
     switch status {
@@ -83,21 +103,7 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
   }
 
   switch optionTask {
-  | Some(task) =>
-    let handleModal = (modalType: int, evt) => {
-      ReactEvent.Synthetic.preventDefault(evt)
-
-      // Verify
-      if modalType == 0 {
-        setShowVerify(_ => true)
-      } else {
-        // Decline
-        setShowVerify(_ => false)
-      }
-      handleOpen()
-    }
-
-    <>
+  | Some(task) => <>
       <div style={ReactDOM.Style.make(~margin="auto", ~display="flex", ~padding="3px 30px", ())}>
         <IconButton onClick={_ => onNotification()}> <ArrowBackIos /> </IconButton>
       </div>
@@ -118,41 +124,19 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
           {switch task.status {
           | Done(_doneBy) =>
             <div>
-              <Grid.Container spacing={2}>
+              <Grid.Container spacing=2>
                 <Grid.Item>
-                  <Button variant=Button.Variant.contained color="primary" onClick={0->handleModal}>
+                  <Button variant=Button.Variant.contained color="primary" onClick=onClickVerify>
                     {string("Verify")}
                   </Button>
                 </Grid.Item>
                 <Grid.Item>
-                  <Button
-                    variant=Button.Variant.contained color="secondary" onClick={1->handleModal}>
+                  <Button variant=Button.Variant.contained color="secondary" onClick=onClickDecline>
                     {string("Decline")}
                   </Button>
                 </Grid.Item>
+                <Popup user task setNotificationBadge popUpState handleClose=onClosePopUp />
               </Grid.Container>
-              <Modal _open={openModal} onClose={handleClose}>
-                <div
-                  style={ReactDOM.Style.make(
-                    ~position="absolute",
-                    ~backgroundColor="#FFFFFF",
-                    ~top="50%",
-                    ~left="50%",
-                    ~transform="translate(-50%, -50%)",
-                    ~width="400",
-                    ~borderRadius="3px 3px",
-                    (),
-                  )}>
-                  <Box p={4}>
-                    <Typography id="modal-modal-title" variant=Typography.Variant.h6 component="h2">
-                      {showVerify == false ? {string("Decline Task")} : {string("Verify Task")}}
-                    </Typography>
-                    <div style={ReactDOM.Style.make(~padding="20px 0px 30px 0px", ())}>
-                      <Popup user task showVerify setNotificationBadge handleClose />
-                    </div>
-                  </Box>
-                </div>
-              </Modal>
             </div>
           | _ => <div />
           }}
