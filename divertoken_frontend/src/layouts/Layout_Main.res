@@ -26,7 +26,7 @@ module SwitchTabs = {
 }
 
 @react.component
-let make = (~title, ~notificationBadge, ~setNotificationBadge, ~onLogout, ~children) => {
+let make = (~title, ~notificationBadge, ~setNotificationBadge, ~children) => {
   let url = RescriptReactRouter.useUrl()
   let user = React.useContext(Context_Auth.context)
   let (currentTab, setCurrentTab) = React.useState(_ => UnClaimed)
@@ -83,9 +83,5 @@ let make = (~title, ~notificationBadge, ~setNotificationBadge, ~onLogout, ~child
     </div>
     {children}
     <SwitchTabs currentTab setCurrentTab notificationBadge />
-    <Button
-      variant={Button.Variant.contained} color={NoTransparentColor.secondary} onClick=onLogout>
-      {React.string("Logout")}
-    </Button>
   </div>
 }
