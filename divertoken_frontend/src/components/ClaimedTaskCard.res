@@ -5,7 +5,7 @@ open MaterialUIDataType
 
 @react.component
 let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
-  // Show Done Button or not
+  // Show Done Button or not << Should not be state, I think. Set task in Firebase should be
   let (_, setShowDone) = useState(_ => true)
 
   let (doneMsg, setDoneMsg) = useState(_ => false)
@@ -26,8 +26,8 @@ let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
       <div style={ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ())}>
         <Typography variant=Typography.Variant.h5> {string(task.content)} </Typography>
       </div>
-      <Grid.Container>
-        <Grid.Item xs={GridSize.size(6)}>
+      <Grid.Container justify={Justify.spaceBetween}>
+        <Grid.Item>
           {
             let due = switch task.deadline {
             | Some(d) => d->Js.Date.toString
@@ -36,7 +36,7 @@ let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
             <Typography> {string(`Deadline: ${due}`)} </Typography>
           }
         </Grid.Item>
-        <Grid.Item xs={GridSize.size(6)}>
+        <Grid.Item>
           <Typography> {string("Votes: " ++ string_of_int(task.vote))} </Typography>
         </Grid.Item>
       </Grid.Container>
@@ -44,40 +44,12 @@ let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
     <Grid.Item>
       {switch task.status {
       | Claim =>
-        <div
-          style={ReactDOM.Style.make(
-            ~margin="auto",
-            ~padding="10px 3px",
-            ~fontFamily="Arial",
-            ~fontSize="15px",
-            (),
-          )}>
-          <Button color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
-            {string("Done")}
-          </Button>
-        </div>
-      | Done =>
-        <div
-          style={ReactDOM.Style.make(
-            ~margin="auto",
-            ~padding="10px 3px",
-            ~fontFamily="Arial",
-            ~fontSize="15px",
-            (),
-          )}>
-          {string("Task is being verified")}
-        </div>
+        <Button color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
+          {string("Done")}
+        </Button>
+      | Done => <div className="status-text"> {string("Task is being verified")} </div>
       | DoneAndVerified =>
-        <div
-          style={ReactDOM.Style.make(
-            ~margin="auto",
-            ~padding="10px 3px",
-            ~fontFamily="Arial",
-            ~fontSize="15px",
-            (),
-          )}>
-          {string("Task has been verified! Enjoy your tokens")}
-        </div>
+        <div className="status-text"> {string("Task has been verified! Enjoy your tokens")} </div>
       | Open => React.null
       }}
       <Snackbar _open={doneMsg} autoHideDuration={6000} onClose={handleDoneMsgClose}>
