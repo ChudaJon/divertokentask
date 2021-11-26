@@ -79,12 +79,12 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
           | Done(_doneBy) =>
             <div>
               <Grid.Container spacing={2}>
-                <Grid.Item xs={GridSize.size(2)}>
+                <Grid.Item>
                   <Button variant=Button.Variant.contained color="primary" onClick={0->handleModal}>
                     {string("Verify")}
                   </Button>
                 </Grid.Item>
-                <Grid.Item xs={GridSize.size(2)}>
+                <Grid.Item>
                   <Button
                     variant=Button.Variant.contained color="secondary" onClick={1->handleModal}>
                     {string("Decline")}
@@ -120,7 +120,7 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
                             </Typography>
                             <div style={ReactDOM.Style.make(~padding="20px 0px 0px 0px", ())}>
                               <Grid.Container spacing={2}>
-                                <Grid.Item xs={GridSize.size(4)}>
+                                <Grid.Item>
                                   <Button
                                     color="primary"
                                     variant=Button.Variant.contained
@@ -128,7 +128,7 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
                                     {string("Decline")}
                                   </Button>
                                 </Grid.Item>
-                                <Grid.Item xs={GridSize.size(4)}>
+                                <Grid.Item>
                                   <Button
                                     color="secondary"
                                     variant=Button.Variant.contained
