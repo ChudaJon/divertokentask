@@ -4,6 +4,16 @@ module Item = Grid.Item
 
 @react.component
 let make = () => {
+
+  let confirmPasswordReset = _ =>
+  Firebase.Divertask.auth
+  ->Firebase.Auth.confirmPasswordReset(
+    ~code="200", // get code from URL
+    ~newPassword="newpassword",
+  )
+  ->Js.Promise.then_(x => Js.log2("confirm success", x)->Js.Promise.resolve, _)
+  ->ignore // invalid code
+
   let textFieldStyle = ReactDOM.Style.make(
     ~fontSize="25px",
     ~justifyContent="center",

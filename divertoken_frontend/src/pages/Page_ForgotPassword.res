@@ -34,6 +34,10 @@ let make = () => {
     ->Js.Promise.then_(x => Js.log2("forgot password return", x)->Js.Promise.resolve, _)
     ->ignore
 
+  let handleResetPassword = () => {
+    Routes.push(ForgotPasswordSuccess)
+    resetPassword
+  }
   <Layout_FormPage>
     <Form title="Forgot your password?">
       <div style={Styles.descriptionText}>
@@ -44,7 +48,7 @@ let make = () => {
       <Form.TextInput
         label="Your Email" name="email" _type="email" onChange=onEmailChange autoFocus=true
       />
-      <Form.SubmitButton text="Send Me a Link" onClick=resetPassword />
+      <Form.SubmitButton text="Send Me a Link" onClick=handleResetPassword() />
     </Form>
   </Layout_FormPage>
 }
