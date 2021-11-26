@@ -2,32 +2,33 @@ open React
 open MaterialUI
 open MaterialUIDataType
 
+let (notificationBadge, setNotificationBadge) = useState(() => 0)
+
 let tokenCount = <div> {React.string("1")} </div>
+let onUnclaimedTask = () => RescriptReactRouter.push(Routes.route2Str(UnclaimTask))
+let onTaskList = () => RescriptReactRouter.push(Routes.route2Str(TaskList))
+let onNotification = () => RescriptReactRouter.push(Routes.route2Str(Notification))
+let handleNotifications = () => {
+  onNotification()
+  setNotificationBadge(_ => 0)
+}
 
 let switchTab =
   <div style={ReactDOM.Style.make(~padding="25px", ())}>
     <Grid.Container spacing=3>
       <Grid.Item xs={GridSize.size(4)}>
-        <Button
-        // onClick={_ => onUnclaimedTask()}
-          fullWidth=true>
+        <Button onClick={_ => onUnclaimedTask()} fullWidth=true>
           <Typography variant=Typography.Variant.h6> {string("Unclaimed Tasks")} </Typography>
         </Button>
       </Grid.Item>
       <Grid.Item xs={GridSize.size(4)}>
-        <Button
-        // onClick={_ => onTaskList()}
-          fullWidth=true>
+        <Button onClick={_ => onTaskList()} fullWidth=true>
           <Typography variant=Typography.Variant.h6> {string("Your Tasks")} </Typography>
         </Button>
       </Grid.Item>
       <Grid.Item xs={GridSize.size(4)}>
-        <Button
-        // onClick={_ => handleNotifications()}
-          fullWidth=true>
-          <Badge
-          // badgeContent={notificationBadge}
-            color="secondary">
+        <Button onClick={_ => handleNotifications()} fullWidth=true>
+          <Badge badgeContent={notificationBadge} color="secondary">
             <Typography variant=Typography.Variant.h6> {string("Notifications")} </Typography>
           </Badge>
         </Button>
