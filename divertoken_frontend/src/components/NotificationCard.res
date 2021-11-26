@@ -1,88 +1,51 @@
 open React
 open MaterialUI
 open MaterialUIDataType
+open Data
+
+module Styles = {
+  open ReactDOM.Style
+  let container = make(~margin="auto", ~width="50%", ~display="block", ())
+  let box = make(~margin="10px", ~padding="15px 25px", ~backgroundColor="#FFFFFF", ())
+
+  let button = make(~margin="auto", ~padding="10px 3px", ())
+}
 
 @react.component
-let make = (~user: User.t, ~notification: Notification.t) => {
-  let optionIdConvert = notiTaskId => {
-    switch notiTaskId {
-    | Some(notiTaskId) => notiTaskId
-    | None => ""
-    }
-  }
+let make = (~notification: notification) => {
+  let tasks = React.useContext(Context_Tasks.context)
 
-  let taskId = optionIdConvert(notification.task_id)
+  let taskId = notification.task_id->Belt.Option.getWithDefault("")
 
-  let linkToTask = () => {
-    RescriptReactRouter.push(Routes.route2Str(ViewTask(taskId)))
-  }
-
-  let allTasks = React.useContext(Context_Tasks.context)
-
-  let optionTask = allTasks->Belt.List.getBy(t => t.id == Some(taskId))
+  let linkToTask = () => Routes.push(ViewTask(taskId))
+  let optionTask = tasks->Belt.Array.getBy(t => t.id == Some(taskId))
 
   switch optionTask {
-  | Some(task) => <>
-      {<div style={ReactDOM.Style.make(~display="flex", ())}>
-        <Grid.Container>
-          <div style={ReactDOM.Style.make(~margin="auto", ~width="50%", ~display="block", ())}>
-            <div
-              className="box"
-              style={ReactDOM.Style.make(
-                ~margin="10px",
-                ~padding="15px 25px",
-                ~backgroundColor="#FFFFFF",
-                (),
-              )}>
-              <Grid.Item xs={GridSize.size(12)}>
-                <div style={ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ())}>
-                  <Button onClick={_ => linkToTask()}>
-                    {switch notification.notiType {
-                    | Claimed =>
-                      <Typography variant=Typography.Variant.h6>
-                        {string(
-                          "Your task '" ++
-                          task.content ++
-                          "' has been claimed by " ++
-                          user.displayName,
-                        )}
-                      </Typography>
-                    | VerifyWait =>
-                      <Typography variant=Typography.Variant.h6>
-                        {string(
-                          "Your task '" ++
-                          task.content ++
-                          "' is being verified by " ++
-                          user.displayName,
-                        )}
-                      </Typography>
-                    | Verify =>
-                      <div>
-                        <Typography variant=Typography.Variant.h6>
-                          {string(
-                            "A task that you voted for '" ++
-                            task.content ++ "' is completed, you can verify it now",
-                          )}
-                        </Typography>
-                      </div>
-                    | Done =>
-                      <Typography variant=Typography.Variant.h6>
-                        {string(
-                          "Your task '" ++
-                          task.content ++
-                          "' has been verified by " ++
-                          user.displayName,
-                        )}
-                      </Typography>
-                    }}
-                  </Button>
-                </div>
-              </Grid.Item>
+  | Some(task) =>
+    <Grid.Container>
+      <div style={Styles.container}>
+        //TODO: Change to use either flex or block
+        <div className="box" style={Styles.box}>
+          <Grid.Item xs={GridSize.size(12)}>
+            <div style={Styles.button}>
+              <Button onClick={_ => linkToTask()}>
+                <Typography variant=Typography.Variant.h6>
+                  {string(
+                    switch notification.notiType {
+                    | Claimed(user) => `Task '${task.content}' has been claimed by ${user}`
+                    | Complete =>
+                      `A task that you voted for '${task.content}' is completed, you can verify it now`
+                    | Verified(user) => `Task '${task.content}' has been verified by ${user}`
+                    },
+                  )}
+                </Typography>
+              </Button>
             </div>
-          </div>
-        </Grid.Container>
-      </div>}
-    </>
+          </Grid.Item>
+        </div>
+      </div>
+    </Grid.Container>
+
   | None => string("")
   }
 }

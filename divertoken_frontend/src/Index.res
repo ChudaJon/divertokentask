@@ -6,13 +6,9 @@ let makeContainer = () => {
   let container = document["createElement"]("div")
   container["className"] = "container"
 
-  let content = document["createElement"]("div")
-  content["className"] = "containerContent"
+  let _ = document["body"]["appendChild"](container)
 
-  let () = container["appendChild"](content)
-  let () = document["body"]["appendChild"](container)
-
-  content
+  container
 }
 
 // ReactDOMRe.render(<Routing />, makeContainer())

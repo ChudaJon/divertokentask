@@ -37,7 +37,7 @@ module Database = {
     @send
     external once: (
       t,
-      ~eventType: @string [#value | #child_added | #child_changed | #child_removed | #child_moved],
+      ~eventType: [#value | #child_added | #child_changed | #child_removed | #child_moved],
       ~successCallback: DataSnapshot.t => unit=?,
       unit,
     ) => Js.Promise.t<DataSnapshot.t> = "once"
@@ -45,7 +45,7 @@ module Database = {
     @send
     external on: (
       t,
-      ~eventType: @string [#value | #child_added | #child_changed | #child_removed | #child_moved],
+      ~eventType: [#value | #child_added | #child_changed | #child_removed | #child_moved],
       ~callback: DataSnapshot.t => unit,
       ~cancelCallback: Error.t<'e> => unit=?,
     ) => t = "on"
@@ -53,7 +53,7 @@ module Database = {
     @send
     external off: (
       t,
-      ~eventType: @string [#value | #child_added | #child_changed | #child_removed | #child_moved],
+      ~eventType: [#value | #child_added | #child_changed | #child_removed | #child_moved],
       ~callback: DataSnapshot.t => unit=?,
       unit,
     ) => unit = "off"
@@ -166,7 +166,7 @@ module Storage = {
 module Auth = {
   type t
   type user = {
-    displayName: string,
+    displayName: Js.nullable<string>,
     email: Js.nullable<string>,
     emailVerified: bool,
     isAnonymous: bool,
@@ -211,13 +211,17 @@ module Auth = {
     ~nextOrObserver: Js.Null.t<User.t> => unit,
     ~error: Error.t => unit=?,
     ~completed: unit => unit=?,
+    unit,
   ) => unit = "onAuthStateChanged"
-  @send external signInAnonymously: (t, unit) => Js.Promise.t<User.t> = "signInAnonymously"
   @send
-  external signInWithCredential: (t, ~credential: AuthCredential.t) => Js.Promise.t<User.t> =
-    "signInWithCredential"
+  external signInAnonymously: (t, unit) => Js.Promise.t<UserCredential.t> = "signInAnonymously"
   @send
-  external signInWithCustomToken: (t, ~token: string) => Js.Promise.t<User.t> =
+  external signInWithCredential: (
+    t,
+    ~credential: AuthCredential.t,
+  ) => Js.Promise.t<UserCredential.t> = "signInWithCredential"
+  @send
+  external signInWithCustomToken: (t, ~token: string) => Js.Promise.t<UserCredential.t> =
     "signInWithCustomToken"
 
   @send
@@ -225,7 +229,7 @@ module Auth = {
     t,
     ~email: string,
     ~password: string,
-  ) => Js.Promise.t<{..}> = "signInWithEmailAndPassword"
+  ) => Js.Promise.t<UserCredential.t> = "signInWithEmailAndPassword"
 
   @send external signOut: t => Js.Promise.t<unit> = "signOut"
   @send
