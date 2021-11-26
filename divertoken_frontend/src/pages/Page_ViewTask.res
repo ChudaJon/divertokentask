@@ -1,8 +1,61 @@
 open React
 open MaterialUI
 open MaterialUI_Icon
-open MaterialUIDataType
+
 open Data
+
+module Popup = {
+  @react.component
+  let make = (~user: user, ~task: task, ~showVerify, ~setNotificationBadge, ~handleClose) => {
+    let handleDecline = ignore // Handle decline
+
+    let handleVerify = () => {
+      // Handle notification
+      setNotificationBadge(prev => prev + 1)
+      Notification.allNotifications(task, Verified(user.email))
+
+      // Give user token and change status
+      Task.giveToken(user, task)
+      task.id->Belt.Option.forEach(tId => Task.verifyByTaskId(tId)->ignore)
+    }
+
+    let verifyBtn =
+      <Button color="primary" variant=Button.Variant.contained onClick={_ => handleVerify()}>
+        {string("Verify")}
+      </Button>
+    let declineBtn =
+      <Button color="primary" variant=Button.Variant.contained onClick={_ => handleDecline()}>
+        {string("Decline")}
+      </Button>
+    let cancelBtn =
+      <Button color="secondary" variant=Button.Variant.contained onClick={_ => handleClose()}>
+        {string("Cancel")}
+      </Button>
+
+    let verifyingTxt = {
+      `Do you want to verify ${task.content} ? ` ++
+      `If everyone who voted has verified this task, ` ++
+      `${user.displayName} will receive ${string_of_int(task.vote)} ` ++
+      `${task.vote > 1 ? "tokens" : "token"}}`
+    }
+    let decliningTxt = {
+      `Do you want to decline ${task.content}? ` ++
+      `If everyone who voted has verified this task, ` ++
+      `${user.displayName} will receive ${string_of_int(task.vote)} ` ++
+      `${task.vote > 1 ? "tokens" : "token"}}`
+    }
+
+    <>
+      <Typography id="modal-modal-description">
+        {string(showVerify ? verifyingTxt : decliningTxt)}
+      </Typography>
+      <Grid.Container spacing={2}>
+        <Grid.Item> {showVerify ? verifyBtn : declineBtn} </Grid.Item>
+        <Grid.Item> cancelBtn </Grid.Item>
+      </Grid.Container>
+    </>
+  }
+}
 
 // Page for when you press on the notication and it leads you to the task associated with it
 @react.component
@@ -44,19 +97,6 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
       handleOpen()
     }
 
-    let handleVerify = () => {
-      // Handle notification
-      setNotificationBadge(prev => prev + 1)
-      Notification.allNotifications(task, Verified(user.email))
-
-      // Give user token and change status
-      Task.giveToken(user, task)
-      Task.verifyByTaskId(taskId)->ignore
-    }
-    let handleDecline = () => {
-      ()
-      // Handle decline
-    }
     <>
       <div style={ReactDOM.Style.make(~margin="auto", ~display="flex", ~padding="3px 30px", ())}>
         <IconButton onClick={_ => onNotification()}> <ArrowBackIos /> </IconButton>
@@ -108,67 +148,7 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
                       {showVerify == false ? {string("Decline Task")} : {string("Verify Task")}}
                     </Typography>
                     <div style={ReactDOM.Style.make(~padding="20px 0px 30px 0px", ())}>
-                      {showVerify == false
-                        ? <div>
-                            <Typography id="modal-modal-description">
-                              {string(
-                                `Do you want to decline ${task.content} ? If everyone who voted has verified this task, user.displayName will receive ${string_of_int(
-                                    task.vote,
-                                  )}`,
-                              )}
-                              {task.vote != 1 ? {string(" tokens")} : {string(" token")}}
-                            </Typography>
-                            <div style={ReactDOM.Style.make(~padding="20px 0px 0px 0px", ())}>
-                              <Grid.Container spacing={2}>
-                                <Grid.Item>
-                                  <Button
-                                    color="primary"
-                                    variant=Button.Variant.contained
-                                    onClick={_ => handleDecline()}>
-                                    {string("Decline")}
-                                  </Button>
-                                </Grid.Item>
-                                <Grid.Item>
-                                  <Button
-                                    color="secondary"
-                                    variant=Button.Variant.contained
-                                    onClick={_ => handleClose()}>
-                                    {string("Cancel")}
-                                  </Button>
-                                </Grid.Item>
-                              </Grid.Container>
-                            </div>
-                          </div>
-                        : <div>
-                            <Typography id="modal-modal-description">
-                              {string(
-                                `Do you want to verify ${task.content} ? If everyone who voted has verified this task, ${user.displayName} will receive ${string_of_int(
-                                    task.vote,
-                                  )}`,
-                              )}
-                              {task.vote != 1 ? {string(" tokens")} : {string(" token")}}
-                            </Typography>
-                            <div style={ReactDOM.Style.make(~padding="20px 0px 0px 0px", ())}>
-                              <Grid.Container spacing={2}>
-                                <Grid.Item xs={GridSize.size(4)}>
-                                  <Button
-                                    color="primary"
-                                    variant=Button.Variant.contained
-                                    onClick={_ => handleVerify()}>
-                                    {string("Verify")}
-                                  </Button>
-                                </Grid.Item>
-                                <Grid.Item xs={GridSize.size(4)}>
-                                  <Button
-                                    color="secondary"
-                                    variant=Button.Variant.contained
-                                    onClick={_ => handleClose()}>
-                                    {string("Cancel")}
-                                  </Button>
-                                </Grid.Item>
-                              </Grid.Container>
-                            </div>
-                          </div>}
+                      <Popup user task showVerify setNotificationBadge handleClose />
                     </div>
                   </Box>
                 </div>
