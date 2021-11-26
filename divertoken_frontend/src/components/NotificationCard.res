@@ -33,7 +33,6 @@ let make = (~notification: notification) => {
                   {string(
                     switch notification.notiType {
                     | Claimed(user) => `Your task '${task.content}' has been claimed by ${user}`
-                    | Verifying(user) => `Your task '${task.content}' is being verified by ${user}`
                     | Complete =>
                       `A task that you voted for '${task.content}' is completed, you can verify it now`
                     | Verified(user) => `Your task '${task.content}' has been verified by ${user}`

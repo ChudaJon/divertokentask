@@ -2,7 +2,6 @@ type userName = string
 type notiType =
   | Claimed(userName)
   | Complete
-  | Verifying(userName)
   | Verified(userName)
 
 type t = {
@@ -21,8 +20,7 @@ let fromJson = (notiId: option<string>, data: Js.Json.t) => {
     switch field("notiType", int)->withDefault(0)(json) {
     | 0 => Claimed(field("user", string->optional)(json)->Belt.Option.getWithDefault("Some user"))
     | 1 => Complete
-    | 2 => Verifying(field("user", string->optional)(json)->Belt.Option.getWithDefault("Some user"))
-    | 3 => Verified(field("user", string->optional)(json)->Belt.Option.getWithDefault("Some user"))
+    | 2 => Verified(field("user", string->optional)(json)->Belt.Option.getWithDefault("Some user"))
     | _ => Claimed(field("user", string->optional)(json)->Belt.Option.getWithDefault("Some user"))
     }
 
@@ -47,8 +45,7 @@ let toJson = (notification: t) => {
     switch notification.notiType {
     | Claimed(user) => [("notiType", 0->int), ("user", user->string)]
     | Complete => [("notiType", 1->int)]
-    | Verifying(user) => [("notiType", 2->int), ("user", user->string)]
-    | Verified(user) => [("notiType", 3->int), ("user", user->string)]
+    | Verified(user) => [("notiType", 2->int), ("user", user->string)]
     },
   )
   ->Js.Array.concat(
