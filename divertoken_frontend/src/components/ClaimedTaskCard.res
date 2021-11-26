@@ -41,52 +41,50 @@ let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
         </Grid.Item>
       </Grid.Container>
     </Grid.Item>
-    <Grid.Container>
-      <Grid.Item xs={GridSize.size(6)}>
-        {switch task.status {
-        | Claim =>
-          <div
-            style={ReactDOM.Style.make(
-              ~margin="auto",
-              ~padding="10px 3px",
-              ~fontFamily="Arial",
-              ~fontSize="15px",
-              (),
-            )}>
-            <Button color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
-              {string("Done")}
-            </Button>
-          </div>
-        | Done =>
-          <div
-            style={ReactDOM.Style.make(
-              ~margin="auto",
-              ~padding="10px 3px",
-              ~fontFamily="Arial",
-              ~fontSize="15px",
-              (),
-            )}>
-            {string("Task is being verified")}
-          </div>
-        | DoneAndVerified =>
-          <div
-            style={ReactDOM.Style.make(
-              ~margin="auto",
-              ~padding="10px 3px",
-              ~fontFamily="Arial",
-              ~fontSize="15px",
-              (),
-            )}>
-            {string("Task has been verified! Enjoy your tokens")}
-          </div>
-        | _ => <div> {string("")} </div>
-        }}
-        <Snackbar _open={doneMsg} autoHideDuration={6000} onClose={handleDoneMsgClose}>
-          <Alert onClose={handleDoneMsgClose} severity="info">
-            {string("Please wait for your task to be verified")}
-          </Alert>
-        </Snackbar>
-      </Grid.Item>
-    </Grid.Container>
+    <Grid.Item>
+      {switch task.status {
+      | Claim =>
+        <div
+          style={ReactDOM.Style.make(
+            ~margin="auto",
+            ~padding="10px 3px",
+            ~fontFamily="Arial",
+            ~fontSize="15px",
+            (),
+          )}>
+          <Button color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
+            {string("Done")}
+          </Button>
+        </div>
+      | Done =>
+        <div
+          style={ReactDOM.Style.make(
+            ~margin="auto",
+            ~padding="10px 3px",
+            ~fontFamily="Arial",
+            ~fontSize="15px",
+            (),
+          )}>
+          {string("Task is being verified")}
+        </div>
+      | DoneAndVerified =>
+        <div
+          style={ReactDOM.Style.make(
+            ~margin="auto",
+            ~padding="10px 3px",
+            ~fontFamily="Arial",
+            ~fontSize="15px",
+            (),
+          )}>
+          {string("Task has been verified! Enjoy your tokens")}
+        </div>
+      | Open => React.null
+      }}
+      <Snackbar _open={doneMsg} autoHideDuration={6000} onClose={handleDoneMsgClose}>
+        <Alert onClose={handleDoneMsgClose} severity="info">
+          {string("Please wait for your task to be verified")}
+        </Alert>
+      </Snackbar>
+    </Grid.Item>
   </Grid.Container>
 }
