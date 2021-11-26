@@ -36,35 +36,37 @@ module RouterWithAuth = {
     }, [url])
 
     <Context_Tasks.Provider>
-      {switch url->Routes.url2route {
-      | TaskList =>
-        <Layout_Main notificationBadge setNotificationBadge title="Your Tasks">
-          <Page_TaskList user setNotificationBadge />
-        </Layout_Main>
-      | Notification =>
-        <Layout_Main notificationBadge setNotificationBadge title="Notifications">
-          <Page_NotificationList />
-        </Layout_Main>
-      | AddTask =>
-        <Layout_Main notificationBadge setNotificationBadge title="Create a New Task">
-          <Page_AddTask user />
-        </Layout_Main>
-      | ViewTask(taskId) => <Page_ViewTask taskId user setNotificationBadge />
-      | Logout => <div> {string("Logging out")} </div>
-      | Account =>
-        <Layout_Main notificationBadge setNotificationBadge title="Account">
-          <Button
-            variant={Button.Variant.contained}
-            color={DataType.NoTransparentColor.secondary}
-            onClick={_ => onLogout()}>
-            {React.string("Logout")}
-          </Button>
-        </Layout_Main>
-      | _ =>
-        <Layout_Main notificationBadge setNotificationBadge title="Unclaimed Tasks">
-          <Page_UnclaimTask user setNotificationBadge />
-        </Layout_Main>
-      }}
+      <Context_Notifications.Provider>
+        {switch url->Routes.url2route {
+        | TaskList =>
+          <Layout_Main notificationBadge setNotificationBadge title="Your Tasks">
+            <Page_TaskList user setNotificationBadge />
+          </Layout_Main>
+        | Notification =>
+          <Layout_Main notificationBadge setNotificationBadge title="Notifications">
+            <Page_NotificationList />
+          </Layout_Main>
+        | AddTask =>
+          <Layout_Main notificationBadge setNotificationBadge title="Create a New Task">
+            <Page_AddTask user />
+          </Layout_Main>
+        | ViewTask(taskId) => <Page_ViewTask taskId user setNotificationBadge />
+        | Logout => <div> {string("Logging out")} </div>
+        | Account =>
+          <Layout_Main notificationBadge setNotificationBadge title="Account">
+            <Button
+              variant={Button.Variant.contained}
+              color={DataType.NoTransparentColor.secondary}
+              onClick={_ => onLogout()}>
+              {React.string("Logout")}
+            </Button>
+          </Layout_Main>
+        | _ =>
+          <Layout_Main notificationBadge setNotificationBadge title="Unclaimed Tasks">
+            <Page_UnclaimTask user setNotificationBadge />
+          </Layout_Main>
+        }}
+      </Context_Notifications.Provider>
     </Context_Tasks.Provider>
   }
 }
