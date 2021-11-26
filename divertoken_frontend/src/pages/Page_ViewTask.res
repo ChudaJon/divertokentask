@@ -22,9 +22,9 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
 
   let statusToString = (status: Task.status) => {
     switch status {
-    | Claim => "Claimed"
-    | Done => "Done"
-    | DoneAndVerified => "Done and verified"
+    | Claim(_) => "Claimed"
+    | Done(_) => "Done"
+    | DoneAndVerified(_) => "Done and verified"
     | Open => "Open"
     }
   }
@@ -92,7 +92,7 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
                 </Typography>
               </div>
               {switch task.status {
-              | Done =>
+              | Done(_doneBy) =>
                 <div>
                   <div style={ReactDOM.Style.make(~padding="30px 0px 0px", ())}>
                     <Grid.Container spacing={2}>
