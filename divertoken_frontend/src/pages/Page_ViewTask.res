@@ -83,11 +83,6 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
               <Typography variant=Typography.Variant.h4> {string(task.content)} </Typography>
               <div style={ReactDOM.Style.make(~padding="30px 0px 0px 0px", ())}>
                 <Typography variant=Typography.Variant.h6>
-                  {string("taskId= " ++ taskId)}
-                </Typography>
-              </div>
-              <div style={ReactDOM.Style.make(~padding="30px 0px 0px 0px", ())}>
-                <Typography variant=Typography.Variant.h6>
                   {string("status= " ++ statusToString(task.status))}
                 </Typography>
               </div>
