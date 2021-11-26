@@ -17,7 +17,7 @@ let make = (~user: user, ~task: task, ~setNotificationBadge) => {
 
   let claim = (user: user, task: task) => {
     task->Task.claim(user)->ignore
-    task->Notification.allNotifications(user, Claimed)->ignore
+    task->Notification.allNotifications(Claimed(user.email))->ignore
     setNotificationBadge(prev => prev + 1)
   }
 

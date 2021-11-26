@@ -47,7 +47,7 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
     let handleVerify = () => {
       // Handle notification
       setNotificationBadge(prev => prev + 1)
-      Notification.allNotifications(task, user, Done)
+      Notification.allNotifications(task, Verified(user.email))
 
       // Give user token and change status
       Task.giveToken(user, task)

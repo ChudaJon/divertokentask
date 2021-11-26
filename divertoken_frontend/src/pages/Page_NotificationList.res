@@ -2,7 +2,7 @@ open React
 open Data
 
 @react.component
-let make = (~user) => {
+let make = () => {
   let (notifications: array<notification>, setNotifications) = useState(_ => [])
 
   useEffect0(() => {
@@ -37,7 +37,7 @@ let make = (~user) => {
   <div>
     {notifications
     ->Belt.Array.mapWithIndex((i, notification) =>
-      <NotificationCard key={string_of_int(i)} user notification />
+      <NotificationCard key={string_of_int(i)} notification />
     )
     ->React.array}
   </div>

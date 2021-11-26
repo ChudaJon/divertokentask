@@ -43,7 +43,7 @@ module RouterWithAuth = {
         </Layout_Main>
       | Notification =>
         <Layout_Main notificationBadge setNotificationBadge title="Notifications">
-          <Page_NotificationList user />
+          <Page_NotificationList />
         </Layout_Main>
       | AddTask =>
         <Layout_Main notificationBadge setNotificationBadge title="Create a New Task">
