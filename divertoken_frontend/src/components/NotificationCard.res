@@ -34,9 +34,9 @@ let make = (~user: user, ~notification: notification) => {
                     switch notification.notiType {
                     | Claimed =>
                       `Your task '${task.content}' has been claimed by ${user.displayName}`
-                    | VerifyWait =>
+                    | Verifying =>
                       `Your task '${task.content}' is being verified by ${user.displayName}`
-                    | Verify =>
+                    | Verified =>
                       `A task that you voted for '${task.content}' is completed, you can verify it now`
                     | Done => `Your task '${task.content}' has been verified by ${user.displayName}`
                     },

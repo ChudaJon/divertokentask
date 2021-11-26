@@ -1,7 +1,7 @@
 type notiType =
   | Claimed
-  | VerifyWait
-  | Verify
+  | Verifying
+  | Verified
   | Done
 
 type t = {
@@ -15,8 +15,8 @@ module Database = Firebase.Database
 let numbertoType = n => {
   switch n {
   | 0 => Claimed
-  | 1 => VerifyWait
-  | 2 => Verify
+  | 1 => Verifying
+  | 2 => Verified
   | 3 => Done
   | _ => Claimed
   }
@@ -48,8 +48,8 @@ let toJson = (notification: t) => {
       "notiType",
       switch notification.notiType {
       | Claimed => 0
-      | VerifyWait => 1
-      | Verify => 2
+      | Verifying => 1
+      | Verified => 2
       | Done => 3
       }->Encode.int,
     ),
