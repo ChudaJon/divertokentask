@@ -21,3 +21,4 @@ _esy
 _build
 *.install
 *.bs.js
+build/
