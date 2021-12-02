@@ -14,14 +14,17 @@ let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
     ReactEvent.Synthetic.preventDefault(evt)
     setDoneMsg(_ => true)
     task->Data.Task.done(user, setShowDone)->ignore
-    task->Data.Notification.allNotifications(user, VerifyWait)->ignore
-    task->Data.Notification.allNotifications(user, Verify)->ignore
+    task->Data.Notification.allNotifications(Complete)->ignore
     setNotificationBadge(prev => prev + 1)
   }
 
   let handleDoneMsgClose = () => setDoneMsg(_ => false)
+  let containerClassName = switch task.status {
+  | Claim(_) => ""
+  | _ => styles["unclaimed"]
+  }
 
-  <Grid.Container className={task.status != Claim ? styles["unclaimed"] : ""}>
+  <Grid.Container className=containerClassName>
     <Grid.Item xs={GridSize.size(12)}>
       <div style={ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ())}>
         <Typography variant=Typography.Variant.h5> {string(task.content)} </Typography>
@@ -43,12 +46,12 @@ let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
     </Grid.Item>
     <Grid.Item>
       {switch task.status {
-      | Claim =>
+      | Claim(_) =>
         <Button color="primary" variant=Button.Variant.contained onClick={handleDoneMsgOpen}>
           {string("Done")}
         </Button>
-      | Done => <div className="status-text"> {string("Task is being verified")} </div>
-      | DoneAndVerified =>
+      | Done(_) => <div className="status-text"> {string("Task is being verified")} </div>
+      | DoneAndVerified(_) =>
         <div className="status-text"> {string("Task has been verified! Enjoy your tokens")} </div>
       | Open => React.null
       }}

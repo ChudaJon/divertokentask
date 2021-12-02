@@ -5,7 +5,12 @@ let make = (~user, ~setNotificationBadge) => {
 
   <div>
     {tasks
-    ->Belt.Array.keep(t => t.status == Claim || t.status == Done || t.status == DoneAndVerified)
+    ->Belt.Array.keep(t =>
+      switch t.status {
+      | Claim(_) | Done(_) | DoneAndVerified(_) => true
+      | _ => false
+      }
+    )
     ->Belt.Array.mapWithIndex((i, task) =>
       <ClaimedTaskCard key={string_of_int(i)} user task setNotificationBadge />
     )

@@ -12,7 +12,7 @@ module Styles = {
 }
 
 @react.component
-let make = (~user: user, ~notification: notification) => {
+let make = (~notification: notification) => {
   let tasks = React.useContext(Context_Tasks.context)
 
   let taskId = notification.task_id->Belt.Option.getWithDefault("")
@@ -32,13 +32,10 @@ let make = (~user: user, ~notification: notification) => {
                 <Typography variant=Typography.Variant.h6>
                   {string(
                     switch notification.notiType {
-                    | Claimed =>
-                      `Your task '${task.content}' has been claimed by ${user.displayName}`
-                    | VerifyWait =>
-                      `Your task '${task.content}' is being verified by ${user.displayName}`
-                    | Verify =>
+                    | Claimed(user) => `Task '${task.content}' has been claimed by ${user}`
+                    | Complete =>
                       `A task that you voted for '${task.content}' is completed, you can verify it now`
-                    | Done => `Your task '${task.content}' has been verified by ${user.displayName}`
+                    | Verified(user) => `Task '${task.content}' has been verified by ${user}`
                     },
                   )}
                 </Typography>

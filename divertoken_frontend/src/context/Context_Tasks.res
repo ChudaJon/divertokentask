@@ -18,6 +18,7 @@ module Provider = {
 
     React.useEffect0(() => {
       open Firebase.Divertask
+
       let onTaskAdded = (id, data) =>
         setTasks(prevTasks => prevTasks->Array.concat([data->Task.fromJson(id, _)]))
       let onTaskChange = (id, data) =>

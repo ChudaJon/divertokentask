@@ -1,8 +1,8 @@
+type userName = string
 type notiType =
-  | Claimed
-  | VerifyWait
-  | Verify
-  | Done
+  | Claimed(userName)
+  | Complete
+  | Verified(userName)
 
 type t = {
   id: option<string>,
@@ -12,53 +12,47 @@ type t = {
 
 module Database = Firebase.Database
 
-let numbertoType = n => {
-  switch n {
-  | 0 => Claimed
-  | 1 => VerifyWait
-  | 2 => Verify
-  | 3 => Done
-  | _ => Claimed
-  }
-}
-
 let path = "notifications"
 let db = Firebase.Divertask.db
-let fromJson = (id: option<string>, data: Js.Json.t) => {
-  open Json
+let fromJson = (notiId: option<string>, data: Js.Json.t) => {
+  open Json.Decode
+  let notiType = json =>
+    switch field("notiType", int)->withDefault(0)(json) {
+    | 0 => Claimed(field("user", string->optional)(json)->Belt.Option.getWithDefault("Some user"))
+    | 1 => Complete
+    | 2 => Verified(field("user", string->optional)(json)->Belt.Option.getWithDefault("Some user"))
+    | _ => Claimed(field("user", string->optional)(json)->Belt.Option.getWithDefault("Some user"))
+    }
+
   data->(
     json => {
       {
-        id: id,
-        task_id: (Decode.field("task_id", Decode.string)->Decode.optional)(json),
-        notiType: Decode.field("notiType", Decode.int)(json)->numbertoType,
+        id: notiId,
+        task_id: (field("task_id", string)->optional)(json),
+        notiType: json->notiType,
       }
     }
   )
 }
 
 let toJson = (notification: t) => {
-  open Json
+  open Json.Encode
   switch notification.id {
-  | Some(id) => [("id", Encode.string(id))]
+  | Some(id) => [("id", string(id))]
   | None => []
   }
-  ->Js.Array.concat([
-    (
-      "notiType",
-      switch notification.notiType {
-      | Claimed => 0
-      | VerifyWait => 1
-      | Verify => 2
-      | Done => 3
-      }->Encode.int,
-    ),
-  ])
   ->Js.Array.concat(
-    notification.task_id->Belt.Option.mapWithDefault([], x => [("task_id", Encode.string(x))]),
+    switch notification.notiType {
+    | Claimed(user) => [("notiType", 0->int), ("user", user->string)]
+    | Complete => [("notiType", 1->int)]
+    | Verified(user) => [("notiType", 2->int), ("user", user->string)]
+    },
+  )
+  ->Js.Array.concat(
+    notification.task_id->Belt.Option.mapWithDefault([], x => [("task_id", string(x))]),
   )
   ->Array.to_list
-  ->Encode.object_
+  ->object_
 }
 
 let createNotification = (~taskId: option<string>, ~notificationType) => {
@@ -77,7 +71,7 @@ let onSave = (~task_id: option<string>, ~notificationType) => {
   createNotification(~taskId=task_id, ~notificationType)->addNotification->ignore
 }
 
-let allNotifications = (task: Data_Task.t, _byUser: Data_User.t, notificationType) => {
+let allNotifications = (task: Data_Task.t, notificationType) => {
   // Check who voted on the task & create notification for that user on this task id
   let taskEntries = Js.Dict.entries(task.voted)
   for x in 0 to Array.length(taskEntries) - 1 {
