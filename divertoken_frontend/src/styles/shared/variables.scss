@@ -1,0 +1,16 @@
+$page-max-width: 600px;
+$topbar-height: 50px;
+$bottombar-height: 60px;
+$card-padding-tb: 20px;
+$card-padding-lr: 20px;
+$card-margin-topbottom: 10px;
+$card-border-radius: 10px;
+$card-shadow: 0px 0px 4px rgba(0, 0, 0, 0.45);
+
+%taskcard {
+  padding: $card-padding-tb $card-padding-lr;
+  margin: $card-margin-topbottom 0;
+  background-color: white;
+  border-radius: $card-border-radius;
+  box-shadow: $card-shadow;
+}

@@ -2,6 +2,7 @@ open React
 open MaterialUI
 open MaterialUIDataType
 open Data
+@module("/src/styles/UnclaimedTaskCard.module.scss") external styles: 'a = "default"
 
 @react.component
 let make = (~user: user, ~task: task, ~setNotificationBadge) => {
@@ -37,20 +38,12 @@ let make = (~user: user, ~task: task, ~setNotificationBadge) => {
 
   <div style={ReactDOM.Style.make(~display="flex", ())}>
     <Grid.Container>
-      <div style={ReactDOM.Style.make(~margin="auto", ~width="50%", ~display="block", ())}>
+      <div>
         // <Grid.Item xs={GridSize.size(8)}>
-        <div
-          className="box"
-          style={ReactDOM.Style.make(
-            ~margin="10px",
-            ~padding="15px 25px",
-            ~backgroundColor="#FFFFFF",
-            ~borderRadius="3px 3px",
-            (),
-          )}>
+        <div className={styles["card"]}>
           <Grid.Item xs={GridSize.size(12)}>
             <div style={ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ())}>
-              <Typography variant=Typography.Variant.h5> {string(task.content)} </Typography>
+              <Typography variant=Typography.Variant.h6> {string(task.content)} </Typography>
             </div>
             <Grid.Container>
               <Grid.Item xs={GridSize.size(6)}>
@@ -71,9 +64,7 @@ let make = (~user: user, ~task: task, ~setNotificationBadge) => {
             <Grid.Container>
               <Grid.Item xs={GridSize.size(6)}>
                 <Button
-                  color="secondary"
-                  variant=Button.Variant.contained
-                  onClick={_ => claim(user, task)}>
+                  color="primary" variant=Button.Variant.contained onClick={_ => claim(user, task)}>
                   {string("Claim Task")}
                 </Button>
               </Grid.Item>

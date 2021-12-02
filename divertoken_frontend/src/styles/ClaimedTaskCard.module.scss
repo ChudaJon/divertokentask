@@ -1,3 +1,7 @@
+@import "shared/variables.scss";
+.card {
+  @extend %taskcard;
+}
 .unclaimed {
   opacity: 0.3;
 }

@@ -2,6 +2,7 @@ open React
 open MaterialUI
 open MaterialUIDataType
 open Data
+@module("/src/styles/Page_AddTask.module.scss") external styles: 'a = "default"
 
 @react.component
 let make = (~user) => {
@@ -23,31 +24,13 @@ let make = (~user) => {
 
   module Container = Grid.Container
   module Item = Grid.Item
-  <div
-    style={ReactDOM.Style.make(
-      ~padding="20px 0px 0px 20px",
-      ~display="flex",
-      ~justifyContent="center",
-      (),
-    )}>
-    <div
-      style={ReactDOM.Style.make(
-        ~backgroundColor="#FFFFFF",
-        ~borderRadius="3px 3px",
-        ~width="30%",
-        (),
-      )}>
+  <div>
+    <div className={styles["add-task-card"]}>
       <Box p={4}>
         <div style={ReactDOM.Style.make(~margin="0 auto", ())}>
-          <Container>
+          <Container spacing=2>
             <Item xs={GridSize.size(12)}>
-              <div
-                style={ReactDOM.Style.make(
-                  ~display="flex",
-                  ~justifyContent="center",
-                  ~padding="20px 0px 0px 0px",
-                  (),
-                )}>
+              <div>
                 <Picker.UtilsProvider utils=Picker.dateFns>
                   <DatePicker
                     autoOk=true
@@ -64,24 +47,16 @@ let make = (~user) => {
               </div>
             </Item>
             <Item xs={GridSize.size(12)}>
-              <div
-                style={ReactDOM.Style.make(
-                  ~display="flex",
-                  ~justifyContent="center",
-                  ~padding="30px 0px 0px 0px",
-                  (),
-                )}>
-                <TextField
-                  size="medium"
-                  required=true
-                  variant=TextField.Variant.outlined
-                  label="Task name"
-                  value=taskContent
-                  onChange
-                  rows={"5"}
-                  multiline=true
-                />
-              </div>
+              <TextField
+                size="small"
+                required=true
+                variant=TextField.Variant.outlined
+                label="Task name"
+                value=taskContent
+                onChange
+                rows={"1"}
+                multiline=true
+              />
             </Item>
             <Item xs={GridSize.size(12)}>
               <div
