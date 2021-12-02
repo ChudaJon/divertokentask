@@ -2,7 +2,7 @@
   "name": "divertoken",
   "version": "0.1.0",
   "scripts": {
-    "build": "bsb -make-world",
+    "build": "bsb -make-world && webpack build",
     "start": "bsb -make-world -w -ws _ ",
     "clean": "bsb -clean-world",
     "server": "webpack serve --config webpack.config.js --progress --port 5050",
