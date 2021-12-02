@@ -1,7 +1,7 @@
 open React
 open MaterialUI
 open MaterialUIDataType
-@module("/src/styles/ClaimTaskCard.module.scss") external styles: 'a = "default"
+@module("/src/styles/ClaimedTaskCard.module.scss") external styles: 'a = "default"
 
 @react.component
 let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
@@ -24,10 +24,11 @@ let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
   | _ => styles["unclaimed"]
   }
 
-  <Grid.Container className=containerClassName>
+  let containerStyle = styles["card"]
+  <Grid.Container className={`${containerClassName} + ${containerStyle}`}>
     <Grid.Item xs={GridSize.size(12)}>
       <div style={ReactDOM.Style.make(~margin="auto", ~padding="10px 3px", ())}>
-        <Typography variant=Typography.Variant.h5> {string(task.content)} </Typography>
+        <Typography variant=Typography.Variant.h6> {string(task.content)} </Typography>
       </div>
       <Grid.Container justify={Justify.spaceBetween}>
         <Grid.Item>

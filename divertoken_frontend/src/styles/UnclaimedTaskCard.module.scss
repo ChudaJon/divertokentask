@@ -1,0 +1,6 @@
+@import "shared/variables.scss";
+.card {
+    @extend %taskcard;
+    margin-left: $card-padding-lr;
+    margin-right: $card-padding-lr;
+}

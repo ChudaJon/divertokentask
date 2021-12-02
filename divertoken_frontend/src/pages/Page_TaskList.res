@@ -3,7 +3,7 @@
 let make = (~user, ~setNotificationBadge) => {
   let tasks = React.useContext(Context_Tasks.context)
 
-  <div>
+  <div className={styles["tasklist"]}>
     {tasks
     ->Belt.Array.keep(t =>
       switch t.status {

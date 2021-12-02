@@ -3,6 +3,8 @@ open MaterialUI.DataType
 
 type tab = UnClaimed | YourTask | Notification | Account
 
+@module("/src/styles/Layout_Main.module.scss") external styles: {..} = "default"
+
 module SwitchTabs = {
   @react.component
   let make = (~currentTab, ~setCurrentTab, ~notificationBadge) => {
@@ -11,17 +13,18 @@ module SwitchTabs = {
       user->Belt.Option.mapWithDefault("", ({email}) => email->Js.String2.slice(~from=0, ~to_=2))
 
     let onChange = (_event, newTab) => setCurrentTab(_ => newTab)
-
-    <BottomNavigation value={currentTab} onChange>
-      <BottomNavigationAction icon={<Icon.FormatListBulleted />} />
-      <BottomNavigationAction icon={<Icon.Person />} />
-      <BottomNavigationAction
-        icon={<Badge badgeContent=notificationBadge color="secondary">
-          <Icon.Notifications />
-        </Badge>}
-      />
-      <BottomNavigationAction icon={<Avatar> {React.string(userStr)} </Avatar>} />
-    </BottomNavigation>
+    <div className={styles["bottom-nav-container"]}>
+      <BottomNavigation className={styles["bottom-nav"]} value={currentTab} onChange>
+        <BottomNavigationAction icon={<Icon.FormatListBulleted />} />
+        <BottomNavigationAction icon={<Icon.Person />} />
+        <BottomNavigationAction
+          icon={<Badge badgeContent=notificationBadge color="secondary">
+            <Icon.Notifications />
+          </Badge>}
+        />
+        <BottomNavigationAction icon={<Avatar> {React.string(userStr)} </Avatar>} />
+      </BottomNavigation>
+    </div>
   }
 }
 
@@ -65,23 +68,21 @@ let make = (~title, ~notificationBadge, ~setNotificationBadge, ~children) => {
   }, [currentTab])
 
   <div>
-    <div style={ReactDOM.Style.make(~padding="10px", ())}>
-      <Grid.Container>
+    <div className={styles["page-header-container"]}>
+      <Grid.Container className={styles["page-header"]}>
         <Grid.Item xs={GridSize.size(12)}>
           <Grid.Container justify=Justify.center spacing=10>
             <Grid.Item>
               <Typography variant=Typography.Variant.h5> {React.string(title)} </Typography>
             </Grid.Item>
-            <div style={ReactDOM.Style.make(~position="absolute", ~left="87%", ~top="2%", ())}>
-              <Grid.Item>
-                <Typography variant=Typography.Variant.h6> tokenCount </Typography>
-              </Grid.Item>
-            </div>
+            <Grid.Item>
+              <Typography variant=Typography.Variant.h6> tokenCount </Typography>
+            </Grid.Item>
           </Grid.Container>
         </Grid.Item>
       </Grid.Container>
     </div>
-    {children}
+    <div className={styles["page-content"]}> {children} </div>
     <SwitchTabs currentTab setCurrentTab notificationBadge />
   </div>
 }
