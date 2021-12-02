@@ -39,8 +39,12 @@ let make = (~title, ~notificationBadge, ~setNotificationBadge, ~children) => {
   let tokenCount = switch user {
   | Some({token}) =>
     token > 1
-      ? <div> {React.string(`You have ${Js.Int.toString(token)} tokens`)} </div>
-      : <div> {React.string(`You have ${Js.Int.toString(token)} token`)} </div>
+      ? <div>
+          {React.string(`You have`)} <br /> {React.string(`${Js.Int.toString(token)} tokens`)}
+        </div>
+      : <div>
+          {React.string(`You have`)} <br /> {React.string(`${Js.Int.toString(token)} token`)}
+        </div>
   | None => <div> {React.string(`You don't have any tokens`)} </div>
   }
 
@@ -71,13 +75,13 @@ let make = (~title, ~notificationBadge, ~setNotificationBadge, ~children) => {
     <div className={styles["page-header-container"]}>
       <Grid.Container className={styles["page-header"]}>
         <Grid.Item xs={GridSize.size(12)}>
-          <Grid.Container justify=Justify.center spacing=10>
+          <Grid.Container justify=Justify.center spacing=12>
             <Grid.Item>
               <Typography variant=Typography.Variant.h5> {React.string(title)} </Typography>
             </Grid.Item>
-            <Grid.Item>
-              <Typography variant=Typography.Variant.h6> tokenCount </Typography>
-            </Grid.Item>
+            <div className={styles["tokencount-container"]}>
+              <Typography> tokenCount </Typography>
+            </div>
           </Grid.Container>
         </Grid.Item>
       </Grid.Container>
