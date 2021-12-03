@@ -35,7 +35,7 @@ let make = () => {
     ->ignore
 
   let handleResetPassword = () => {
-    Routes.push(ForgotPasswordSuccess)
+    // Routes.push(ForgotPasswordSuccess) Redirect to this page 
     resetPassword
   }
   <Layout_FormPage>
