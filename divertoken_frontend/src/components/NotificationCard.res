@@ -32,10 +32,10 @@ let make = (~notification: notification) => {
                 <Typography variant=Typography.Variant.h6>
                   {string(
                     switch notification.notiType {
-                    | Claimed(user) => `Your task '${task.content}' has been claimed by ${user}`
+                    | Claimed(user) => `Task '${task.content}' has been claimed by ${user}`
                     | Complete =>
                       `A task that you voted for '${task.content}' is completed, you can verify it now`
-                    | Verified(user) => `Your task '${task.content}' has been verified by ${user}`
+                    | Verified(user) => `Task '${task.content}' has been verified by ${user}`
                     },
                   )}
                 </Typography>
