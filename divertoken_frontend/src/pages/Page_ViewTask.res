@@ -92,15 +92,41 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
   let onClickVerify = _ => setPopUpState(_ => Show(Verify))
   let onClickDecline = _ => setPopUpState(_ => Show(Decline))
   let onClosePopUp = _ => setPopUpState(_ => Hidden)
+  let (userIdOfTask, setUserOfTask) = useState(_=>"")
+  let (doer, setDoer) = useState(_=>user)
 
   let statusToString = (status: Task.status) => {
     switch status {
-    | Claim(_) => "Claimed"
-    | Done(_) => "Done"
+    | Claim(userId) => {
+      setUserOfTask(_ => userId)
+      "Claimed"
+    }
+    | Done(userId) => {
+      setUserOfTask(_ => userId)
+      "Done"
+    }
     | DoneAndVerified(_) => "Done and verified"
     | Open => "Open"
     }
   }
+
+  React.useEffect1(() => {
+    open Firebase.Divertask
+    let path = `users/${userIdOfTask}`
+
+    let onUserOfTask = (_id, data) =>
+      {
+        Js.log2("user->", data)
+        switch (Data.User.Codec.fromJson(Some(userIdOfTask), data)) {
+        | Some(u) => setDoer(_=>u)
+        | None => Js.log("No user")
+        }
+      }
+
+    let stopListen = listenToPath(path, ~eventType=#value, ~onData=onUserOfTask, ())
+    
+    Some(_=>stopListen())
+  },[userIdOfTask])
 
   switch optionTask {
   | Some(task) => <>
@@ -135,7 +161,7 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
                     {string("Decline")}
                   </Button>
                 </Grid.Item>
-                <Popup user task setNotificationBadge popUpState handleClose=onClosePopUp />
+                <Popup user=doer task setNotificationBadge popUpState handleClose=onClosePopUp />
               </Grid.Container>
             </div>
           | _ => <div />
