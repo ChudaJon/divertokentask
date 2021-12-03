@@ -54,7 +54,7 @@ let make = () => {
               (),
             )}>
             <Button
-            // onClick=back to Home
+            onClick={_ => Routes.push(Login)}
               color="primary" variant=Button.Variant.contained size="large">
               {string("Back to Home")}
             </Button>

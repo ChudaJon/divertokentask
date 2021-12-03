@@ -239,7 +239,19 @@ module Auth = {
     ~actionCodeSetting: {..}=?,
     unit,
   ) => Js.Promise.t<{..}> = "sendPasswordResetEmail"
-}
+  @send
+  external confirmPasswordReset: (
+    t,
+    ~code: string,
+    ~newPassword: string,
+  ) => Js.Promise.t<{..}> = "confirmPasswordReset"
+
+  @send
+  external verifyPasswordResetCode: (
+    t,
+    ~code: string,
+  ) => Js.Promise.t<{..}> = "verifyPasswordResetCode"
+} 
 
 module Messaging = {
   type t
