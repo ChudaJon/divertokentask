@@ -18,7 +18,12 @@ let make = (~user: user, ~task: task, ~setNotificationBadge) => {
 
   let claim = (user: user, task: task) => {
     task->Task.claim(user)->ignore
-    task->Notification.allNotifications(Claimed(user.email))->ignore
+    task
+    ->Notification.allNotifications(
+      Claimed(user.email),
+      [user.id]->Belt.Array.concat(task.voted->Js.Dict.keys),
+    )
+    ->ignore
     setNotificationBadge(prev => prev + 1)
   }
 
