@@ -3,7 +3,7 @@ body {
     margin: 0;
 }
 .page-content {
-    height: calc(100vh - #{$bottombar-height} - #{$topbar-height} );    
+    height: calc(100vh - #{$bottombar-height} - #{$topbar-height} -  env(safe-area-inset-bottom));    
     overflow: scroll;
     max-width: $page-max-width;
     margin: auto;
