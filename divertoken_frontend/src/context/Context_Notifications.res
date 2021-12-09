@@ -13,7 +13,7 @@ module Provider = {
   let provider = React.Context.provider(context)
 
   @react.component
-  let make = (~children) => {
+  let make = (~userId, ~children) => {
     let (notifications: array<notification>, setNotifications) = React.useState(_ => [])
 
     React.useEffect0(() => {
@@ -41,6 +41,14 @@ module Provider = {
       Some(uninstall)
     })
 
-    React.createElement(provider, {"value": notifications, "children": children})
+    React.createElement(
+      provider,
+      {
+        "value": notifications->Belt.Array.keep(({target}) =>
+          target->Belt.Array.some(id => id == userId)
+        ),
+        "children": children,
+      },
+    )
   }
 }
