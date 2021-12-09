@@ -92,16 +92,12 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
   let onClickVerify = _ => setPopUpState(_ => Show(Verify))
   let onClickDecline = _ => setPopUpState(_ => Show(Decline))
   let onClosePopUp = _ => setPopUpState(_ => Hidden)
-  let (doer, setDoer) = useState(_=>user)
+  let (doer, setDoer) = useState(_ => user)
 
   let statusToString = (status: Task.status) => {
     switch status {
-    | Claim(_) => {
-      "Claimed"
-    }
-    | Done(_) => {
-      "Done"
-    }
+    | Claim(_) => "Claimed"
+    | Done(_) => "Done"
     | DoneAndVerified(_) => "Done and verified"
     | Open => "Open"
     }
@@ -110,33 +106,23 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
   React.useEffect1(() => {
     open Firebase.Divertask
 
-    let retrieveDoer = (userId) => {
+    let retrieveDoer = userId => {
       let path = `users/${userId}`
-      let onUserOfTask = (_id, data) =>
-      {
-        switch (Data.User.Codec.fromJson(Some(userId), data)) {
-        | Some(u) => setDoer(_=>u)
+      let onUserOfTask = (_id, data) => {
+        switch Data.User.Codec.fromJson(Some(userId), data) {
+        | Some(u) => setDoer(_ => u)
         | None => Js.log("No user")
         }
       }
-      
+
       Some(listenToPath(path, ~eventType=#value, ~onData=onUserOfTask, ()))
     }
 
-    switch(optionTask) {
-      | Some({status}) => {
-        switch status {
-        | Claim(userId)
-        | Done(userId) => {
-          retrieveDoer(userId)
-        }
-        | _ => None
-        }
-      }
-      | _ => None
+    switch optionTask {
+    | Some({status: Claim(userId) | Done(userId)}) => retrieveDoer(userId)
+    | _ => None
     }
-
-  },[optionTask])
+  }, [optionTask])
 
   switch optionTask {
   | Some(task) => <>
