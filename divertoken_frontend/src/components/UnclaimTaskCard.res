@@ -21,7 +21,7 @@ let make = (~user: user, ~task: task, ~setNotificationBadge) => {
     task
     ->Notification.allNotifications(
       Claimed(user.email),
-      [user.email]->Belt.Array.concat(task.voted->Js.Dict.keys),
+      [user.id]->Belt.Array.concat(task.voted->Js.Dict.keys),
     )
     ->ignore
     setNotificationBadge(prev => prev + 1)

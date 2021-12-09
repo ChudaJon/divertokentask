@@ -54,6 +54,7 @@ let toJson = (notification: t) => {
   ->Js.Array.concat(
     notification.task_id->Belt.Option.mapWithDefault([], x => [("task_id", string(x))]),
   )
+  ->Js.Array.concat([("target", notification.target->array(string, _))])
   ->Array.to_list
   ->object_
 }
