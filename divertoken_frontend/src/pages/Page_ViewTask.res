@@ -9,16 +9,27 @@ type popUpState = Hidden | Show(popUpType)
 
 module Popup = {
   @react.component
-  let make = (~popUpState, ~user: user, ~task: task, ~setNotificationBadge, ~handleClose) => {
+  let make = (
+    ~popUpState,
+    ~verifier: user,
+    ~doer: user,
+    ~task: task,
+    ~setNotificationBadge,
+    ~handleClose,
+  ) => {
     let handleDecline = ignore // Handle decline
 
     let handleVerify = () => {
       // Handle notification
       setNotificationBadge(prev => prev + 1)
-      Notification.allNotifications(task, Verified(user.email))
+      Notification.allNotifications(
+        task,
+        Verified(verifier.email),
+        [verifier.id, doer.id]->Belt.Array.concat(task.voted->Js.Dict.keys),
+      )
 
       // Give user token and change status
-      Task.giveToken(user, task)
+      Task.giveToken(doer, task)
       task.id->Belt.Option.forEach(tId => Task.verifyByTaskId(tId)->ignore)
     }
 
@@ -38,13 +49,13 @@ module Popup = {
     let verifyingTxt = {
       `Do you want to verify ${task.content} ? ` ++
       `If everyone who voted has verified this task, ` ++
-      `${user.displayName} will receive ${string_of_int(task.vote)} ` ++
+      `${doer.displayName} will receive ${string_of_int(task.vote)} ` ++
       `${task.vote > 1 ? "tokens" : "token"}}`
     }
     let decliningTxt = {
       `Do you want to decline ${task.content}? ` ++
       `If everyone who voted has verified this task, ` ++
-      `${user.displayName} will receive ${string_of_int(task.vote)} ` ++
+      `${doer.displayName} will receive ${string_of_int(task.vote)} ` ++
       `${task.vote > 1 ? "tokens" : "token"}}`
     }
 
@@ -157,7 +168,9 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
                     {string("Decline")}
                   </Button>
                 </Grid.Item>
-                <Popup user=doer task setNotificationBadge popUpState handleClose=onClosePopUp />
+                <Popup
+                  verifier=user doer task setNotificationBadge popUpState handleClose=onClosePopUp
+                />
               </Grid.Container>
             </div>
           | _ => <div />

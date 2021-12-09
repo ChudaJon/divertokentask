@@ -1,4 +1,5 @@
 type userName = string
+type userId = string
 type notiType =
   | Claimed(userName)
   | Complete
@@ -8,6 +9,7 @@ type t = {
   id: option<string>,
   task_id: option<string>,
   mutable notiType: notiType,
+  target: array<userId>,
 }
 
 module Database = Firebase.Database
@@ -30,6 +32,7 @@ let fromJson = (notiId: option<string>, data: Js.Json.t) => {
         id: notiId,
         task_id: (field("task_id", string)->optional)(json),
         notiType: json->notiType,
+        target: (field("target", array(string))->optional)(json)->Belt.Option.getWithDefault([]),
       }
     }
   )
@@ -55,10 +58,11 @@ let toJson = (notification: t) => {
   ->object_
 }
 
-let createNotification = (~taskId: option<string>, ~notificationType) => {
+let createNotification = (~taskId: option<string>, ~notificationType, ~target) => {
   id: None,
   task_id: taskId,
   notiType: notificationType,
+  target: target,
 }
 
 let addNotification = (notification: t) => {
@@ -67,17 +71,17 @@ let addNotification = (notification: t) => {
   db->Database.ref(~path="notifications", ())->Database.Reference.push(~value, ())
 }
 
-let onSave = (~task_id: option<string>, ~notificationType) => {
-  createNotification(~taskId=task_id, ~notificationType)->addNotification->ignore
+let onSave = (~task_id: option<string>, ~notificationType, ~target) => {
+  createNotification(~taskId=task_id, ~notificationType, ~target)->addNotification->ignore
 }
 
-let allNotifications = (task: Data_Task.t, notificationType) => {
+let allNotifications = (task: Data_Task.t, notificationType, target) => {
   // Check who voted on the task & create notification for that user on this task id
   let taskEntries = Js.Dict.entries(task.voted)
   for x in 0 to Array.length(taskEntries) - 1 {
     let (_thisUser, voted) = taskEntries[x]
     if voted == 1 {
-      onSave(~task_id=task.id, ~notificationType)
+      onSave(~task_id=task.id, ~notificationType, ~target)
     }
   }
 }
