@@ -72,17 +72,7 @@ let addNotification = (notification: t) => {
   db->Database.ref(~path="notifications", ())->Database.Reference.push(~value, ())
 }
 
-let onSave = (~task_id: option<string>, ~notificationType, ~target) => {
-  createNotification(~taskId=task_id, ~notificationType, ~target)->addNotification->ignore
-}
-
 let allNotifications = (task: Data_Task.t, notificationType, target) => {
   // Check who voted on the task & create notification for that user on this task id
-  let taskEntries = Js.Dict.entries(task.voted)
-  for x in 0 to Array.length(taskEntries) - 1 {
-    let (_thisUser, voted) = taskEntries[x]
-    if voted == 1 {
-      onSave(~task_id=task.id, ~notificationType, ~target)
-    }
-  }
+  createNotification(~taskId=task.id, ~notificationType, ~target)->addNotification->ignore
 }
