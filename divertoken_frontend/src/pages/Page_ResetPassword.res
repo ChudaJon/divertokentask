@@ -4,6 +4,7 @@ module Item = Grid.Item
 
 @react.component
 let make = () => {
+
   let textFieldStyle = ReactDOM.Style.make(
     ~fontSize="25px",
     ~justifyContent="center",

@@ -1,2 +1,2 @@
-let host = "http://localhost:5050/" // TODO: Change this in prod
+let host = "https://divertise-asia-divertask.web.app/" 
 let defaultToken = 10

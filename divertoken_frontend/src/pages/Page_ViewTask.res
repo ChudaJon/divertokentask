@@ -9,16 +9,27 @@ type popUpState = Hidden | Show(popUpType)
 
 module Popup = {
   @react.component
-  let make = (~popUpState, ~user: user, ~task: task, ~setNotificationBadge, ~handleClose) => {
+  let make = (
+    ~popUpState,
+    ~verifier: user,
+    ~doer: user,
+    ~task: task,
+    ~setNotificationBadge,
+    ~handleClose,
+  ) => {
     let handleDecline = ignore // Handle decline
 
     let handleVerify = () => {
       // Handle notification
       setNotificationBadge(prev => prev + 1)
-      Notification.allNotifications(task, Verified(user.email))
+      Notification.allNotifications(
+        task,
+        Verified(verifier.email),
+        [verifier.id, doer.id]->Belt.Array.concat(task.voted->Js.Dict.keys),
+      )
 
       // Give user token and change status
-      Task.giveToken(user, task)
+      Task.giveToken(doer, task)
       task.id->Belt.Option.forEach(tId => Task.verifyByTaskId(tId)->ignore)
     }
 
@@ -38,13 +49,13 @@ module Popup = {
     let verifyingTxt = {
       `Do you want to verify ${task.content} ? ` ++
       `If everyone who voted has verified this task, ` ++
-      `${user.displayName} will receive ${string_of_int(task.vote)} ` ++
+      `${doer.displayName} will receive ${string_of_int(task.vote)} ` ++
       `${task.vote > 1 ? "tokens" : "token"}}`
     }
     let decliningTxt = {
       `Do you want to decline ${task.content}? ` ++
       `If everyone who voted has verified this task, ` ++
-      `${user.displayName} will receive ${string_of_int(task.vote)} ` ++
+      `${doer.displayName} will receive ${string_of_int(task.vote)} ` ++
       `${task.vote > 1 ? "tokens" : "token"}}`
     }
 
@@ -92,6 +103,7 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
   let onClickVerify = _ => setPopUpState(_ => Show(Verify))
   let onClickDecline = _ => setPopUpState(_ => Show(Decline))
   let onClosePopUp = _ => setPopUpState(_ => Hidden)
+  let (doer, setDoer) = useState(_ => user)
 
   let statusToString = (status: Task.status) => {
     switch status {
@@ -101,6 +113,27 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
     | Open => "Open"
     }
   }
+
+  React.useEffect1(() => {
+    open Firebase.Divertask
+
+    let retrieveDoer = userId => {
+      let path = `users/${userId}`
+      let onUserOfTask = (_id, data) => {
+        switch Data.User.Codec.fromJson(Some(userId), data) {
+        | Some(u) => setDoer(_ => u)
+        | None => Js.log("No user")
+        }
+      }
+
+      Some(listenToPath(path, ~eventType=#value, ~onData=onUserOfTask, ()))
+    }
+
+    switch optionTask {
+    | Some({status: Claim(userId) | Done(userId)}) => retrieveDoer(userId)
+    | _ => None
+    }
+  }, [optionTask])
 
   switch optionTask {
   | Some(task) => <>
@@ -135,7 +168,9 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
                     {string("Decline")}
                   </Button>
                 </Grid.Item>
-                <Popup user task setNotificationBadge popUpState handleClose=onClosePopUp />
+                <Popup
+                  verifier=user doer task setNotificationBadge popUpState handleClose=onClosePopUp
+                />
               </Grid.Container>
             </div>
           | _ => <div />
