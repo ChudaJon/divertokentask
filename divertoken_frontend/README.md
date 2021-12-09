@@ -18,7 +18,7 @@ npm run server
 npm start
 ```
 
-Open a new web page to `http://localhost:8000/`. Change any `.re` file in `src` to see the page auto-reload. **You don't need any bundler when you're developing**!
+Open a new web page to `http://localhost:5050/`. Change any `.re` file in `src` to see the page auto-reload. **You don't need any bundler when you're developing**!
 
 **How come we don't need any bundler during development**? We highly encourage you to open up `index.html` to check for yourself!
 
