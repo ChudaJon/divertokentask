@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
@@ -6,9 +7,9 @@ admin.initializeApp(functions.config().firebase);
 //
 
 function isAllVerified(verifier, voter) {
-  console.log('check', verifier, 'vs', voter);
+  console.log("check", verifier, "vs", voter);
   if (voter.length === verifier.length) {
-    const filteredArray = voter.filter(v => !verifier.includes(v));
+    const filteredArray = voter.filter((v) => !verifier.includes(v));
     return filteredArray.length === 0;
   } else {
     return false;
@@ -24,15 +25,16 @@ function payoutOnVerified(task) {
   const ref = admin.database().ref(path);
   ref.once("value", (snapshot) => {
     const user = snapshot.val();
-    if (user){
-        const token = user.token + totalTokenToBePaid;
-        ref.update({token: token});
+    if (user) {
+      const token = user.token + totalTokenToBePaid;
+      ref.update({token: token});
     } else {
-        console.log("No such user exists, the token should be returned to the all voters");
-        //TODO: return tokens logic
+      console.log(`No such user exists, the token 
+      should be returned to the all voters`);
+      // TODO: return tokens logic
     }
   });
-};
+}
 
 exports.verifyTask = functions.https.onRequest((req, res) => {
   functions.logger.info("Task verified!", {structuredData: true});
