@@ -71,6 +71,7 @@ exports.claimTask = functions.https.onRequest((request, response) => {
   response.send("Task claim!");
 });
 
+// eslint-disable-next-line no-unused-vars
 function paybackOnDeclined(task) {
   const voter = task.voted;
 
@@ -121,6 +122,7 @@ exports.declineTask = functions.https.onRequest((req, res) => {
     } else {
       // paybackOnDeclined(task);
       task.claimedBy = null;
+      task.status = 0;
       ref.update(task);
 
       res.send(`Task ${task} is declined!`);
