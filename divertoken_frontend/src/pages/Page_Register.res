@@ -44,7 +44,20 @@ let make = () => {
       Routes.push(Login)
       Promise.resolve()
     })
-    ->Promise.catch(err => Js.log2("Register error", err)->Promise.resolve)
+    ->Promise.catch(err =>
+      {
+        let msg = switch err {
+        | Promise.JsError(err) =>
+          switch Js.Exn.message(err) {
+          | Some(msg) => msg
+          | None => ""
+          }
+        | _ => "Unexpected error occurred"
+        }
+
+        Js.log2("msg err:: ", msg)
+      }->Promise.resolve
+    )
     ->ignore
   }
 
