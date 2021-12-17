@@ -10,7 +10,9 @@ type popUpState = Hidden | Show(popUpType)
 module Popup = {
   @react.component
   let make = (~popUpState, ~user: user, ~task: task, ~setNotificationBadge, ~handleClose) => {
-    let handleDecline = ignore // Handle decline
+    let handleDecline = () => {
+      TaskApi.declineTask(task, user)
+    } // Handle decline
 
     let handleVerify = () => {
       // Handle notification
