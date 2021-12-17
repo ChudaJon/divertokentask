@@ -73,16 +73,17 @@ exports.claimTask = functions.https.onRequest((request, response) => {
 
 function paybackOnDeclined(task) {
   const voter = task.voted;
-  const totalTokenToBePaid = Object.values(voter).reduce((a, b) => a + b);
-  console.log(`paying out ${totalTokenToBePaid} to ${task.claimedBy}`);
+
   Object.entries(voter).map((entry) => {
     const path = `users/${entry[0]}/token`;
     const ref = admin.database().ref(path);
+    console.log(`paying back ${entry[1]} to ${entry[0]}`);
     ref.transaction((currentToken) => {
       return (currentToken || 0) + entry[1];
     });
   });
 }
+
 
 exports.declineTask = functions.https.onRequest((req, res) => {
   functions.logger.info("Task declined!", {structuredData: true});
@@ -99,20 +100,28 @@ exports.declineTask = functions.https.onRequest((req, res) => {
     const task = snapshot.val();
     const verifier = task.verifier || [];
     const voted = task.voted || [];
+    const claimedBy = task.claimedBy || null;
 
     if (userId === undefined || userId === null) {
       res.status(400).send({status: "No userId provided"});
       return;
     }
 
-    if (!voted.includes(userId)) {
+    if (claimedBy === null) {
+      res.status(400).send({status: "Task is not claimed"});
+      return;
+    }
+
+    if (!Object.keys(voted).includes(userId)) {
       res.status(400).send({status: `You have not voted for this task, 
       therefore you cannot decline it`});
-    } else if (!verifier.includes(userId)) {
+    } else if (verifier.includes(userId)) {
       res.status(400).send({status: `You have already verfiied this task,, 
       therefore you cannot decline it`});
     } else {
-      paybackOnDeclined(task);
+      // paybackOnDeclined(task);
+      task.claimedBy = null;
+      ref.update(task);
 
       res.send(`Task ${task} is declined!`);
     }
