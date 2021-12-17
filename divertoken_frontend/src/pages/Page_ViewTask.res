@@ -11,7 +11,7 @@ module Popup = {
   @react.component
   let make = (~popUpState, ~user: user, ~task: task, ~setNotificationBadge, ~handleClose) => {
     let handleDecline = () => {
-      TaskApi.declineTask(task, user)
+      TaskApi.declineTask(task, user) -> ignore
     } // Handle decline
 
     let handleVerify = () => {
