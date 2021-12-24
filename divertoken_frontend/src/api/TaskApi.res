@@ -21,6 +21,9 @@ let claimTask = (task:Data.Task.t, user:Data.User.t) =>{
       "taskId": task.id,
       "userId": user.id,
     })
+    ->Superagent.then(res => {
+      Js.log2("Task is claimed", res)
+    })
 }
 
 let verifyTask = (task:Data.Task.t, user:Data.User.t) =>{
