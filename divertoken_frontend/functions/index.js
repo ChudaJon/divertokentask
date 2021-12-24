@@ -66,8 +66,12 @@ exports.verifyTask = functions.https.onRequest((req, res) => {
   return ref.once("value", (snapshot) => {
     const task = snapshot.val();
     const verifier = task.verifier || [];
+    const voted = task.voted || [];
     if (userId && verifier.includes(userId)) {
-      res.status(400).send({status: "Already verified"});
+      res.status(400).send({status: "You have already verified"});
+    } else if (!Object.keys(voted).includes(userId)) {
+      res.status(400).send({status: `You have not voted for this task, 
+      therefore you cannot verify it`});
     } else {
       verifier.push(userId);
       ref.update({verifier: verifier});
