@@ -75,13 +75,13 @@ let make = (~title, ~notificationBadge, ~setNotificationBadge, ~children) => {
     <div className={styles["page-header-container"]}>
       <Grid.Container className={styles["page-header"]}>
         <Grid.Item xs={GridSize.size(12)}>
-          <Grid.Container justify=Justify.center spacing=12>
+          <Grid.Container justify=Justify.center spacing=10>
             <Grid.Item>
               <Typography variant=Typography.Variant.h5> {React.string(title)} </Typography>
             </Grid.Item>
             <Grid.Item>
               <div className={styles["tokencount-container"]}>
-                <Typography> tokenCount </Typography>
+                tokenCount
               </div>
             </Grid.Item>
           </Grid.Container>
