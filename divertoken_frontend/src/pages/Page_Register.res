@@ -1,3 +1,4 @@
+open React
 open MaterialUI
 open Data
 
@@ -18,7 +19,7 @@ let defaultRegistration = {
 @react.component
 let make = () => {
   let (registration, setRegistration) = React.useState(() => defaultRegistration)
-  let (_error, setError) = React.useState(_ => "")
+  let (error, setError) = React.useState(_ => "")
 
   let handleSubmit = evt => {
     ReactEvent.Synthetic.preventDefault(evt)
@@ -56,6 +57,7 @@ let make = () => {
         }
 
         Js.log2("msg err:: ", msg)
+        setError(_ => msg)
       }->Promise.resolve
     )
     ->ignore
@@ -79,6 +81,11 @@ let make = () => {
       <Form.TextInput label="Email" name="email" onChange autoFocus=true />
       <Form.TextInput label="Password" _type="password" name="password" onChange />
       <Form.TextInput label="Confirm Password" _type="password" name="cpassword" onChange />
+      {if error != "" {
+        <Typography> {string(error)} </Typography>
+      } else {
+        React.null
+      }}
       <Form.SubmitButton onClick=handleSubmit />
       <Form.TextLink text="Log in" onClick={_ => Routes.push(Login)} />
     </Form>
