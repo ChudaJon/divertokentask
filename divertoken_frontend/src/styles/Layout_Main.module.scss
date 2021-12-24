@@ -3,15 +3,18 @@ body {
     margin: 0;
 }
 .page-content {
-    height: calc(100vh - #{$bottombar-height} - #{$topbar-height} );    
-    overflow: scroll;
     max-width: $page-max-width;
     margin: auto;
+    padding-top: calc(#{$topbar-height} + env(safe-area-inset-top));
+    padding-bottom: calc(#{$bottombar-height} + env(safe-area-inset-bottom));
 }
 .bottom-nav-container {
     bottom: 0;
+    position: fixed;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 1;
     width: 100vw;
-    height: $bottombar-height;
+    background-color: white;
 }
 .bottom-nav {
     margin: auto;
@@ -20,21 +23,27 @@ body {
 }
 .page-header-container {
     top: 0;
+    position: fixed;
+    padding-top: env(safe-area-inset-top);
+    z-index: 1;
     background-color: white;
+    width: 100vw;
 }
 .page-header {
     max-width: $page-max-width;
     margin: auto;
     height: $topbar-height;
 }
+.page-title-container {
+    width: 100%;
+    margin-right: -80px !important;
+    text-align: center;
+}
 .tokencount-container {
-    height: $topbar-height;
+    height: calc(#{$topbar-height} + env(safe-area-inset-top));
     width: 80px;
     padding: 0;
     text-align: right;
-    position: absolute;
-    top: 0;
-    right: 0;
     p {
         line-height: 1.2;
     }

@@ -7,10 +7,35 @@ let make = (~user, ~setNotificationBadge) => {
     {tasks
     ->Belt.Array.keep(t =>
       switch t.status {
-      | Claim(_) | Done(_) | DoneAndVerified(_) => true
+      | Claim(_) => true
       | _ => false
       }
     )
+    ->Belt.Array.reverse
+    ->Belt.Array.mapWithIndex((i, task) =>
+      <ClaimedTaskCard key={string_of_int(i)} user task setNotificationBadge />
+    )
+    ->React.array}
+    {tasks
+    ->Belt.Array.keep(t =>
+      switch t.status {
+      | Done(_)  => true
+      | _ => false
+      }
+    )
+    ->Belt.Array.reverse
+    ->Belt.Array.mapWithIndex((i, task) =>
+      <ClaimedTaskCard key={string_of_int(i)} user task setNotificationBadge />
+    )
+    ->React.array}
+    {tasks
+    ->Belt.Array.keep(t =>
+      switch t.status {
+      | DoneAndVerified(_) => true
+      | _ => false
+      }
+    )
+    ->Belt.Array.reverse
     ->Belt.Array.mapWithIndex((i, task) =>
       <ClaimedTaskCard key={string_of_int(i)} user task setNotificationBadge />
     )

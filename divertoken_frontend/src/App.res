@@ -36,7 +36,7 @@ module RouterWithAuth = {
     }, [url])
 
     <Context_Tasks.Provider>
-      <Context_Notifications.Provider>
+      <Context_Notifications.Provider userId=user.id>
         {switch url->Routes.url2route {
         | TaskList =>
           <Layout_Main notificationBadge setNotificationBadge title="Your Tasks">
