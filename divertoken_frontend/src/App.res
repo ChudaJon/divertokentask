@@ -40,7 +40,7 @@ module RouterWithAuth = {
         {switch url->Routes.url2route {
         | TaskList =>
           <Layout_Main notificationBadge setNotificationBadge title="Your Tasks">
-            <Page_TaskList user setNotificationBadge />
+            <Page_TaskList user />
           </Layout_Main>
         | Notification =>
           <Layout_Main notificationBadge setNotificationBadge title="Notifications">
@@ -63,7 +63,7 @@ module RouterWithAuth = {
           </Layout_Main>
         | _ =>
           <Layout_Main notificationBadge setNotificationBadge title="Unclaimed Tasks">
-            <Page_UnclaimTask user setNotificationBadge />
+            <Page_UnclaimTask user />
           </Layout_Main>
         }}
       </Context_Notifications.Provider>

@@ -1,6 +1,6 @@
 @module("/src/styles/TaskList.module.scss") external styles: 'a = "default"
 @react.component
-let make = (~user, ~setNotificationBadge) => {
+let make = (~user) => {
   let tasks = React.useContext(Context_Tasks.context)
 
   <div className={styles["tasklist"]}>

@@ -2,7 +2,7 @@ open React
 open MaterialUI
 
 @react.component
-let make = (~user, ~setNotificationBadge) => {
+let make = (~user) => {
   let onAddTask = _ => Routes.push(AddTask)
 
   let tasks = React.useContext(Context_Tasks.context)
