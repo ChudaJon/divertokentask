@@ -31,3 +31,5 @@ build/
 ### Firebase Patch ###
 .runtimeconfig.json
 .firebase/
+**/.firebase
+*.cache
