@@ -5,7 +5,7 @@ open Data
 @module("/src/styles/UnclaimedTaskCard.module.scss") external styles: 'a = "default"
 
 @react.component
-let make = (~user: user, ~task: task, ~setNotificationBadge) => {
+let make = (~user: user, ~task: task) => {
   // For Popup delete
   let (openModal, setOpenModal) = React.useState(_ => false)
   let handleOpen = () => setOpenModal(_ => true)
@@ -18,13 +18,7 @@ let make = (~user: user, ~task: task, ~setNotificationBadge) => {
 
   let claim = (user: user, task: task) => {
     task->Task.claim(user)->ignore
-    task
-    ->Notification.allNotifications(
-      Claimed(user.email),
-      [user.id]->Belt.Array.concat(task.voted->Js.Dict.keys),
-    )
-    ->ignore
-    setNotificationBadge(prev => prev + 1)
+    task->Notification.allNotifications(Claimed(user.email), task.voted->Js.Dict.keys)->ignore
   }
 
   let handleModal = (user: user, task: task) => {
