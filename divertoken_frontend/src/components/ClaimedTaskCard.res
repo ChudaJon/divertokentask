@@ -14,12 +14,7 @@ let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
     ReactEvent.Synthetic.preventDefault(evt)
     setDoneMsg(_ => true)
     task->Data.Task.done(user, setShowDone)->ignore
-    task
-    ->Data.Notification.allNotifications(
-      Complete,
-      [user.id]->Belt.Array.concat(task.voted->Js.Dict.keys),
-    )
-    ->ignore
+    task->Data.Notification.allNotifications(Complete, task.voted->Js.Dict.keys)->ignore
     setNotificationBadge(prev => prev + 1)
   }
 
