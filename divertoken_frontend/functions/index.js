@@ -38,6 +38,22 @@ function payoutOnVerified(task) {
 
 exports.verifyTask = functions.https.onRequest((req, res) => {
   functions.logger.info("Task verified!", {structuredData: true});
+
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+  res.set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  // eslint-disable-next-line max-len
+  res.set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
+  if (req.method === "OPTIONS") {
+    console.log("got the options call");
+    res.set("Access-Control-Allow-Methods", "POST");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+    return;
+  }
+
   const taskId = req.body.taskId;
   const userId = req.body.userId;
   const path = `tasks/${taskId}`;
@@ -88,6 +104,22 @@ function paybackOnDeclined(task) {
 
 exports.declineTask = functions.https.onRequest((req, res) => {
   functions.logger.info("Task declined!", {structuredData: true});
+
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
+  res.set("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  // eslint-disable-next-line max-len
+  res.set("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+
+  if (req.method === "OPTIONS") {
+    console.log("got the options call");
+    res.set("Access-Control-Allow-Methods", "POST");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "3600");
+    res.status(204).send("");
+    return;
+  }
+
   const taskId = req.body.taskId;
   const userId = req.body.userId;
   const path = `tasks/${taskId}`;
