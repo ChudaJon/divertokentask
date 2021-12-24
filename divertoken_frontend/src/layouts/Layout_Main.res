@@ -79,9 +79,11 @@ let make = (~title, ~notificationBadge, ~setNotificationBadge, ~children) => {
             <Grid.Item>
               <Typography variant=Typography.Variant.h5> {React.string(title)} </Typography>
             </Grid.Item>
-            <div className={styles["tokencount-container"]}>
-              <Typography> tokenCount </Typography>
-            </div>
+            <Grid.Item>
+              <div className={styles["tokencount-container"]}>
+                <Typography> tokenCount </Typography>
+              </div>
+            </Grid.Item>
           </Grid.Container>
         </Grid.Item>
       </Grid.Container>
