@@ -12,21 +12,17 @@ let make = (~user, ~setNotificationBadge) => {
       }
     )
     ->Belt.Array.reverse
-    ->Belt.Array.mapWithIndex((i, task) =>
-      <ClaimedTaskCard key={string_of_int(i)} user task setNotificationBadge />
-    )
+    ->Belt.Array.mapWithIndex((i, task) => <ClaimedTaskCard key={string_of_int(i)} user task />)
     ->React.array}
     {tasks
     ->Belt.Array.keep(t =>
       switch t.status {
-      | Done(_)  => true
+      | Done(_) => true
       | _ => false
       }
     )
     ->Belt.Array.reverse
-    ->Belt.Array.mapWithIndex((i, task) =>
-      <ClaimedTaskCard key={string_of_int(i)} user task setNotificationBadge />
-    )
+    ->Belt.Array.mapWithIndex((i, task) => <ClaimedTaskCard key={string_of_int(i)} user task />)
     ->React.array}
     {tasks
     ->Belt.Array.keep(t =>
@@ -36,9 +32,7 @@ let make = (~user, ~setNotificationBadge) => {
       }
     )
     ->Belt.Array.reverse
-    ->Belt.Array.mapWithIndex((i, task) =>
-      <ClaimedTaskCard key={string_of_int(i)} user task setNotificationBadge />
-    )
+    ->Belt.Array.mapWithIndex((i, task) => <ClaimedTaskCard key={string_of_int(i)} user task />)
     ->React.array}
   </div>
 }

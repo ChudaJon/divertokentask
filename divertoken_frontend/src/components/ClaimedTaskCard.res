@@ -4,7 +4,7 @@ open MaterialUIDataType
 @module("/src/styles/ClaimedTaskCard.module.scss") external styles: 'a = "default"
 
 @react.component
-let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
+let make = (~user: Data.user, ~task: Data.task) => {
   // Show Done Button or not << Should not be state, I think. Set task in Firebase should be
   let (_, setShowDone) = useState(_ => true)
 
@@ -15,7 +15,6 @@ let make = (~user: Data.user, ~task: Data.task, ~setNotificationBadge) => {
     setDoneMsg(_ => true)
     task->Data.Task.done(user, setShowDone)->ignore
     task->Data.Notification.allNotifications(Complete, task.voted->Js.Dict.keys)->ignore
-    setNotificationBadge(prev => prev + 1)
   }
 
   let handleDoneMsgClose = () => setDoneMsg(_ => false)
