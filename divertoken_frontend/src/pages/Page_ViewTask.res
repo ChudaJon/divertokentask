@@ -18,7 +18,7 @@ module Popup = {
     ~handleClose,
   ) => {
     let handleDecline = () => {
-      TaskApi.declineTask(task, verifier) -> ignore
+      TaskApi.declineTask(task, verifier) -> Js.log
     } // Handle decline
 
     let handleVerify = () => {
@@ -31,8 +31,9 @@ module Popup = {
       )
 
       // Give user token and change status
-      Task.giveToken(doer, task)
-      task.id->Belt.Option.forEach(tId => Task.verifyByTaskId(tId)->ignore)
+      // Task.giveToken(doer, task)
+      TaskApi.verifyTask(task, verifier) -> Js.log
+      // task.id->Belt.Option.forEach(tId => Task.verifyByTaskId(tId)->ignore)
     }
 
     let verifyBtn =
