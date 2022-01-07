@@ -5,9 +5,9 @@ let declineTask = (task: Data.Task.t, user: Data.User.t) => {
     "taskId": task.id,
     "userId": user.id,
   })
-  ->Superagent.then(res => {
-    Js.log2("Task is being declined", res)
-  })
+  // ->Superagent.then(res => {
+  //   Js.log2("Task is being declined", res)
+  // })
 }
 
 let claimTask = (task: Data.Task.t, user: Data.User.t) => {

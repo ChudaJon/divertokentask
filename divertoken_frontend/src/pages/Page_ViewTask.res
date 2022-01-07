@@ -6,7 +6,7 @@ open Data
 
 type popUpType = Verify | Decline
 type popUpState = Hidden | Show(popUpType)
-type verifyStatus = Initial | Success | Failed
+type verifyOrDeclineStatus = Initial | VerifySuccess | VerifyFailed | DeclineSuccess | DeclineFailed
 
 module Popup = {
   @react.component
@@ -18,10 +18,20 @@ module Popup = {
     ~setNotificationBadge,
     ~handleClose,
     ~handleVerifyMsgOpen,
-    ~setVerifyMsgStatus,
+    ~setVerifyOrDeclineMsgStatus,
   ) => {
     let handleDecline = () => {
-      TaskApi.declineTask(task, verifier)->Js.log
+      TaskApi.declineTask(task, verifier)
+      ->Superagent.then(res => {
+        handleVerifyMsgOpen()
+        if res.statusCode == 200 {
+          setVerifyOrDeclineMsgStatus(_ => DeclineSuccess)
+        } else {
+          setVerifyOrDeclineMsgStatus(_ => DeclineFailed)
+        }
+        Js.log3("Task is being declined", res.statusCode, res)
+      })
+      ->ignore
     } // Handle decline
 
     let handleVerify = () => {
@@ -39,9 +49,9 @@ module Popup = {
       ->Superagent.then(res => {
         handleVerifyMsgOpen()
         if res.statusCode == 200 {
-          setVerifyMsgStatus(_ => Success)
+          setVerifyOrDeclineMsgStatus(_ => VerifySuccess)
         } else {
-          setVerifyMsgStatus(_ => Failed)
+          setVerifyOrDeclineMsgStatus(_ => VerifyFailed)
         }
         Js.log3("Task is being verified", res.statusCode, res)
       })
@@ -122,27 +132,29 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
   let onClosePopUp = _ => setPopUpState(_ => Hidden)
   let (doer, setDoer) = useState(_ => user)
 
-  let (verifyMsg, setVerifyMsg) = useState(_ => false)
-  let (verifyMsgStatus, setVerifyMsgStatus) = useState(_ => Initial)
+  let (verifyOrDeclineMsg, setVerifyOrDeclineMsg) = useState(_ => false)
+  let (verifyOrDeclineMsgStatus, setVerifyOrDeclineMsgStatus) = useState(_ => Initial)
 
-  let verifyStatusTostr = (status: verifyStatus) => {
+  let verifyOrDeclineStatusTostr = (status: verifyOrDeclineStatus) => {
     switch status {
-    | Success => "successful"
-    | Failed => "failed"
+    | VerifySuccess => "Verify successful"
+    | VerifyFailed => "Verify failed, Please try again"
+    | DeclineSuccess => "Decline successful"
+    | DeclineFailed => "Decline failed, Please try again"
     | _ => ""
     }
   }
 
-  let verifySeverity = (status: verifyStatus) => {
+  let verifyOrDeclineSeverity = (status: verifyOrDeclineStatus) => {
     switch status {
-    | Success => "success"
-    | Failed => "error"
+    | VerifySuccess | DeclineSuccess => "success"
+    | VerifyFailed | DeclineFailed => "error"
     | _ => "info"
     }
   }
 
-  let handleVerifyMsgOpen = () => setVerifyMsg(_ => true)
-  let handleVerifyMsgClose = () => setVerifyMsg(_ => false)
+  let handleVerifyMsgOpen = () => setVerifyOrDeclineMsg(_ => true)
+  let handleVerifyMsgClose = () => setVerifyOrDeclineMsg(_ => false)
 
   let statusToString = (status: Task.status) => {
     switch status {
@@ -215,7 +227,7 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
                   popUpState
                   handleClose=onClosePopUp
                   handleVerifyMsgOpen
-                  setVerifyMsgStatus
+                  setVerifyOrDeclineMsgStatus
                 />
               </Grid.Container>
             </div>
@@ -223,9 +235,12 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
           }}
         </div>
         <Grid.Item>
-          <Snackbar _open={verifyMsg} autoHideDuration={6000} onClose={handleVerifyMsgClose}>
-            <Alert onClose={handleVerifyMsgClose} severity={verifySeverity(verifyMsgStatus)}>
-              {string("Verify " ++ verifyStatusTostr(verifyMsgStatus))}
+          <Snackbar
+            _open={verifyOrDeclineMsg} autoHideDuration={6000} onClose={handleVerifyMsgClose}>
+            <Alert
+              onClose={handleVerifyMsgClose}
+              severity={verifyOrDeclineSeverity(verifyOrDeclineMsgStatus)}>
+              {string(verifyOrDeclineStatusTostr(verifyOrDeclineMsgStatus))}
             </Alert>
           </Snackbar>
         </Grid.Item>
