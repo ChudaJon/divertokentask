@@ -1,6 +1,6 @@
 type t
 type request
-type response = {body: Js.Json.t, text: string}
+type response = {body: Js.Json.t, text: string, statusCode: int}
 type responseHandler = response => unit
 type sentRequest
 type error = {

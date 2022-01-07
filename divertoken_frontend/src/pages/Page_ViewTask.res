@@ -6,6 +6,7 @@ open Data
 
 type popUpType = Verify | Decline
 type popUpState = Hidden | Show(popUpType)
+type verifyStatus = Initial | Success | Failed
 
 module Popup = {
   @react.component
@@ -16,9 +17,11 @@ module Popup = {
     ~task: task,
     ~setNotificationBadge,
     ~handleClose,
+    ~handleVerifyMsgOpen,
+    ~setVerifyMsgStatus,
   ) => {
     let handleDecline = () => {
-      TaskApi.declineTask(task, verifier) -> Js.log
+      TaskApi.declineTask(task, verifier)->Js.log
     } // Handle decline
 
     let handleVerify = () => {
@@ -32,7 +35,18 @@ module Popup = {
 
       // Give user token and change status
       // Task.giveToken(doer, task)
-      TaskApi.verifyTask(task, verifier) -> Js.log
+      TaskApi.verifyTask(task, verifier)
+      ->Superagent.then(res => {
+        handleVerifyMsgOpen()
+        if res.statusCode == 200 {
+          setVerifyMsgStatus(_ => Success)
+        } else {
+          setVerifyMsgStatus(_ => Failed)
+        }
+        Js.log3("Task is being verified", res.statusCode, res)
+      })
+      ->ignore
+      // ->Superagent.catch(res => Js.log2("veri error:: ", res))
       // task.id->Belt.Option.forEach(tId => Task.verifyByTaskId(tId)->ignore)
     }
 
@@ -108,6 +122,28 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
   let onClosePopUp = _ => setPopUpState(_ => Hidden)
   let (doer, setDoer) = useState(_ => user)
 
+  let (verifyMsg, setVerifyMsg) = useState(_ => false)
+  let (verifyMsgStatus, setVerifyMsgStatus) = useState(_ => Initial)
+
+  let verifyStatusTostr = (status: verifyStatus) => {
+    switch status {
+    | Success => "successful"
+    | Failed => "failed"
+    | _ => ""
+    }
+  }
+
+  let verifySeverity = (status: verifyStatus) => {
+    switch status {
+    | Success => "success"
+    | Failed => "error"
+    | _ => "info"
+    }
+  }
+
+  let handleVerifyMsgOpen = () => setVerifyMsg(_ => true)
+  let handleVerifyMsgClose = () => setVerifyMsg(_ => false)
+
   let statusToString = (status: Task.status) => {
     switch status {
     | Claim(_) => "Claimed"
@@ -172,13 +208,27 @@ let make = (~user: user, ~taskId: string, ~setNotificationBadge) => {
                   </Button>
                 </Grid.Item>
                 <Popup
-                  verifier=user doer task setNotificationBadge popUpState handleClose=onClosePopUp
+                  verifier=user
+                  doer
+                  task
+                  setNotificationBadge
+                  popUpState
+                  handleClose=onClosePopUp
+                  handleVerifyMsgOpen
+                  setVerifyMsgStatus
                 />
               </Grid.Container>
             </div>
           | _ => <div />
           }}
         </div>
+        <Grid.Item>
+          <Snackbar _open={verifyMsg} autoHideDuration={6000} onClose={handleVerifyMsgClose}>
+            <Alert onClose={handleVerifyMsgClose} severity={verifySeverity(verifyMsgStatus)}>
+              {string("Verify " ++ verifyStatusTostr(verifyMsgStatus))}
+            </Alert>
+          </Snackbar>
+        </Grid.Item>
       </Grid.Container>
     </>
 
